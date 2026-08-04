@@ -46,10 +46,10 @@
 
   /* ---------- Sidebar ---------- */
   .crest{
-    height:82px;display:flex;align-items:center;justify-content:center;
+    height:112px;display:flex;align-items:center;justify-content:center;
     border-bottom:1px solid rgba(255,255,255,.10);
   }
-  .crest svg{display:block;}
+  .crest svg,.crest img{display:block;object-fit:contain;}
   .nav{padding:22px 0 0 0;}
   .nav-item{
     width:100%;display:flex;align-items:center;gap:11px;
@@ -256,13 +256,8 @@
 
   <!-- ===================== SIDEBAR ===================== -->
   <aside class="sidebar">
-    <div class="crest" title="Reemplazar por el escudo oficial de la Universidad del Cauca">
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-label="Escudo Universidad del Cauca">
-        <circle cx="28" cy="28" r="25" stroke="#fff" stroke-width="1.4" opacity=".9"/>
-        <circle cx="28" cy="28" r="19" stroke="#fff" stroke-width=".8" opacity=".55"/>
-        <path d="M28 15c4 5 6 9 6 13s-2.7 7-6 9c-3.3-2-6-5-6-9s2-8 6-13z" stroke="#fff" stroke-width="1.1" fill="none" opacity=".9"/>
-        <path d="M18 30c2 4 5 6.5 8 8M38 30c-2 4-5 6.5-8 8" stroke="#fff" stroke-width="1" opacity=".7"/>
-      </svg>
+    <div class="crest">
+      <img src="img/escudo.png" width="90" height="90" alt="Escudo Universidad del Cauca">
     </div>
     <nav class="nav">
       <button class="nav-item" data-view="usuario">
