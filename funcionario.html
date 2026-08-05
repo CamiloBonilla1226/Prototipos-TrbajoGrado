@@ -69,15 +69,35 @@
     padding:0 26px;border-bottom:1px solid var(--line);background:#fff;
   }
   .app-title{font-size:19px;font-weight:700;color:var(--navy-ink);letter-spacing:.1px;margin:0;}
-  .user-chip{display:flex;align-items:center;gap:11px;}
+  .user-chip{position:relative;display:flex;align-items:center;}
+  .user-chip-btn{
+    display:flex;align-items:center;gap:11px;background:none;border:0;
+    cursor:pointer;padding:6px 8px;border-radius:5px;font-family:inherit;
+  }
+  .user-chip-btn:hover{background:var(--panel);}
+  .user-chip-btn:focus-visible{outline:2px solid #B9C7EE;outline-offset:1px;}
   .avatar{
     width:36px;height:36px;border-radius:50%;border:1.5px solid var(--navy-ink);
     display:flex;align-items:center;justify-content:center;
     font-weight:700;font-size:12.5px;color:var(--navy-ink);
   }
-  .user-meta{line-height:1.35;}
+  .user-meta{line-height:1.35;text-align:left;}
   .user-name{font-weight:700;font-size:13px;color:var(--navy-ink);}
   .user-role{font-size:12.5px;color:var(--navy-ink);display:flex;align-items:center;gap:5px;}
+  .user-chip-btn[aria-expanded="true"] .user-role svg{transform:rotate(180deg);}
+  .user-dropdown{
+    position:absolute;top:calc(100% + 6px);right:0;min-width:190px;
+    background:#fff;border:1px solid var(--line);border-radius:5px;
+    box-shadow:0 12px 28px rgba(20,26,56,.2);padding:6px;z-index:60;
+  }
+  .user-dropdown-item{
+    width:100%;display:flex;align-items:center;gap:10px;
+    background:none;border:0;padding:10px 11px;border-radius:3px;
+    font-size:13px;font-weight:600;color:var(--red);cursor:pointer;
+    text-align:left;font-family:inherit;
+  }
+  .user-dropdown-item:hover{background:#FBE9E7;}
+  .user-dropdown-item:focus-visible{outline:2px solid #B9C7EE;outline-offset:1px;}
 
   /* ---------- Content ---------- */
   .content{flex:1;padding:16px 26px 0;}
@@ -386,11 +406,11 @@
       <img src="img/escudo.png" width="90" height="90" alt="Escudo Universidad del Cauca">
     </div>
     <nav class="nav">
-      <button class="nav-item" data-view="usuario">
+      <button class="nav-item is-active" data-view="usuario">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19a6 6 0 0 1 11 0"/></svg>
         <span class="bar">|</span><span class="label">Mi usuario</span>
       </button>
-      <button class="nav-item is-active" data-view="solicitudes">
+      <button class="nav-item" data-view="solicitudes">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
         <span class="bar">|</span><span class="label">Solicitudes</span>
       </button>
@@ -406,22 +426,30 @@
     <header class="topbar">
       <h1 class="app-title">Gestión de Procesos Académicos FIET</h1>
       <div class="user-chip">
-        <div class="avatar">FA</div>
-        <div class="user-meta">
-          <div class="user-name">Camila Ríos</div>
-          <div class="user-role">Funcionario Académico
-            <svg width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="#1F2A6D" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+        <button class="user-chip-btn" id="userMenuBtn" aria-haspopup="true" aria-expanded="false">
+          <div class="avatar">FA</div>
+          <div class="user-meta">
+            <div class="user-name">Camila Ríos</div>
+            <div class="user-role">Funcionario Académico
+              <svg width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="#1F2A6D" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+            </div>
           </div>
+        </button>
+        <div class="user-dropdown" id="userDropdown" hidden>
+          <button class="user-dropdown-item" id="btnLogout" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B23B2E" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            Cerrar sesión
+          </button>
         </div>
       </div>
     </header>
 
     <div class="content">
-      <div class="crumbs"><b>Funcionario Académico</b><span>&gt;</span><b id="crumbView">Solicitudes</b></div>
-      <div class="section-tab" id="sectionTab">Solicitudes</div>
+      <div class="crumbs"><b>Funcionario Académico</b><span>&gt;</span><b id="crumbView">Mi usuario</b></div>
+      <div class="section-tab" id="sectionTab">Mi usuario</div>
 
       <!-- ---------- VISTA: SOLICITUDES ---------- -->
-      <section id="view-solicitudes">
+      <section id="view-solicitudes" hidden>
         <div class="card">
           <div class="card-head">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A3A86" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
@@ -489,7 +517,7 @@
       </section>
 
       <!-- ---------- VISTA: MI USUARIO ---------- -->
-      <section id="view-usuario" hidden>
+      <section id="view-usuario">
         <div class="card user-card">
           <div class="card-body user-card-body">
             <h2 class="user-welcome">Bienvenid@, Camila!</h2>
@@ -1484,8 +1512,36 @@ document.addEventListener('keydown', e => {
   if(e.key === 'Escape' && backdropAccion.classList.contains('open')) cerrarAccion();
 });
 
+/* ---------- Menú de usuario / Cerrar sesión ---------- */
+const userMenuBtn = document.getElementById('userMenuBtn');
+const userDropdown = document.getElementById('userDropdown');
+
+function abrirMenuUsuario(){
+  userDropdown.hidden = false;
+  userMenuBtn.setAttribute('aria-expanded', 'true');
+}
+function cerrarMenuUsuario(){
+  userDropdown.hidden = true;
+  userMenuBtn.setAttribute('aria-expanded', 'false');
+}
+userMenuBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  userDropdown.hidden ? abrirMenuUsuario() : cerrarMenuUsuario();
+});
+document.addEventListener('click', e => {
+  if(!userDropdown.hidden && !e.target.closest('.user-chip')) cerrarMenuUsuario();
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && !userDropdown.hidden){ cerrarMenuUsuario(); userMenuBtn.focus(); }
+});
+document.getElementById('btnLogout').addEventListener('click', () => {
+  cerrarMenuUsuario();
+  mostrarToast('<b>Sesión cerrada.</b><br>Has salido de Gestión de Procesos Académicos FIET.');
+});
+
 render();
 renderRespuestas();
+irA('usuario');
 </script>
 </body>
 </html>
