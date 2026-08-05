@@ -229,8 +229,8 @@
     justify-content:flex-end;gap:10px;flex-wrap:wrap;
   }
   .btn{height:36px;padding:0 16px;border-radius:3px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;}
-  .btn-ghost{background:#fff;border-color:var(--line);color:var(--text);}
-  .btn-ghost:hover{background:var(--panel);}
+  .btn-ghost{background:var(--panel);border-color:#B7BCC6;color:var(--navy-ink);}
+  .btn-ghost:hover{background:#E7EAF1;border-color:var(--navy-700);}
   .btn-danger{background:#fff;border-color:var(--red);color:var(--red);}
   .btn-danger:hover{background:var(--red);color:#fff;}
   .btn-primary{background:var(--navy-700);color:#fff;}
@@ -434,7 +434,7 @@ const DATA = [
   {rad:'2026-CM-0148', est:'Laura Valentina Muñoz',  doc:'1061789234', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-28T09:12', estado:'Pendiente',  just:'Solicito la cancelación de matrícula del periodo académico por motivos de salud debidamente certificados por la EPS, que me impiden continuar con las actividades académicas del semestre.', anexos:['Solicitud firmada.pdf','Incapacidad médica EPS.pdf','Historia académica.pdf']},
   {rad:'2026-ES-0147', est:'Andrés Felipe Chantre',  doc:'1002345671', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.ES, fecha:'2026-07-28T08:40', estado:'Pendiente',  just:'Solicito examen supletorio de Señales y Sistemas, presentado el 12 de julio, por incapacidad médica el día de la evaluación.', anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf','Visto bueno del docente.pdf']},
   {rad:'2026-CA-0145', est:'María José Ordóñez',     doc:'1063998877', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-27T15:05', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Control Digital debido al cruce de horario con la práctica empresarial autorizada por coordinación.', anexos:['Solicitud firmada.pdf','Carta de coordinación.pdf']},
-  {rad:'2026-ES-0144', est:'Juan Sebastián Paz',     doc:'1004556612', prog:'Tecnología en Telemática',    proc:PROC.ES, fecha:'2026-07-27T11:22', estado:'En Gestión', just:'Solicito examen supletorio de Bases de Datos por calamidad doméstica presentada el día de la evaluación.', anexos:['Solicitud firmada.pdf','Certificado de defunción.pdf']},
+  {rad:'2026-ES-0144', est:'Juan Sebastián Paz',     doc:'1004556612', prog:'Tecnología en Telemática',    proc:PROC.ES, fecha:'2026-07-27T11:22', estado:'En Gestión', esperaDe:'Decano', just:'Solicito examen supletorio de Bases de Datos por calamidad doméstica presentada el día de la evaluación.', anexos:['Solicitud firmada.pdf','Certificado de defunción.pdf']},
   {rad:'2026-CM-0142', est:'Diana Carolina Bolaños', doc:'1061223344', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-26T16:48', estado:'Pendiente de Respuesta', just:'Solicito la cancelación de matrícula por traslado laboral fuera de la ciudad de Popayán a partir del mes de agosto.', anexos:['Solicitud firmada.pdf','Carta laboral.pdf','Historia académica.pdf']},
   {rad:'2026-CA-0139', est:'Kevin Steven Muñoz',     doc:'1007889900', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.CA, fecha:'2026-07-24T10:15', estado:'Respondida', just:'Solicito la cancelación de la asignatura Electrónica Analógica II por bajo rendimiento derivado de una situación familiar.', anexos:['Solicitud firmada.pdf','Historia académica.pdf']},
   {rad:'2026-ES-0138', est:'Valeria Astudillo',      doc:'1062556677', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-24T09:03', estado:'Respondida', just:'Solicito examen supletorio de Ingeniería de Software por participación en la representación deportiva de la Universidad.', anexos:['Solicitud firmada.pdf','Certificado de Bienestar.pdf']},
@@ -444,7 +444,7 @@ const DATA = [
   {rad:'2026-CM-0129', est:'Angie Paola Rengifo',    doc:'1060778899', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-20T13:24', estado:'Respondida', just:'Solicito la cancelación de matrícula por licencia de maternidad durante el periodo académico.', anexos:['Solicitud firmada.pdf','Certificado médico.pdf']},
   {rad:'2026-CA-0127', est:'Daniel Esteban Vidal',   doc:'1058445566', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-19T10:02', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Instrumentación Industrial por superposición con el curso de nivelación autorizado.', anexos:['Solicitud firmada.pdf']},
   {rad:'2026-ES-0124', est:'Laura Sofía Muñoz',      doc:'1061789234', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-18T09:45', estado:'Respondida', just:'Solicito examen supletorio de Estructuras de Datos por incapacidad médica el día de la evaluación.', anexos:['Solicitud firmada.pdf','Incapacidad médica EPS.pdf']},
-  {rad:'2026-CM-0121', est:'Camilo Andrés Ledezma',  doc:'1005990011', prog:'Tecnología en Telemática',    proc:PROC.CM, fecha:'2026-07-17T16:20', estado:'En Gestión', just:'Solicito la cancelación de matrícula por prestación del servicio militar obligatorio.', anexos:['Solicitud firmada.pdf','Orden de presentación.pdf']}
+  {rad:'2026-CM-0121', est:'Camilo Andrés Ledezma',  doc:'1005990011', prog:'Tecnología en Telemática',    proc:PROC.CM, fecha:'2026-07-17T16:20', estado:'En Gestión', esperaDe:'Estudiante', just:'Solicito la cancelación de matrícula por prestación del servicio militar obligatorio.', anexos:['Solicitud firmada.pdf','Orden de presentación.pdf']}
 ];
 
 const ORDEN_ESTADO = {'Pendiente':0,'En Gestión':1,'Pendiente de Respuesta':2,'Pendiente de Verificación':3,'Respondida':4};
@@ -589,9 +589,12 @@ function abrirDetalle(rad){
       </span>
     </li>`).join('');
 
+  const notaEnGestion = r.esperaDe === 'Decano'
+    ? 'La solicitud está en manos del Decano, a la espera de su decisión. Solo puedes consultarla mientras no sea tu turno.'
+    : 'La solicitud está a la espera de una acción del Estudiante. Solo puedes consultarla mientras no sea tu turno.';
   const notas = {
     'Pendiente': 'Es tu turno de actuar sobre esta solicitud. Las acciones de remitir al Decano y rechazar se ejecutan desde esta misma vista.',
-    'En Gestión': 'La solicitud está en manos de otro responsable. Solo puedes consultarla mientras no sea tu turno.',
+    'En Gestión': notaEnGestion,
     'Pendiente de Respuesta': 'El Decano ya tomó una decisión sobre esta solicitud. Debes enviar la respuesta correspondiente al estudiante.',
     'Pendiente de Verificación': 'El estudiante subió el comprobante de pago del examen supletorio. Verifícalo para cerrar el trámite.',
     'Respondida': 'El trámite ya fue cerrado. El detalle es de solo lectura.'
