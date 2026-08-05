@@ -326,6 +326,21 @@
   .chip-decision.is-aprobada{background:#E4F5EC;color:var(--green);}
   .chip-decision.is-rechazada{background:#FBE9E7;color:var(--red);}
 
+  /* ---------- Comprobante de pago destacado ---------- */
+  .comprobante-destacado{
+    display:flex;align-items:center;gap:12px;margin:14px 0 4px;
+    background:#EFFAF4;border:1.5px solid #BFE7D3;border-left:5px solid var(--green);
+    border-radius:4px;padding:13px 15px;
+  }
+  .comprobante-destacado .anexo-name{gap:11px;}
+  .comprobante-destacado .anexo-name span{
+    font-weight:700;color:var(--navy-ink);font-size:13.5px;white-space:normal;
+  }
+  .comprobante-destacado .anexo-name small{
+    display:block;font-weight:400;color:var(--muted);font-size:11.5px;margin-top:2px;
+  }
+  .comprobante-destacado .anexo-actions{margin-left:auto;}
+
   /* ---------- Toast de confirmación ---------- */
   .toast{
     position:fixed;right:22px;bottom:22px;max-width:380px;z-index:100;
@@ -665,7 +680,7 @@ const DATA = [
   {rad:'2026-ES-0138', est:'Valeria Astudillo',      doc:'1062556677', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-24T09:03', estado:'Respondida', decision:'Aprobada', just:'Solicito examen supletorio de Ingeniería de Software por participación en la representación deportiva de la Universidad.', anexos:['Solicitud firmada.pdf','Certificado de Bienestar.pdf']},
   {rad:'2026-CM-0136', est:'Óscar Iván Chicangana',  doc:'1059334455', prog:'Ingeniería en Automática Industrial', proc:PROC.CM, fecha:'2026-07-23T14:30', estado:'Respondida', decision:'Rechazada', observacion:'No se anexó soporte suficiente que justifique la cancelación por motivos económicos alegados.', just:'Solicito la cancelación de matrícula por razones económicas que me impiden sostener el semestre en curso.', anexos:['Solicitud firmada.pdf','Declaración de renta familiar.pdf']},
   {rad:'2026-CA-0133', est:'Sara Camila Yandi',      doc:'1064112233', prog:'Tecnología en Telemática',    proc:PROC.CA, fecha:'2026-07-22T08:57', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Redes de Computadores por incompatibilidad con el horario de la asignatura homologada.', anexos:['Solicitud firmada.pdf','Acta de homologación.pdf']},
-  {rad:'2026-ES-0131', est:'Nicolás Gómez Trujillo', doc:'1003667788', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.ES, fecha:'2026-07-21T17:11', estado:'Pendiente de Verificación', just:'Solicito examen supletorio de Comunicaciones Digitales por incapacidad médica de tres días.', anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf','Comprobante de pago.pdf']},
+  {rad:'2026-ES-0131', est:'Nicolás Gómez Trujillo', doc:'1003667788', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.ES, fecha:'2026-07-21T17:11', estado:'Pendiente de Verificación', comprobante:'Comprobante de pago.pdf', just:'Solicito examen supletorio de Comunicaciones Digitales por incapacidad médica de tres días.', anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf']},
   {rad:'2026-CM-0129', est:'Angie Paola Rengifo',    doc:'1060778899', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-20T13:24', estado:'Respondida', decision:'Aprobada', resolucion:'Resolución 0129-2026.pdf', just:'Solicito la cancelación de matrícula por licencia de maternidad durante el periodo académico.', anexos:['Solicitud firmada.pdf','Certificado médico.pdf']},
   {rad:'2026-CA-0127', est:'Daniel Esteban Vidal',   doc:'1058445566', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-19T10:02', estado:'Pendiente de Respuesta', decisionDecano:'Rechazada', just:'Solicito la cancelación de la asignatura Instrumentación Industrial por superposición con el curso de nivelación autorizado.', anexos:['Solicitud firmada.pdf']},
   {rad:'2026-ES-0124', est:'Laura Sofía Muñoz',      doc:'1061789234', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-18T09:45', estado:'Respondida', decision:'Rechazada', observacion:'La incapacidad médica presentada no cubre la fecha de la evaluación programada.', just:'Solicito examen supletorio de Estructuras de Datos por incapacidad médica el día de la evaluación.', anexos:['Solicitud firmada.pdf','Incapacidad médica EPS.pdf']},
@@ -940,6 +955,21 @@ function abrirDetalle(rad){
       </span>
     </li>`).join('');
 
+  if(r.estado === 'Pendiente de Verificación' && r.comprobante){
+    document.getElementById('mRespuestaExtra').innerHTML = `
+      <div class="modal-sub">Comprobante de pago</div>
+      <div class="comprobante-destacado">
+        <span class="anexo-name">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/></svg>
+          <span>${r.comprobante}<small>Subido por el Estudiante</small></span>
+        </span>
+        <span class="anexo-actions">
+          <button class="link-btn" type="button">Visualizar</button>
+          <button class="link-btn" type="button">Descargar</button>
+        </span>
+      </div>`;
+  }
+
   const notaEnGestion = r.esperaDe === 'Decano'
     ? 'La solicitud está en manos del Decano, a la espera de su decisión. Solo puedes consultarla mientras no sea tu turno.'
     : 'La solicitud está a la espera de una acción del Estudiante. Solo puedes consultarla mientras no sea tu turno.';
@@ -959,7 +989,8 @@ function abrirDetalle(rad){
     'Pendiente de Respuesta': `<button class="btn btn-ghost" data-close>Cerrar</button>
        <button class="btn btn-primary" data-accion="responder" data-rad="${r.rad}">Enviar respuesta al Estudiante</button>`,
     'Pendiente de Verificación': `<button class="btn btn-ghost" data-close>Cerrar</button>
-       <button class="btn btn-primary">Verificar comprobante</button>`
+       <button class="btn btn-danger" data-accion="rechazarComprobante" data-rad="${r.rad}">Rechazar</button>
+       <button class="btn btn-primary" data-accion="aprobarComprobante" data-rad="${r.rad}">Aprobar</button>`
   };
   document.getElementById('mFoot').innerHTML = pies[r.estado] || `<button class="btn btn-ghost" data-close>Cerrar</button>`;
 
@@ -1086,9 +1117,13 @@ document.getElementById('mFoot').addEventListener('click', e => {
   const bRechazar = e.target.closest('[data-accion="rechazar"]');
   const bRemitir  = e.target.closest('[data-accion="remitir"]');
   const bResponder = e.target.closest('[data-accion="responder"]');
+  const bAprobarComp = e.target.closest('[data-accion="aprobarComprobante"]');
+  const bRechazarComp = e.target.closest('[data-accion="rechazarComprobante"]');
   if(bRechazar){ cerrarDetalle(); abrirRechazo(bRechazar.dataset.rad); }
   if(bRemitir){ cerrarDetalle(); abrirRemision(bRemitir.dataset.rad); }
   if(bResponder){ cerrarDetalle(); abrirRespuesta(bResponder.dataset.rad); }
+  if(bAprobarComp){ cerrarDetalle(); abrirAprobarComprobante(bAprobarComp.dataset.rad); }
+  if(bRechazarComp){ cerrarDetalle(); abrirRechazarComprobante(bRechazarComp.dataset.rad); }
 });
 
 /* ---------- Diálogos de acción: Rechazar solicitud / Remitir al Decano ---------- */
@@ -1264,6 +1299,62 @@ function abrirRespuesta(rad){
   abrirBackdropAccion();
 }
 
+function abrirAprobarComprobante(rad){
+  const r = DATA.find(x => x.rad === rad);
+  if(!r) return;
+  accionRad = rad; accionModo = 'aprobarComprobante';
+  accionLastFocus = document.activeElement;
+
+  document.getElementById('aTitle').textContent = 'Aprobar comprobante';
+  llenarDatosEstudiante(r);
+
+  document.getElementById('aCentro').innerHTML = `
+    <div class="modal-sub">Comprobante de pago</div>
+    <ul class="anexos">
+      <li>
+        <span class="anexo-name">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D0463B" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/></svg>
+          <span>${r.comprobante}</span>
+        </span>
+        <span class="anexo-actions">
+          <button class="link-btn" type="button">Visualizar</button>
+          <button class="link-btn" type="button">Descargar</button>
+        </span>
+      </li>
+    </ul>
+    <p class="dialog-note">El comprobante de pago quedará validado y la solicitud se cerrará como aprobada. Se notificará al Estudiante.</p>`;
+
+  document.getElementById('aFoot').innerHTML = `
+    <button class="btn btn-ghost" data-close>Cancelar</button>
+    <button class="btn btn-primary" id="aConfirmar">Aprobar comprobante</button>`;
+
+  abrirBackdropAccion();
+}
+
+function abrirRechazarComprobante(rad){
+  const r = DATA.find(x => x.rad === rad);
+  if(!r) return;
+  accionRad = rad; accionModo = 'rechazarComprobante';
+  accionLastFocus = document.activeElement;
+
+  document.getElementById('aTitle').textContent = 'Rechazar comprobante';
+  llenarDatosEstudiante(r);
+
+  document.getElementById('aCentro').innerHTML = `
+    <div class="field-block">
+      <label for="aObsComp">Observaciones <span class="req">*</span></label>
+      <textarea id="aObsComp" rows="4" placeholder="Describe el motivo del rechazo del comprobante..."></textarea>
+      <p class="field-error" id="aObsCompError" hidden>Debes registrar una observación con el motivo del rechazo.</p>
+    </div>
+    <p class="dialog-note">El Estudiante será notificado del rechazo del comprobante y deberá radicar una solicitud completamente nueva si desea reintentar.</p>`;
+
+  document.getElementById('aFoot').innerHTML = `
+    <button class="btn btn-ghost" data-close>Cancelar</button>
+    <button class="btn btn-danger" id="aConfirmar">Rechazar comprobante</button>`;
+
+  abrirBackdropAccion();
+}
+
 let toastTimer = null;
 function mostrarToast(html){
   const toast = document.getElementById('toast');
@@ -1347,6 +1438,37 @@ function confirmarAccion(){
     } else {
       mostrarToast('<b>Respuesta enviada al Estudiante.</b><br>Se notificó el rechazo de la solicitud y el trámite quedó cerrado.');
     }
+    return;
+  }
+
+  if(accionModo === 'aprobarComprobante'){
+    r.decision = 'Aprobada';
+    r.estado = 'Respondida';
+    cerrarAccion();
+    render();
+    renderRespuestas();
+    mostrarToast('<b>Comprobante aprobado.</b><br>La solicitud quedó cerrada como aprobada y se notificó al Estudiante.');
+    return;
+  }
+
+  if(accionModo === 'rechazarComprobante'){
+    const campo = document.getElementById('aObsComp');
+    const obs = campo.value.trim();
+    const err = document.getElementById('aObsCompError');
+    if(!obs){
+      err.hidden = false;
+      campo.classList.add('is-invalid');
+      return;
+    }
+    err.hidden = true;
+    campo.classList.remove('is-invalid');
+    r.decision = 'Rechazada';
+    r.observacion = obs;
+    r.estado = 'Respondida';
+    cerrarAccion();
+    render();
+    renderRespuestas();
+    mostrarToast('<b>Comprobante rechazado.</b><br>Se notificó al Estudiante y el trámite quedó cerrado.');
   }
 }
 
