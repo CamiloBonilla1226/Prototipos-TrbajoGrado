@@ -149,6 +149,7 @@
   }
   .btn-eye:hover{background:#E3EBFA;}
   .btn-eye:focus-visible{outline:2px solid var(--link);outline-offset:1px;}
+  .acciones-multi{display:flex;align-items:center;gap:4px;}
 
   /* ---------- Empty state ---------- */
   .empty{padding:44px 20px;text-align:center;}
@@ -441,10 +442,69 @@
         </div>
       </section>
 
+      <!-- ---------- VISTA: RESPUESTAS ---------- -->
       <section id="view-respuestas" hidden>
-        <div class="placeholder">
-          <h3>Respuestas</h3>
-          <p>Sección por definir. Aquí irá el envío de la respuesta al estudiante, el adjunto del recibo de pago del examen supletorio y la verificación del comprobante.</p>
+        <div class="card">
+          <div class="card-head">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A3A86" stroke-width="1.6" stroke-linejoin="round"><path d="M4 4l16 8-16 8 3-8-3-8z"/></svg>
+            <h2>Historial de respuestas</h2>
+          </div>
+
+          <div class="card-body">
+            <div class="filters">
+              <div class="field">
+                <label for="fRProceso">Tipo de proceso académico</label>
+                <select id="fRProceso">
+                  <option value="">Todos</option>
+                  <option>Cancelación de Matrícula</option>
+                  <option>Cancelación de Asignatura</option>
+                  <option>Examen Supletorio</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="fRDecision">Estado</label>
+                <select id="fRDecision">
+                  <option value="">Todos</option>
+                  <option>Aprobada</option>
+                  <option>Rechazada</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="fRDoc">Número de identificación</label>
+                <div class="search-wrap">
+                  <input id="fRDoc" type="text" inputmode="numeric" placeholder="Ej. 1061789234" autocomplete="off">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2C3038" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                </div>
+              </div>
+              <button class="btn-clear" id="btnClearR">Limpiar filtros</button>
+            </div>
+
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Radicado</th>
+                    <th>Estudiante</th>
+                    <th>Documento</th>
+                    <th>Tipo de proceso</th>
+                    <th class="sortable" data-sort="fecha">Fecha de radicación <span class="sort">⇅</span></th>
+                    <th class="sortable" data-sort="decision">Estado <span class="sort">⇅</span></th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyR"></tbody>
+              </table>
+            </div>
+
+            <div class="empty" id="emptyR" hidden>
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#9AA2B1" stroke-width="1.3"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+              <h3 id="emptyTitleR"></h3>
+              <p id="emptyTextR"></p>
+              <button class="btn-clear" id="emptyClearR" hidden>Limpiar filtros</button>
+            </div>
+          </div>
+
+          <div class="pager" id="pagerR"></div>
         </div>
       </section>
     </div>
@@ -479,6 +539,8 @@
 
       <div class="modal-sub">Anexos adjuntos</div>
       <ul class="anexos" id="mAnexos"></ul>
+
+      <div id="mRespuestaExtra"></div>
 
       <p class="note" id="mNote"></p>
     </div>
@@ -529,14 +591,14 @@ const DATA = [
   {rad:'2026-CA-0145', est:'María José Ordóñez',     doc:'1063998877', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-27T15:05', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Control Digital debido al cruce de horario con la práctica empresarial autorizada por coordinación.', anexos:['Solicitud firmada.pdf','Carta de coordinación.pdf']},
   {rad:'2026-ES-0144', est:'Juan Sebastián Paz',     doc:'1004556612', prog:'Tecnología en Telemática',    proc:PROC.ES, fecha:'2026-07-27T11:22', estado:'En Gestión', esperaDe:'Decano', just:'Solicito examen supletorio de Bases de Datos por calamidad doméstica presentada el día de la evaluación.', anexos:['Solicitud firmada.pdf','Certificado de defunción.pdf']},
   {rad:'2026-CM-0142', est:'Diana Carolina Bolaños', doc:'1061223344', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-26T16:48', estado:'Pendiente de Respuesta', decisionDecano:'Aprobada', resolucion:'Resolución 0142-2026.pdf', just:'Solicito la cancelación de matrícula por traslado laboral fuera de la ciudad de Popayán a partir del mes de agosto.', anexos:['Solicitud firmada.pdf','Carta laboral.pdf','Historia académica.pdf']},
-  {rad:'2026-CA-0139', est:'Kevin Steven Muñoz',     doc:'1007889900', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.CA, fecha:'2026-07-24T10:15', estado:'Respondida', just:'Solicito la cancelación de la asignatura Electrónica Analógica II por bajo rendimiento derivado de una situación familiar.', anexos:['Solicitud firmada.pdf','Historia académica.pdf']},
-  {rad:'2026-ES-0138', est:'Valeria Astudillo',      doc:'1062556677', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-24T09:03', estado:'Respondida', just:'Solicito examen supletorio de Ingeniería de Software por participación en la representación deportiva de la Universidad.', anexos:['Solicitud firmada.pdf','Certificado de Bienestar.pdf']},
-  {rad:'2026-CM-0136', est:'Óscar Iván Chicangana',  doc:'1059334455', prog:'Ingeniería en Automática Industrial', proc:PROC.CM, fecha:'2026-07-23T14:30', estado:'Respondida', just:'Solicito la cancelación de matrícula por razones económicas que me impiden sostener el semestre en curso.', anexos:['Solicitud firmada.pdf','Declaración de renta familiar.pdf']},
+  {rad:'2026-CA-0139', est:'Kevin Steven Muñoz',     doc:'1007889900', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.CA, fecha:'2026-07-24T10:15', estado:'Respondida', decision:'Aprobada', resolucion:'Resolución 0139-2026.pdf', just:'Solicito la cancelación de la asignatura Electrónica Analógica II por bajo rendimiento derivado de una situación familiar.', anexos:['Solicitud firmada.pdf','Historia académica.pdf']},
+  {rad:'2026-ES-0138', est:'Valeria Astudillo',      doc:'1062556677', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-24T09:03', estado:'Respondida', decision:'Aprobada', just:'Solicito examen supletorio de Ingeniería de Software por participación en la representación deportiva de la Universidad.', anexos:['Solicitud firmada.pdf','Certificado de Bienestar.pdf']},
+  {rad:'2026-CM-0136', est:'Óscar Iván Chicangana',  doc:'1059334455', prog:'Ingeniería en Automática Industrial', proc:PROC.CM, fecha:'2026-07-23T14:30', estado:'Respondida', decision:'Rechazada', observacion:'No se anexó soporte suficiente que justifique la cancelación por motivos económicos alegados.', just:'Solicito la cancelación de matrícula por razones económicas que me impiden sostener el semestre en curso.', anexos:['Solicitud firmada.pdf','Declaración de renta familiar.pdf']},
   {rad:'2026-CA-0133', est:'Sara Camila Yandi',      doc:'1064112233', prog:'Tecnología en Telemática',    proc:PROC.CA, fecha:'2026-07-22T08:57', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Redes de Computadores por incompatibilidad con el horario de la asignatura homologada.', anexos:['Solicitud firmada.pdf','Acta de homologación.pdf']},
   {rad:'2026-ES-0131', est:'Nicolás Gómez Trujillo', doc:'1003667788', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.ES, fecha:'2026-07-21T17:11', estado:'Pendiente de Verificación', just:'Solicito examen supletorio de Comunicaciones Digitales por incapacidad médica de tres días.', anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf','Comprobante de pago.pdf']},
-  {rad:'2026-CM-0129', est:'Angie Paola Rengifo',    doc:'1060778899', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-20T13:24', estado:'Respondida', just:'Solicito la cancelación de matrícula por licencia de maternidad durante el periodo académico.', anexos:['Solicitud firmada.pdf','Certificado médico.pdf']},
+  {rad:'2026-CM-0129', est:'Angie Paola Rengifo',    doc:'1060778899', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-20T13:24', estado:'Respondida', decision:'Aprobada', resolucion:'Resolución 0129-2026.pdf', just:'Solicito la cancelación de matrícula por licencia de maternidad durante el periodo académico.', anexos:['Solicitud firmada.pdf','Certificado médico.pdf']},
   {rad:'2026-CA-0127', est:'Daniel Esteban Vidal',   doc:'1058445566', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-19T10:02', estado:'Pendiente de Respuesta', decisionDecano:'Rechazada', just:'Solicito la cancelación de la asignatura Instrumentación Industrial por superposición con el curso de nivelación autorizado.', anexos:['Solicitud firmada.pdf']},
-  {rad:'2026-ES-0124', est:'Laura Sofía Muñoz',      doc:'1061789234', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-18T09:45', estado:'Respondida', just:'Solicito examen supletorio de Estructuras de Datos por incapacidad médica el día de la evaluación.', anexos:['Solicitud firmada.pdf','Incapacidad médica EPS.pdf']},
+  {rad:'2026-ES-0124', est:'Laura Sofía Muñoz',      doc:'1061789234', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-18T09:45', estado:'Respondida', decision:'Rechazada', observacion:'La incapacidad médica presentada no cubre la fecha de la evaluación programada.', just:'Solicito examen supletorio de Estructuras de Datos por incapacidad médica el día de la evaluación.', anexos:['Solicitud firmada.pdf','Incapacidad médica EPS.pdf']},
   {rad:'2026-CM-0121', est:'Camilo Andrés Ledezma',  doc:'1005990011', prog:'Tecnología en Telemática',    proc:PROC.CM, fecha:'2026-07-17T16:20', estado:'En Gestión', esperaDe:'Estudiante', just:'Solicito la cancelación de matrícula por prestación del servicio militar obligatorio.', anexos:['Solicitud firmada.pdf','Orden de presentación.pdf']}
 ];
 
@@ -653,6 +715,137 @@ function renderPager(total){
   pager.innerHTML = `<div class="pager-box">${btns}</div>`;
 }
 
+/* ---------- Vista: Respuestas (historial de solo lectura) ---------- */
+const ORDEN_DECISION = {'Aprobada':0,'Rechazada':1};
+let pageR = 1, sortKeyR = 'fecha', sortDirR = 'desc';
+
+function getFilteredRespuestas(){
+  const p = document.getElementById('fRProceso').value;
+  const dec = document.getElementById('fRDecision').value;
+  const d = document.getElementById('fRDoc').value.trim();
+  let rows = DATA.filter(r =>
+    r.estado === 'Respondida' &&
+    (!p || r.proc === p) && (!dec || r.decision === dec) && (!d || r.doc.includes(d))
+  );
+  rows.sort((a,b)=>{
+    let va, vb;
+    if(sortKeyR === 'decision'){ va = ORDEN_DECISION[a.decision]; vb = ORDEN_DECISION[b.decision]; }
+    else { va = a.fecha; vb = b.fecha; }
+    if(va < vb) return sortDirR === 'asc' ? -1 : 1;
+    if(va > vb) return sortDirR === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return rows;
+}
+function hasFiltersR(){
+  return !!(document.getElementById('fRProceso').value ||
+            document.getElementById('fRDecision').value ||
+            document.getElementById('fRDoc').value.trim());
+}
+
+function renderRespuestas(){
+  const rows = getFilteredRespuestas();
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  if(pageR > totalPages) pageR = totalPages;
+
+  const tbody = document.getElementById('tbodyR');
+  const empty = document.getElementById('emptyR');
+  const table = document.querySelector('#view-respuestas .table-scroll');
+  const pager = document.getElementById('pagerR');
+
+  if(rows.length === 0){
+    table.hidden = true; pager.innerHTML = ''; empty.hidden = false;
+    const filtered = hasFiltersR();
+    document.getElementById('emptyTitleR').textContent =
+      filtered ? 'No se encontraron respuestas' : 'Aún no hay solicitudes respondidas';
+    document.getElementById('emptyTextR').textContent = filtered
+      ? 'Ninguna respuesta coincide con los criterios aplicados. Ajusta los filtros o límpialos para volver al listado completo.'
+      : 'Cuando cierres un trámite de un proceso a tu cargo, quedará registrado aquí como historial de solo lectura.';
+    document.getElementById('emptyClearR').hidden = !filtered;
+    return;
+  }
+
+  table.hidden = false; empty.hidden = true;
+  const slice = rows.slice((pageR-1)*PAGE_SIZE, pageR*PAGE_SIZE);
+  tbody.innerHTML = slice.map(r => {
+    const aprobada = r.decision === 'Aprobada';
+    const puedeDescargar = aprobada && r.resolucion && (r.proc === PROC.CM || r.proc === PROC.CA);
+    return `
+    <tr>
+      <td class="radicado">${r.rad}</td>
+      <td>${r.est}</td>
+      <td class="doc">${r.doc}</td>
+      <td>${r.proc}</td>
+      <td class="fecha">${fmtFecha(r.fecha)}</td>
+      <td><span class="chip-decision ${aprobada ? 'is-aprobada' : 'is-rechazada'}">${r.decision}</span></td>
+      <td>
+        <div class="acciones-multi">
+          <button class="btn-eye" data-rad="${r.rad}" title="Ver detalle" aria-label="Ver detalle de ${r.rad}">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2F6FD0" stroke-width="1.7">
+              <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.7"/>
+            </svg>
+          </button>
+          ${puedeDescargar ? `
+          <button class="btn-eye" data-rad="${r.rad}" data-descargar title="Descargar resolución" aria-label="Descargar resolución de ${r.rad}">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="1.7"><path d="M12 4v11M8 11l4 4 4-4"/><path d="M5 19h14"/></svg>
+          </button>` : ''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  renderPagerR(totalPages);
+}
+
+function renderPagerR(total){
+  const pager = document.getElementById('pagerR');
+  let btns = `<button ${pageR===1?'disabled':''} data-go="${pageR-1}">&lt; Anterior</button>`;
+  const nums = [];
+  for(let i=1;i<=total;i++){
+    if(i===1 || i===total || Math.abs(i-pageR)<=1) nums.push(i);
+    else if(nums[nums.length-1] !== '…') nums.push('…');
+  }
+  nums.forEach(n => {
+    btns += (n === '…')
+      ? `<button class="dots" disabled>…</button>`
+      : `<button class="${n===pageR?'is-current':''}" data-go="${n}">${n}</button>`;
+  });
+  btns += `<button ${pageR===total?'disabled':''} data-go="${pageR+1}">Siguiente &gt;</button>`;
+  pager.innerHTML = `<div class="pager-box">${btns}</div>`;
+}
+
+function limpiarRespuestas(){
+  document.getElementById('fRProceso').value  = '';
+  document.getElementById('fRDecision').value = '';
+  document.getElementById('fRDoc').value      = '';
+  pageR = 1; renderRespuestas();
+}
+
+['fRProceso','fRDecision'].forEach(id => document.getElementById(id).addEventListener('change', () => { pageR=1; renderRespuestas(); }));
+document.getElementById('fRDoc').addEventListener('input', () => { pageR=1; renderRespuestas(); });
+document.getElementById('btnClearR').addEventListener('click', limpiarRespuestas);
+document.getElementById('emptyClearR').addEventListener('click', limpiarRespuestas);
+
+document.querySelectorAll('#view-respuestas th.sortable').forEach(th => th.addEventListener('click', () => {
+  const k = th.dataset.sort;
+  sortDirR = (sortKeyR === k && sortDirR === 'asc') ? 'desc' : (sortKeyR === k ? 'asc' : 'asc');
+  sortKeyR = k; renderRespuestas();
+}));
+
+document.getElementById('tbodyR').addEventListener('click', e => {
+  const bDescargar = e.target.closest('[data-descargar]');
+  if(bDescargar){
+    mostrarToast('<b>Descarga simulada.</b><br>En la versión final, la resolución se descargará desde las carpetas de DARCA y DECANATURA.');
+    return;
+  }
+  const b = e.target.closest('.btn-eye');
+  if(b) abrirDetalleRespuesta(b.dataset.rad);
+});
+document.getElementById('pagerR').addEventListener('click', e => {
+  const b = e.target.closest('button[data-go]');
+  if(b && !b.disabled){ pageR = Number(b.dataset.go); renderRespuestas(); window.scrollTo({top:0,behavior:'smooth'}); }
+});
+
 /* ---------- Modal detalle (HU-02 Funcionario) ---------- */
 const backdrop = document.getElementById('backdrop');
 let lastFocus = null;
@@ -661,6 +854,8 @@ function abrirDetalle(rad){
   const r = DATA.find(x => x.rad === rad);
   if(!r) return;
   lastFocus = document.activeElement;
+  document.getElementById('mTitle').textContent = 'Detalle de la solicitud';
+  document.getElementById('mRespuestaExtra').innerHTML = '';
   document.getElementById('mRad').textContent = r.rad;
   document.getElementById('mProc').textContent = r.proc;
   document.getElementById('mEst').textContent = r.est;
@@ -713,6 +908,69 @@ function cerrarDetalle(){
   backdrop.classList.remove('open');
   document.body.style.overflow = '';
   if(lastFocus) lastFocus.focus();
+}
+
+/* ---------- Detalle de respuesta (HU-07 Funcionario, solo lectura) ---------- */
+function abrirDetalleRespuesta(rad){
+  const r = DATA.find(x => x.rad === rad);
+  if(!r) return;
+  lastFocus = document.activeElement;
+  document.getElementById('mTitle').textContent = 'Detalle de la respuesta';
+  document.getElementById('mRad').textContent = r.rad;
+  document.getElementById('mProc').textContent = r.proc;
+  document.getElementById('mEst').textContent = r.est;
+  document.getElementById('mDoc').textContent = r.doc;
+  document.getElementById('mProg').textContent = r.prog;
+  document.getElementById('mFec').textContent = fmtFecha(r.fecha);
+  document.getElementById('mEstado').innerHTML = `<span class="estado">${iconEstado(r.estado)}${r.estado}</span>`;
+  document.getElementById('mJust').textContent = r.just;
+
+  document.getElementById('mAnexos').innerHTML = r.anexos.map(a => `
+    <li>
+      <span class="anexo-name">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D0463B" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/></svg>
+        <span>${a}</span>
+      </span>
+      <span class="anexo-actions">
+        <button class="link-btn">Visualizar</button>
+        <button class="link-btn">Descargar</button>
+      </span>
+    </li>`).join('');
+
+  const aprobada = r.decision === 'Aprobada';
+  const chip = `<span class="chip-decision ${aprobada ? 'is-aprobada' : 'is-rechazada'}">${r.decision}</span>`;
+  let extra = `<div class="modal-sub">Decisión</div><div class="field-block">${chip}</div>`;
+
+  if(aprobada && r.resolucion){
+    extra += `
+      <div class="modal-sub">Resolución</div>
+      <ul class="anexos">
+        <li>
+          <span class="anexo-name">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D0463B" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/></svg>
+            <span>${r.resolucion}</span>
+          </span>
+          <span class="anexo-actions">
+            <button class="link-btn">Visualizar</button>
+            <button class="link-btn">Descargar</button>
+          </span>
+        </li>
+      </ul>`;
+  } else if(aprobada){
+    extra += `<p class="dialog-note">Este proceso no genera un documento de resolución descargable.</p>`;
+  } else {
+    extra += `
+      <div class="modal-sub">Motivo del rechazo</div>
+      <div class="just">${r.observacion || 'No se registró una observación.'}</div>`;
+  }
+
+  document.getElementById('mRespuestaExtra').innerHTML = extra;
+  document.getElementById('mNote').textContent = 'El trámite ya fue cerrado. El detalle es de solo lectura.';
+  document.getElementById('mFoot').innerHTML = `<button class="btn btn-ghost" data-close>Cerrar</button>`;
+
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('mClose').focus();
 }
 
 /* ---------- Navegación entre secciones ---------- */
@@ -972,6 +1230,7 @@ function confirmarAccion(){
     r.estado = 'Respondida';
     cerrarAccion();
     render();
+    renderRespuestas();
     return;
   }
 
@@ -1016,6 +1275,7 @@ function confirmarAccion(){
     r.estado = 'Respondida';
     cerrarAccion();
     render();
+    renderRespuestas();
     if(aprobada){
       mostrarToast(`<b>Respuesta enviada al Estudiante.</b><br>Copia de la resolución guardada en las carpetas <b>DARCA</b> y <b>DECANATURA</b>.`);
     }
@@ -1035,6 +1295,7 @@ document.addEventListener('keydown', e => {
 });
 
 render();
+renderRespuestas();
 </script>
 </body>
 </html>
