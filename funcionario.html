@@ -176,6 +176,37 @@
     font-size:11.5px;color:var(--muted);line-height:1.9;background:#fff;
   }
 
+  /* ---------- Mi usuario ---------- */
+  .user-card{max-width:680px;}
+  .user-card-body{padding:32px 36px 34px;}
+  .user-welcome{
+    text-align:center;color:var(--navy-ink);font-size:19px;font-weight:700;
+    margin:0 0 28px;
+  }
+  .user-grid{display:flex;gap:36px;align-items:flex-start;}
+  .user-side{
+    flex:0 0 108px;display:flex;flex-direction:column;
+    align-items:center;gap:12px;
+  }
+  .user-avatar-big{
+    width:88px;height:88px;border-radius:50%;border:1.5px solid var(--navy-ink);
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;font-weight:700;color:var(--navy-ink);
+  }
+  .user-joined{text-align:center;font-size:12.5px;line-height:1.5;color:var(--text);font-weight:600;}
+  .user-joined span{display:block;}
+  .user-joined b{font-weight:700;}
+  .user-fields{
+    flex:1;display:grid;grid-template-columns:auto 1fr;
+    gap:9px 10px;margin:4px 0 0;font-size:13.5px;
+  }
+  .user-fields dt{font-weight:700;color:var(--navy-ink);white-space:nowrap;}
+  .user-fields dd{margin:0;color:var(--text);}
+  .user-sep{border:0;border-top:1px solid var(--line);margin:26px 0 18px;}
+  .user-roles{margin-bottom:14px;font-size:13.5px;color:var(--text);}
+  .user-roles:last-child{margin-bottom:0;}
+  .user-roles-title{font-weight:700;color:var(--navy-ink);margin-bottom:5px;}
+
   /* ---------- Placeholder sections ---------- */
   .placeholder{
     max-width:1020px;margin:0 auto;border:1px dashed #C3CAD9;border-radius:3px;
@@ -325,6 +356,8 @@
     .dl{grid-template-columns:1fr;gap:3px 0;}
     .dl dd{margin-bottom:8px;}
     .gen-form{grid-template-columns:1fr;}
+    .user-grid{flex-direction:column;align-items:center;text-align:center;}
+    .user-fields{grid-template-columns:1fr;text-align:center;}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 </style>
@@ -440,11 +473,42 @@
         </div>
       </section>
 
-      <!-- ---------- VISTAS PENDIENTES ---------- -->
+      <!-- ---------- VISTA: MI USUARIO ---------- -->
       <section id="view-usuario" hidden>
-        <div class="placeholder">
-          <h3>Mi usuario</h3>
-          <p>Sección por definir. Aquí irán los datos del funcionario, los procesos académicos que tiene asignados y el cambio de contraseña.</p>
+        <div class="card user-card">
+          <div class="card-body user-card-body">
+            <h2 class="user-welcome">Bienvenid@, Camila!</h2>
+            <div class="user-grid">
+              <div class="user-side">
+                <div class="user-avatar-big">CR</div>
+                <div class="user-joined">
+                  <span>Te uniste el:</span>
+                  <b>15/02/2023</b>
+                </div>
+              </div>
+              <dl class="user-fields">
+                <dt>Código:</dt><dd>104619021506</dd>
+                <dt>N° identificación:</dt><dd>1061789234</dd>
+                <dt>Tipo de documento:</dt><dd>Cédula de Ciudadanía</dd>
+                <dt>Nombres:</dt><dd>Camila</dd>
+                <dt>Apellidos:</dt><dd>Ríos</dd>
+                <dt>Teléfono:</dt><dd>3117789234</dd>
+                <dt>Usuario:</dt><dd>crios</dd>
+                <dt>Correo:</dt><dd>crios@unicauca.edu.co</dd>
+              </dl>
+            </div>
+
+            <hr class="user-sep">
+
+            <div class="user-roles">
+              <div class="user-roles-title">Roles:</div>
+              <div>Funcionario Académico</div>
+            </div>
+            <div class="user-roles">
+              <div class="user-roles-title">Procesos académicos asignados:</div>
+              <div>Cancelación de Matrícula, Cancelación de Asignatura, Examen Supletorio</div>
+            </div>
+          </div>
         </div>
       </section>
 
