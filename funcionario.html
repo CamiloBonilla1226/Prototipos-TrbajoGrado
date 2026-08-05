@@ -242,6 +242,72 @@
     border:1px solid #F0DEB4;border-radius:3px;padding:9px 11px;line-height:1.55;
   }
 
+  /* ---------- Diálogo de acción (Rechazar / Remitir al Decano) ---------- */
+  .modal-accion .modal-head{background:#1B2660;}
+  .modal-accion .btn-primary{background:#1B2660;}
+  .modal-accion .btn-primary:hover{background:#131C49;}
+  .modal-accion .btn-ghost{background:transparent;border:1px solid #1B2660;color:#1B2660;}
+  .modal-accion .btn-ghost:hover{background:rgba(27,38,96,.07);}
+  .dl-compact{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--line-soft);}
+  .field-block{margin-bottom:14px;}
+  .field-block > label{display:block;font-size:12.5px;font-weight:600;color:var(--navy-ink);margin-bottom:7px;}
+  .req{color:var(--accent);}
+  .field-block textarea,.gen-form input,.gen-form textarea{
+    width:100%;border:1px solid var(--line);border-radius:3px;padding:9px 11px;
+    font-size:13px;font-family:inherit;color:var(--text);resize:vertical;
+  }
+  .field-block textarea:focus,.gen-form input:focus,.gen-form textarea:focus{
+    outline:2px solid #B9C7EE;outline-offset:0;border-color:var(--navy-700);
+  }
+  .field-block textarea.is-invalid{border-color:var(--accent);}
+  .field-error{margin:7px 0 0;font-size:12px;color:var(--accent);font-weight:600;}
+  .dialog-note{
+    margin:14px 0 0;font-size:12.5px;color:var(--muted);background:var(--panel);
+    border-radius:3px;padding:10px 12px;line-height:1.55;
+  }
+  .segmented{display:flex;border:1px solid var(--navy-700);border-radius:3px;overflow:hidden;margin-bottom:14px;}
+  .seg-btn{
+    flex:1;height:36px;border:0;background:#fff;color:var(--navy-700);
+    font-size:12.8px;font-weight:600;cursor:pointer;
+  }
+  .seg-btn + .seg-btn{border-left:1px solid var(--navy-700);}
+  .seg-btn.is-active{background:var(--navy-700);color:#fff;}
+  .upload-zone{
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    border:1.5px dashed #C3CAD9;border-radius:3px;padding:26px 16px;
+    cursor:pointer;text-align:center;background:#FBFCFE;
+  }
+  .upload-zone:hover{border-color:var(--navy-700);background:#F4F6FB;}
+  .upload-zone span{font-size:12.5px;color:var(--muted);}
+  .upload-zone b{color:var(--navy-ink);}
+  .upload-filename{margin:9px 0 0;font-size:12.5px;color:var(--navy-ink);font-weight:600;}
+  .gen-form{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
+  .gen-form .field-full{grid-column:1/-1;}
+  .gen-form .field label{
+    display:block;font-size:11.5px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;
+  }
+  .chip-decision{
+    display:inline-block;padding:4px 11px;border-radius:20px;
+    font-size:12px;font-weight:700;letter-spacing:.2px;
+  }
+  .chip-decision.is-aprobada{background:#E4F5EC;color:var(--green);}
+  .chip-decision.is-rechazada{background:#FBE9E7;color:var(--red);}
+
+  /* ---------- Toast de confirmación ---------- */
+  .toast{
+    position:fixed;right:22px;bottom:22px;max-width:340px;z-index:100;
+    background:#1B2660;color:#fff;border-radius:5px;
+    box-shadow:0 12px 30px rgba(20,26,56,.35);
+    padding:14px 16px;display:flex;gap:11px;align-items:flex-start;
+    opacity:0;transform:translateY(10px);pointer-events:none;
+    transition:opacity .22s ease, transform .22s ease;
+  }
+  .toast.show{opacity:1;transform:translateY(0);}
+  .toast svg{flex:0 0 auto;margin-top:1px;}
+  .toast-text{font-size:12.8px;line-height:1.55;}
+  .toast-text b{font-weight:700;}
+
   @media (max-width:860px){
     :root{--sidebar-w:64px;}
     .nav-item span.label{display:none;}
@@ -251,6 +317,7 @@
     .crumbs{margin-bottom:16px;}
     .dl{grid-template-columns:1fr;gap:3px 0;}
     .dl dd{margin-bottom:8px;}
+    .gen-form{grid-template-columns:1fr;}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 </style>
@@ -419,6 +486,32 @@
   </div>
 </div>
 
+<!-- ===================== MODAL RECHAZAR / REMITIR AL DECANO ===================== -->
+<div class="backdrop" id="backdropAccion" role="dialog" aria-modal="true" aria-labelledby="aTitle">
+  <div class="modal modal-accion">
+    <div class="modal-head">
+      <h3 id="aTitle">Rechazar solicitud</h3>
+      <button class="modal-close" id="aClose" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="modal-body">
+      <dl class="dl dl-compact">
+        <dt>Estudiante</dt><dd id="aEst"></dd>
+        <dt>Documento</dt><dd id="aDoc"></dd>
+        <dt>Tipo de proceso</dt><dd id="aProc"></dd>
+        <dt>Número de radicado</dt><dd id="aRad"></dd>
+      </dl>
+      <div id="aCentro"></div>
+    </div>
+    <div class="modal-foot" id="aFoot"></div>
+  </div>
+</div>
+
+<!-- ===================== TOAST DE CONFIRMACIÓN ===================== -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" fill="#fff"/><path d="M8 12.5l2.6 2.5L16 9.5"/></svg>
+  <div class="toast-text" id="toastText"></div>
+</div>
+
 <script>
 /* =========================================================
    Datos simulados — reflejan el modelo de estados de HU-V2
@@ -435,14 +528,14 @@ const DATA = [
   {rad:'2026-ES-0147', est:'Andrés Felipe Chantre',  doc:'1002345671', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.ES, fecha:'2026-07-28T08:40', estado:'Pendiente',  just:'Solicito examen supletorio de Señales y Sistemas, presentado el 12 de julio, por incapacidad médica el día de la evaluación.', anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf','Visto bueno del docente.pdf']},
   {rad:'2026-CA-0145', est:'María José Ordóñez',     doc:'1063998877', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-27T15:05', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Control Digital debido al cruce de horario con la práctica empresarial autorizada por coordinación.', anexos:['Solicitud firmada.pdf','Carta de coordinación.pdf']},
   {rad:'2026-ES-0144', est:'Juan Sebastián Paz',     doc:'1004556612', prog:'Tecnología en Telemática',    proc:PROC.ES, fecha:'2026-07-27T11:22', estado:'En Gestión', esperaDe:'Decano', just:'Solicito examen supletorio de Bases de Datos por calamidad doméstica presentada el día de la evaluación.', anexos:['Solicitud firmada.pdf','Certificado de defunción.pdf']},
-  {rad:'2026-CM-0142', est:'Diana Carolina Bolaños', doc:'1061223344', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-26T16:48', estado:'Pendiente de Respuesta', just:'Solicito la cancelación de matrícula por traslado laboral fuera de la ciudad de Popayán a partir del mes de agosto.', anexos:['Solicitud firmada.pdf','Carta laboral.pdf','Historia académica.pdf']},
+  {rad:'2026-CM-0142', est:'Diana Carolina Bolaños', doc:'1061223344', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-26T16:48', estado:'Pendiente de Respuesta', decisionDecano:'Aprobada', resolucion:'Resolución 0142-2026.pdf', just:'Solicito la cancelación de matrícula por traslado laboral fuera de la ciudad de Popayán a partir del mes de agosto.', anexos:['Solicitud firmada.pdf','Carta laboral.pdf','Historia académica.pdf']},
   {rad:'2026-CA-0139', est:'Kevin Steven Muñoz',     doc:'1007889900', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.CA, fecha:'2026-07-24T10:15', estado:'Respondida', just:'Solicito la cancelación de la asignatura Electrónica Analógica II por bajo rendimiento derivado de una situación familiar.', anexos:['Solicitud firmada.pdf','Historia académica.pdf']},
   {rad:'2026-ES-0138', est:'Valeria Astudillo',      doc:'1062556677', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-24T09:03', estado:'Respondida', just:'Solicito examen supletorio de Ingeniería de Software por participación en la representación deportiva de la Universidad.', anexos:['Solicitud firmada.pdf','Certificado de Bienestar.pdf']},
   {rad:'2026-CM-0136', est:'Óscar Iván Chicangana',  doc:'1059334455', prog:'Ingeniería en Automática Industrial', proc:PROC.CM, fecha:'2026-07-23T14:30', estado:'Respondida', just:'Solicito la cancelación de matrícula por razones económicas que me impiden sostener el semestre en curso.', anexos:['Solicitud firmada.pdf','Declaración de renta familiar.pdf']},
   {rad:'2026-CA-0133', est:'Sara Camila Yandi',      doc:'1064112233', prog:'Tecnología en Telemática',    proc:PROC.CA, fecha:'2026-07-22T08:57', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Redes de Computadores por incompatibilidad con el horario de la asignatura homologada.', anexos:['Solicitud firmada.pdf','Acta de homologación.pdf']},
   {rad:'2026-ES-0131', est:'Nicolás Gómez Trujillo', doc:'1003667788', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.ES, fecha:'2026-07-21T17:11', estado:'Pendiente de Verificación', just:'Solicito examen supletorio de Comunicaciones Digitales por incapacidad médica de tres días.', anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf','Comprobante de pago.pdf']},
   {rad:'2026-CM-0129', est:'Angie Paola Rengifo',    doc:'1060778899', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-20T13:24', estado:'Respondida', just:'Solicito la cancelación de matrícula por licencia de maternidad durante el periodo académico.', anexos:['Solicitud firmada.pdf','Certificado médico.pdf']},
-  {rad:'2026-CA-0127', est:'Daniel Esteban Vidal',   doc:'1058445566', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-19T10:02', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Instrumentación Industrial por superposición con el curso de nivelación autorizado.', anexos:['Solicitud firmada.pdf']},
+  {rad:'2026-CA-0127', est:'Daniel Esteban Vidal',   doc:'1058445566', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-19T10:02', estado:'Pendiente de Respuesta', decisionDecano:'Rechazada', just:'Solicito la cancelación de la asignatura Instrumentación Industrial por superposición con el curso de nivelación autorizado.', anexos:['Solicitud firmada.pdf']},
   {rad:'2026-ES-0124', est:'Laura Sofía Muñoz',      doc:'1061789234', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-18T09:45', estado:'Respondida', just:'Solicito examen supletorio de Estructuras de Datos por incapacidad médica el día de la evaluación.', anexos:['Solicitud firmada.pdf','Incapacidad médica EPS.pdf']},
   {rad:'2026-CM-0121', est:'Camilo Andrés Ledezma',  doc:'1005990011', prog:'Tecnología en Telemática',    proc:PROC.CM, fecha:'2026-07-17T16:20', estado:'En Gestión', esperaDe:'Estudiante', just:'Solicito la cancelación de matrícula por prestación del servicio militar obligatorio.', anexos:['Solicitud firmada.pdf','Orden de presentación.pdf']}
 ];
@@ -603,10 +696,10 @@ function abrirDetalle(rad){
 
   const pies = {
     'Pendiente': `<button class="btn btn-ghost" data-close>Cerrar</button>
-       <button class="btn btn-danger">Rechazar solicitud</button>
-       <button class="btn btn-primary">Remitir al Decano</button>`,
+       <button class="btn btn-danger" data-accion="rechazar" data-rad="${r.rad}">Rechazar solicitud</button>
+       <button class="btn btn-primary" data-accion="remitir" data-rad="${r.rad}">Remitir al Decano</button>`,
     'Pendiente de Respuesta': `<button class="btn btn-ghost" data-close>Cerrar</button>
-       <button class="btn btn-primary">Enviar respuesta al Estudiante</button>`,
+       <button class="btn btn-primary" data-accion="responder" data-rad="${r.rad}">Enviar respuesta al Estudiante</button>`,
     'Pendiente de Verificación': `<button class="btn btn-ghost" data-close>Cerrar</button>
        <button class="btn btn-primary">Verificar comprobante</button>`
   };
@@ -666,6 +759,279 @@ backdrop.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape' && backdrop.classList.contains('open')) cerrarDetalle();
+});
+
+document.getElementById('mFoot').addEventListener('click', e => {
+  const bRechazar = e.target.closest('[data-accion="rechazar"]');
+  const bRemitir  = e.target.closest('[data-accion="remitir"]');
+  const bResponder = e.target.closest('[data-accion="responder"]');
+  if(bRechazar){ cerrarDetalle(); abrirRechazo(bRechazar.dataset.rad); }
+  if(bRemitir){ cerrarDetalle(); abrirRemision(bRemitir.dataset.rad); }
+  if(bResponder){ cerrarDetalle(); abrirRespuesta(bResponder.dataset.rad); }
+});
+
+/* ---------- Diálogos de acción: Rechazar solicitud / Remitir al Decano ---------- */
+const backdropAccion = document.getElementById('backdropAccion');
+let accionRad = null, accionModo = null, resModo = 'adjuntar', resArchivo = null, accionLastFocus = null;
+
+function llenarDatosEstudiante(r){
+  document.getElementById('aEst').textContent  = r.est;
+  document.getElementById('aDoc').textContent  = r.doc;
+  document.getElementById('aProc').textContent = r.proc;
+  document.getElementById('aRad').textContent  = r.rad;
+}
+
+function abrirBackdropAccion(){
+  backdropAccion.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('aClose').focus();
+}
+function cerrarAccion(){
+  backdropAccion.classList.remove('open');
+  document.body.style.overflow = '';
+  if(accionLastFocus) accionLastFocus.focus();
+}
+
+function abrirRechazo(rad){
+  const r = DATA.find(x => x.rad === rad);
+  if(!r) return;
+  accionRad = rad; accionModo = 'rechazar';
+  accionLastFocus = document.activeElement;
+
+  document.getElementById('aTitle').textContent = 'Rechazar solicitud';
+  llenarDatosEstudiante(r);
+
+  document.getElementById('aCentro').innerHTML = `
+    <div class="field-block">
+      <label for="aObs">Observaciones <span class="req">*</span></label>
+      <textarea id="aObs" rows="4" placeholder="Describe el motivo del rechazo de la solicitud..."></textarea>
+      <p class="field-error" id="aObsError" hidden>Debes registrar una observación con el motivo del rechazo.</p>
+    </div>
+    <p class="dialog-note">Si el Estudiante desea volver a solicitar este trámite, deberá radicar una solicitud completamente nueva.</p>`;
+
+  document.getElementById('aFoot').innerHTML = `
+    <button class="btn btn-ghost" data-close>Cancelar</button>
+    <button class="btn btn-danger" id="aConfirmar">Rechazar solicitud</button>`;
+
+  abrirBackdropAccion();
+}
+
+function abrirRemision(rad){
+  const r = DATA.find(x => x.rad === rad);
+  if(!r) return;
+  accionRad = rad; accionModo = 'remitir';
+  resModo = 'adjuntar'; resArchivo = null;
+  accionLastFocus = document.activeElement;
+
+  document.getElementById('aTitle').textContent = 'Remitir al Decano';
+  llenarDatosEstudiante(r);
+
+  const esSupletorio = r.proc === PROC.ES;
+  if(esSupletorio){
+    document.getElementById('aCentro').innerHTML = `
+      <p class="dialog-note">Esta solicitud será remitida al Decano para su decisión.</p>`;
+  } else {
+    document.getElementById('aCentro').innerHTML = `
+      <div class="field-block">
+        <label>Resolución <span class="req">*</span></label>
+        <div class="segmented" id="aSeg">
+          <button type="button" class="seg-btn is-active" data-modo="adjuntar">Adjuntar documento</button>
+          <button type="button" class="seg-btn" data-modo="generar">Generar resolución</button>
+        </div>
+        <div id="aResContenido"></div>
+        <p class="field-error" id="aResError" hidden>Debes adjuntar el documento de resolución o generarla antes de continuar.</p>
+      </div>`;
+    renderResContenido();
+    document.getElementById('aSeg').addEventListener('click', e => {
+      const b = e.target.closest('.seg-btn');
+      if(!b) return;
+      resModo = b.dataset.modo;
+      document.querySelectorAll('#aSeg .seg-btn').forEach(x => x.classList.toggle('is-active', x === b));
+      renderResContenido();
+    });
+  }
+
+  document.getElementById('aFoot').innerHTML = `
+    <button class="btn btn-ghost" data-close>Cancelar</button>
+    <button class="btn btn-primary" id="aConfirmar">Remitir al Decano</button>`;
+
+  abrirBackdropAccion();
+}
+
+function renderResContenido(){
+  const cont = document.getElementById('aResContenido');
+  if(!cont) return;
+  if(resModo === 'adjuntar'){
+    cont.innerHTML = `
+      <label class="upload-zone" for="aFile">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6E7480" stroke-width="1.5"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+        <span>Arrastra el archivo aquí o <b>selecciona un PDF</b></span>
+        <input type="file" id="aFile" accept="application/pdf" hidden>
+      </label>
+      <p class="upload-filename" id="aFileName" ${resArchivo ? '' : 'hidden'}>${resArchivo || ''}</p>`;
+    document.getElementById('aFile').addEventListener('change', e => {
+      const f = e.target.files[0];
+      resArchivo = f ? f.name : null;
+      const fn = document.getElementById('aFileName');
+      fn.textContent = resArchivo || '';
+      fn.hidden = !resArchivo;
+    });
+  } else {
+    cont.innerHTML = `
+      <div class="gen-form">
+        <div class="field"><label for="gNum">Número de resolución</label><input id="gNum" type="text" placeholder="Ej. 0148-2026"></div>
+        <div class="field"><label for="gFecha">Fecha de expedición</label><input id="gFecha" type="date"></div>
+        <div class="field field-full"><label for="gTexto">Contenido de la resolución</label><textarea id="gTexto" rows="4" placeholder="Redacta el contenido de la resolución..."></textarea></div>
+      </div>`;
+  }
+}
+
+function abrirRespuesta(rad){
+  const r = DATA.find(x => x.rad === rad);
+  if(!r) return;
+  accionRad = rad; accionModo = 'responder';
+  accionLastFocus = document.activeElement;
+
+  document.getElementById('aTitle').textContent = 'Enviar respuesta al Estudiante';
+  llenarDatosEstudiante(r);
+
+  const aprobada = r.decisionDecano === 'Aprobada';
+  const chip = `<span class="chip-decision ${aprobada ? 'is-aprobada' : 'is-rechazada'}">${r.decisionDecano}</span>`;
+
+  let centro = `
+    <div class="field-block">
+      <label>Decisión del Decano</label>
+      ${chip}
+    </div>`;
+
+  if(aprobada){
+    const mensaje = `Su solicitud de ${r.proc} ha sido aprobada, se adjunta copia de la resolución.`;
+    centro += `
+      <div class="field-block">
+        <label for="aMensaje">Mensaje para el Estudiante</label>
+        <textarea id="aMensaje" rows="3">${mensaje}</textarea>
+      </div>
+      <div class="modal-sub">Resolución firmada por el Decano</div>
+      <ul class="anexos">
+        <li>
+          <span class="anexo-name">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D0463B" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/></svg>
+            <span>${r.resolucion}</span>
+          </span>
+          <span class="anexo-actions">
+            <button class="link-btn" type="button">Visualizar</button>
+            <button class="link-btn" type="button">Descargar</button>
+          </span>
+        </li>
+      </ul>
+      <p class="dialog-note">Esta resolución quedará adjunta automáticamente a la respuesta que se enviará al Estudiante. Al confirmar, se guardará también una copia en las carpetas de DARCA y DECANATURA.</p>`;
+  } else {
+    centro += `
+      <div class="field-block">
+        <label for="aObsResp">Observación del rechazo <span class="req">*</span></label>
+        <textarea id="aObsResp" rows="4" placeholder="Registra el motivo del rechazo que se comunicará al Estudiante..."></textarea>
+        <p class="field-error" id="aObsRespError" hidden>Debes registrar la observación con el motivo del rechazo antes de enviar la respuesta.</p>
+      </div>`;
+  }
+
+  document.getElementById('aCentro').innerHTML = centro;
+
+  document.getElementById('aFoot').innerHTML = `
+    <button class="btn btn-ghost" data-close>Cancelar</button>
+    <button class="btn btn-primary" id="aConfirmar">Enviar respuesta al Estudiante</button>`;
+
+  abrirBackdropAccion();
+}
+
+let toastTimer = null;
+function mostrarToast(html){
+  const toast = document.getElementById('toast');
+  document.getElementById('toastText').innerHTML = html;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 5000);
+}
+
+function confirmarAccion(){
+  const r = DATA.find(x => x.rad === accionRad);
+  if(!r) return;
+
+  if(accionModo === 'rechazar'){
+    const campo = document.getElementById('aObs');
+    const obs = campo.value.trim();
+    const err = document.getElementById('aObsError');
+    if(!obs){
+      err.hidden = false;
+      campo.classList.add('is-invalid');
+      return;
+    }
+    err.hidden = true;
+    campo.classList.remove('is-invalid');
+    r.decision = 'Rechazada';
+    r.observacion = obs;
+    r.estado = 'Respondida';
+    cerrarAccion();
+    render();
+    return;
+  }
+
+  if(accionModo === 'remitir'){
+    if(r.proc !== PROC.ES){
+      const err = document.getElementById('aResError');
+      const generoOk = resModo === 'generar' &&
+        document.getElementById('gNum').value.trim() &&
+        document.getElementById('gTexto').value.trim();
+      const adjuntoOk = resModo === 'adjuntar' && !!resArchivo;
+      if(!adjuntoOk && !generoOk){
+        err.hidden = false;
+        return;
+      }
+      err.hidden = true;
+    }
+    r.estado = 'En Gestión';
+    r.esperaDe = 'Decano';
+    cerrarAccion();
+    render();
+    return;
+  }
+
+  if(accionModo === 'responder'){
+    const aprobada = r.decisionDecano === 'Aprobada';
+    if(!aprobada){
+      const campo = document.getElementById('aObsResp');
+      const obs = campo.value.trim();
+      const err = document.getElementById('aObsRespError');
+      if(!obs){
+        err.hidden = false;
+        campo.classList.add('is-invalid');
+        return;
+      }
+      err.hidden = true;
+      campo.classList.remove('is-invalid');
+      r.observacion = obs;
+    } else {
+      r.mensajeRespuesta = document.getElementById('aMensaje').value.trim();
+    }
+    r.decision = r.decisionDecano;
+    r.estado = 'Respondida';
+    cerrarAccion();
+    render();
+    if(aprobada){
+      mostrarToast(`<b>Respuesta enviada al Estudiante.</b><br>Copia de la resolución guardada en las carpetas <b>DARCA</b> y <b>DECANATURA</b>.`);
+    }
+  }
+}
+
+document.getElementById('aFoot').addEventListener('click', e => {
+  if(e.target.hasAttribute('data-close')){ cerrarAccion(); return; }
+  if(e.target.id === 'aConfirmar') confirmarAccion();
+});
+document.getElementById('aClose').addEventListener('click', cerrarAccion);
+backdropAccion.addEventListener('click', e => {
+  if(e.target === backdropAccion) cerrarAccion();
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && backdropAccion.classList.contains('open')) cerrarAccion();
 });
 
 render();
