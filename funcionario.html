@@ -297,16 +297,22 @@
 
   /* ---------- Toast de confirmación ---------- */
   .toast{
-    position:fixed;right:22px;bottom:22px;max-width:340px;z-index:100;
-    background:#1B2660;color:#fff;border-radius:5px;
-    box-shadow:0 12px 30px rgba(20,26,56,.35);
-    padding:14px 16px;display:flex;gap:11px;align-items:flex-start;
-    opacity:0;transform:translateY(10px);pointer-events:none;
+    position:fixed;right:22px;bottom:22px;max-width:380px;z-index:100;
+    background:#1B2660;color:#fff;border-radius:6px;
+    border-left:5px solid var(--green);
+    box-shadow:0 14px 34px rgba(20,26,56,.4);
+    padding:15px 18px;display:flex;gap:12px;align-items:flex-start;
+    opacity:0;transform:translateY(10px) scale(.98);pointer-events:none;
     transition:opacity .22s ease, transform .22s ease;
   }
-  .toast.show{opacity:1;transform:translateY(0);}
-  .toast svg{flex:0 0 auto;margin-top:1px;}
-  .toast-text{font-size:12.8px;line-height:1.55;}
+  .toast.show{opacity:1;transform:translateY(0) scale(1);}
+  .toast-icon{
+    flex:0 0 auto;width:24px;height:24px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;margin-top:1px;
+    background:var(--green);
+  }
+  .toast-icon svg{display:block;}
+  .toast-text{font-size:13.2px;line-height:1.6;}
   .toast-text b{font-weight:700;}
 
   @media (max-width:860px){
@@ -570,7 +576,7 @@
 
 <!-- ===================== TOAST DE CONFIRMACIÓN ===================== -->
 <div class="toast" id="toast" role="status" aria-live="polite">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" fill="#fff"/><path d="M8 12.5l2.6 2.5L16 9.5"/></svg>
+  <span class="toast-icon" id="toastIcon"></span>
   <div class="toast-text" id="toastText"></div>
 </div>
 
@@ -1197,10 +1203,12 @@ function abrirRespuesta(rad){
 let toastTimer = null;
 function mostrarToast(html){
   const toast = document.getElementById('toast');
+  document.getElementById('toastIcon').innerHTML =
+    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M4 12.5l4.5 4.5L20 6"/></svg>';
   document.getElementById('toastText').innerHTML = html;
   toast.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 5000);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 5500);
 }
 
 function confirmarAccion(){
@@ -1224,6 +1232,7 @@ function confirmarAccion(){
     cerrarAccion();
     render();
     renderRespuestas();
+    mostrarToast('<b>Solicitud rechazada.</b><br>Se notificó al Estudiante y el trámite quedó cerrado.');
     return;
   }
 
@@ -1270,7 +1279,9 @@ function confirmarAccion(){
     render();
     renderRespuestas();
     if(aprobada){
-      mostrarToast(`<b>Respuesta enviada al Estudiante.</b><br>Copia de la resolución guardada en las carpetas <b>DARCA</b> y <b>DECANATURA</b>.`);
+      mostrarToast('<b>Respuesta enviada al Estudiante.</b><br>Copia de la resolución guardada en las carpetas <b>DARCA</b> y <b>DECANATURA</b>.');
+    } else {
+      mostrarToast('<b>Respuesta enviada al Estudiante.</b><br>Se notificó el rechazo de la solicitud y el trámite quedó cerrado.');
     }
   }
 }
