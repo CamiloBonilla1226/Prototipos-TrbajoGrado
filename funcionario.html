@@ -145,6 +145,17 @@
   }
   .btn-eye:hover{background:#E3EBFA;}
   .btn-eye:focus-visible{outline:2px solid var(--link);outline-offset:1px;}
+  .row-actions{display:flex;align-items:center;gap:10px;}
+  .btn-row{
+    background:none;border:0;cursor:pointer;padding:0;
+    font-size:12.3px;font-weight:600;white-space:nowrap;
+  }
+  .btn-row:hover{text-decoration:underline;}
+  .btn-row:focus-visible{outline:2px solid var(--link);outline-offset:2px;}
+  .btn-row.remitir{color:var(--navy-700);}
+  .btn-row.rechazar{color:var(--red);}
+  .btn-row.responder{color:#8A4FC2;}
+  .btn-row.verificar{color:#C77D14;}
 
   /* ---------- Empty state ---------- */
   .empty{padding:44px 20px;text-align:center;}
@@ -319,7 +330,8 @@
                   <option value="">Todos</option>
                   <option>Pendiente</option>
                   <option>En Gestión</option>
-                  <option>Respondida</option>
+                  <option>Pendiente de Respuesta</option>
+                  <option>Pendiente de Verificación</option>
                 </select>
               </div>
               <div class="field">
@@ -430,19 +442,19 @@ const DATA = [
   {rad:'2026-ES-0147', est:'Andrés Felipe Chantre',  doc:'1002345671', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.ES, fecha:'2026-07-28T08:40', estado:'Pendiente',  just:'Solicito examen supletorio de Señales y Sistemas, presentado el 12 de julio, por incapacidad médica el día de la evaluación.', anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf','Visto bueno del docente.pdf']},
   {rad:'2026-CA-0145', est:'María José Ordóñez',     doc:'1063998877', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-27T15:05', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Control Digital debido al cruce de horario con la práctica empresarial autorizada por coordinación.', anexos:['Solicitud firmada.pdf','Carta de coordinación.pdf']},
   {rad:'2026-ES-0144', est:'Juan Sebastián Paz',     doc:'1004556612', prog:'Tecnología en Telemática',    proc:PROC.ES, fecha:'2026-07-27T11:22', estado:'En Gestión', just:'Solicito examen supletorio de Bases de Datos por calamidad doméstica presentada el día de la evaluación.', anexos:['Solicitud firmada.pdf','Certificado de defunción.pdf']},
-  {rad:'2026-CM-0142', est:'Diana Carolina Bolaños', doc:'1061223344', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-26T16:48', estado:'En Gestión', just:'Solicito la cancelación de matrícula por traslado laboral fuera de la ciudad de Popayán a partir del mes de agosto.', anexos:['Solicitud firmada.pdf','Carta laboral.pdf','Historia académica.pdf']},
+  {rad:'2026-CM-0142', est:'Diana Carolina Bolaños', doc:'1061223344', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-26T16:48', estado:'Pendiente de Respuesta', just:'Solicito la cancelación de matrícula por traslado laboral fuera de la ciudad de Popayán a partir del mes de agosto.', anexos:['Solicitud firmada.pdf','Carta laboral.pdf','Historia académica.pdf']},
   {rad:'2026-CA-0139', est:'Kevin Steven Muñoz',     doc:'1007889900', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.CA, fecha:'2026-07-24T10:15', estado:'Respondida', just:'Solicito la cancelación de la asignatura Electrónica Analógica II por bajo rendimiento derivado de una situación familiar.', anexos:['Solicitud firmada.pdf','Historia académica.pdf']},
   {rad:'2026-ES-0138', est:'Valeria Astudillo',      doc:'1062556677', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-24T09:03', estado:'Respondida', just:'Solicito examen supletorio de Ingeniería de Software por participación en la representación deportiva de la Universidad.', anexos:['Solicitud firmada.pdf','Certificado de Bienestar.pdf']},
   {rad:'2026-CM-0136', est:'Óscar Iván Chicangana',  doc:'1059334455', prog:'Ingeniería en Automática Industrial', proc:PROC.CM, fecha:'2026-07-23T14:30', estado:'Respondida', just:'Solicito la cancelación de matrícula por razones económicas que me impiden sostener el semestre en curso.', anexos:['Solicitud firmada.pdf','Declaración de renta familiar.pdf']},
   {rad:'2026-CA-0133', est:'Sara Camila Yandi',      doc:'1064112233', prog:'Tecnología en Telemática',    proc:PROC.CA, fecha:'2026-07-22T08:57', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Redes de Computadores por incompatibilidad con el horario de la asignatura homologada.', anexos:['Solicitud firmada.pdf','Acta de homologación.pdf']},
-  {rad:'2026-ES-0131', est:'Nicolás Gómez Trujillo', doc:'1003667788', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.ES, fecha:'2026-07-21T17:11', estado:'En Gestión', just:'Solicito examen supletorio de Comunicaciones Digitales por incapacidad médica de tres días.', anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf']},
+  {rad:'2026-ES-0131', est:'Nicolás Gómez Trujillo', doc:'1003667788', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.ES, fecha:'2026-07-21T17:11', estado:'Pendiente de Verificación', just:'Solicito examen supletorio de Comunicaciones Digitales por incapacidad médica de tres días.', anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf','Comprobante de pago.pdf']},
   {rad:'2026-CM-0129', est:'Angie Paola Rengifo',    doc:'1060778899', prog:'Ingeniería de Sistemas',      proc:PROC.CM, fecha:'2026-07-20T13:24', estado:'Respondida', just:'Solicito la cancelación de matrícula por licencia de maternidad durante el periodo académico.', anexos:['Solicitud firmada.pdf','Certificado médico.pdf']},
   {rad:'2026-CA-0127', est:'Daniel Esteban Vidal',   doc:'1058445566', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-19T10:02', estado:'Pendiente',  just:'Solicito la cancelación de la asignatura Instrumentación Industrial por superposición con el curso de nivelación autorizado.', anexos:['Solicitud firmada.pdf']},
   {rad:'2026-ES-0124', est:'Laura Sofía Muñoz',      doc:'1061789234', prog:'Ingeniería de Sistemas',      proc:PROC.ES, fecha:'2026-07-18T09:45', estado:'Respondida', just:'Solicito examen supletorio de Estructuras de Datos por incapacidad médica el día de la evaluación.', anexos:['Solicitud firmada.pdf','Incapacidad médica EPS.pdf']},
   {rad:'2026-CM-0121', est:'Camilo Andrés Ledezma',  doc:'1005990011', prog:'Tecnología en Telemática',    proc:PROC.CM, fecha:'2026-07-17T16:20', estado:'En Gestión', just:'Solicito la cancelación de matrícula por prestación del servicio militar obligatorio.', anexos:['Solicitud firmada.pdf','Orden de presentación.pdf']}
 ];
 
-const ORDEN_ESTADO = {'Pendiente':0,'En Gestión':1,'Respondida':2};
+const ORDEN_ESTADO = {'Pendiente':0,'En Gestión':1,'Pendiente de Respuesta':2,'Pendiente de Verificación':3,'Respondida':4};
 const PAGE_SIZE = 8;
 let page = 1, sortKey = 'fecha', sortDir = 'desc';
 
@@ -452,6 +464,10 @@ function iconEstado(e){
     return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E0952B" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>';
   if(e === 'En Gestión')
     return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B6FD4" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 10h8l-2-2M16 14H8l2 2"/></svg>';
+  if(e === 'Pendiente de Respuesta')
+    return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A4FC2" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M13 8l4 4-4 4"/></svg>';
+  if(e === 'Pendiente de Verificación')
+    return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C77D14" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.2 2.2L16 9.5"/><path d="M12 6.2v0"/></svg>';
   return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.5L16 9.5"/></svg>';
 }
 
@@ -470,6 +486,7 @@ function getFiltered(){
   const e = document.getElementById('fEstado').value;
   const d = document.getElementById('fDoc').value.trim();
   let rows = DATA.filter(r =>
+    r.estado !== 'Respondida' &&
     (!p || r.proc === p) && (!e || r.estado === e) && (!d || r.doc.includes(d))
   );
   rows.sort((a,b)=>{
@@ -486,6 +503,18 @@ function hasFilters(){
   return !!(document.getElementById('fProceso').value ||
             document.getElementById('fEstado').value ||
             document.getElementById('fDoc').value.trim());
+}
+
+/* ---------- Acciones contextuales por estado (sección 5.4) ---------- */
+function rowAcciones(r){
+  if(r.estado === 'Pendiente')
+    return `<button class="btn-row remitir" data-rad="${r.rad}" data-accion="remitir">Remitir al Decano</button>
+            <button class="btn-row rechazar" data-rad="${r.rad}" data-accion="rechazar">Rechazar</button>`;
+  if(r.estado === 'Pendiente de Respuesta')
+    return `<button class="btn-row responder" data-rad="${r.rad}" data-accion="responder">Enviar respuesta</button>`;
+  if(r.estado === 'Pendiente de Verificación')
+    return `<button class="btn-row verificar" data-rad="${r.rad}" data-accion="verificar">Verificar comprobante</button>`;
+  return '';
 }
 
 /* ---------- Render ---------- */
@@ -522,11 +551,14 @@ function render(){
       <td class="fecha">${fmtFecha(r.fecha)}</td>
       <td><span class="estado">${iconEstado(r.estado)}${r.estado}</span></td>
       <td>
-        <button class="btn-eye" data-rad="${r.rad}" title="Consultar detalle" aria-label="Consultar detalle de ${r.rad}">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2F6FD0" stroke-width="1.7">
-            <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.7"/>
-          </svg>
-        </button>
+        <div class="row-actions">
+          <button class="btn-eye" data-rad="${r.rad}" title="Ver detalle" aria-label="Ver detalle de ${r.rad}">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2F6FD0" stroke-width="1.7">
+              <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.7"/>
+            </svg>
+          </button>
+          ${rowAcciones(r)}
+        </div>
       </td>
     </tr>`).join('');
 
@@ -579,18 +611,25 @@ function abrirDetalle(rad){
       </span>
     </li>`).join('');
 
-  const pend = r.estado === 'Pendiente';
-  document.getElementById('mNote').textContent = pend
-    ? 'Es tu turno de actuar sobre esta solicitud. Las acciones de remitir al Decano y rechazar se ejecutan desde esta misma vista.'
-    : (r.estado === 'En Gestión'
-        ? 'La solicitud está en manos de otro responsable. Solo puedes consultarla mientras no sea tu turno.'
-        : 'El trámite ya fue cerrado. El detalle es de solo lectura.');
+  const notas = {
+    'Pendiente': 'Es tu turno de actuar sobre esta solicitud. Las acciones de remitir al Decano y rechazar se ejecutan desde esta misma vista.',
+    'En Gestión': 'La solicitud está en manos de otro responsable. Solo puedes consultarla mientras no sea tu turno.',
+    'Pendiente de Respuesta': 'El Decano ya tomó una decisión sobre esta solicitud. Debes enviar la respuesta correspondiente al estudiante.',
+    'Pendiente de Verificación': 'El estudiante subió el comprobante de pago del examen supletorio. Verifícalo para cerrar el trámite.',
+    'Respondida': 'El trámite ya fue cerrado. El detalle es de solo lectura.'
+  };
+  document.getElementById('mNote').textContent = notas[r.estado] || '';
 
-  document.getElementById('mFoot').innerHTML = pend
-    ? `<button class="btn btn-ghost" data-close>Cerrar</button>
+  const pies = {
+    'Pendiente': `<button class="btn btn-ghost" data-close>Cerrar</button>
        <button class="btn btn-danger">Rechazar solicitud</button>
-       <button class="btn btn-primary">Remitir al Decano</button>`
-    : `<button class="btn btn-ghost" data-close>Cerrar</button>`;
+       <button class="btn btn-primary">Remitir al Decano</button>`,
+    'Pendiente de Respuesta': `<button class="btn btn-ghost" data-close>Cerrar</button>
+       <button class="btn btn-primary">Enviar respuesta al Estudiante</button>`,
+    'Pendiente de Verificación': `<button class="btn btn-ghost" data-close>Cerrar</button>
+       <button class="btn btn-primary">Verificar comprobante</button>`
+  };
+  document.getElementById('mFoot').innerHTML = pies[r.estado] || `<button class="btn btn-ghost" data-close>Cerrar</button>`;
 
   backdrop.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -632,7 +671,7 @@ document.querySelectorAll('th.sortable').forEach(th => th.addEventListener('clic
 }));
 
 document.getElementById('tbody').addEventListener('click', e => {
-  const b = e.target.closest('.btn-eye');
+  const b = e.target.closest('.btn-eye, .btn-row');
   if(b) abrirDetalle(b.dataset.rad);
 });
 document.getElementById('pager').addEventListener('click', e => {
