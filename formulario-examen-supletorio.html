@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formulario — Examen Supletorio</title>
+<style>
+  :root{
+    --navy-900:#1B2660;
+    --navy-700:#2A3A86;
+    --navy-ink:#1F2A6D;
+    --accent:#B23B2E;
+    --line:#E3E6EC;
+    --muted:#6E7480;
+    --text:#2C3038;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI","Nunito Sans",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    color:var(--text);background:#F4F5F8;font-size:14px;min-height:100vh;
+    display:flex;flex-direction:column;
+  }
+  header{
+    background:var(--navy-900);color:#fff;padding:18px 28px;
+    display:flex;align-items:center;gap:14px;
+  }
+  header img{display:block;}
+  header h1{margin:0;font-size:16px;font-weight:700;}
+  header p{margin:2px 0 0;font-size:12.5px;opacity:.85;}
+  main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+  .placeholder{
+    max-width:560px;width:100%;background:#fff;border:1px dashed #C3CAD9;
+    border-radius:6px;padding:48px 34px;text-align:center;
+    box-shadow:0 1px 3px rgba(27,38,96,.06);
+  }
+  .placeholder svg{margin-bottom:16px;}
+  .placeholder h2{margin:0 0 10px;color:var(--navy-ink);font-size:18px;}
+  .placeholder p{margin:0 0 26px;color:var(--muted);font-size:13.5px;line-height:1.6;}
+  .btn-volver{
+    display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;
+    border-radius:3px;background:var(--navy-700);color:#fff;text-decoration:none;
+    font-size:13.5px;font-weight:700;
+  }
+  .btn-volver:hover{background:#31439B;}
+</style>
+</head>
+<body>
+<header>
+  <img src="img/escudo.png" width="40" height="40" alt="Escudo Universidad del Cauca">
+  <div>
+    <h1>Formulario de Examen Supletorio</h1>
+    <p>Gestión de Procesos Académicos FIET — Estudiante</p>
+  </div>
+</header>
+<main>
+  <div class="placeholder">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9AA2B1" stroke-width="1.3"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9h8M8 13h5M8 17h3"/></svg>
+    <h2>Formulario en construcción</h2>
+    <p>Esta pantalla contendrá el formulario para radicar la solicitud de Examen Supletorio, con sus campos, anexos obligatorios y validaciones. Se implementará en una siguiente etapa del prototipo.</p>
+    <a class="btn-volver" href="estudiante.html">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      Volver al catálogo de trámites
+    </a>
+  </div>
+</main>
+</body>
+</html>
