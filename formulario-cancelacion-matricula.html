@@ -666,6 +666,7 @@ function renderPaso1(){
       ${campoRO('Código', SESION.codigo)}
       ${campoRO('Facultad', SESION.facultad)}
       ${campoRO('Cédula', SESION.documento)}
+      ${campoRO('Fecha', fmtFecha(new Date().toISOString().slice(0,10)))}
     </div>
     <p class="foot-note">Si algún dato es incorrecto, debes corregirlo ante DARCA antes de radicar la solicitud. La información aquí mostrada es la que quedará registrada en el trámite.</p>`;
 }
