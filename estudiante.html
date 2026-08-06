@@ -501,7 +501,7 @@
 
           <article class="tramite-card">
             <div class="tramite-card-head">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v3M16 3v3"/><path d="M9 14l2 2 4-4"/></svg>
               <h3>Cancelación de Matrícula</h3>
             </div>
             <div class="tramite-card-body">
@@ -533,7 +533,7 @@
 
           <article class="tramite-card">
             <div class="tramite-card-head">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 12h8"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v3M16 3v3"/><path d="M9 14l2 2 4-4"/></svg>
               <h3>Cancelación de Asignatura</h3>
             </div>
             <div class="tramite-card-body">
@@ -733,6 +733,8 @@
 </div>
 
 <script>
+if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+
 /* =========================================================
    Datos simulados — trámites radicados por el Estudiante
    Estado que ve el ESTUDIANTE: En trámite / Pendiente de pago /
@@ -1084,6 +1086,7 @@ function irA(v){
   Object.keys(VIEWS).forEach(k => document.getElementById('view-'+k).hidden = (k !== v));
   document.getElementById('crumbView').textContent = VIEWS[v];
   document.getElementById('sectionTab').textContent = VIEWS[v];
+  window.scrollTo(0, 0);
 }
 
 /* ---------- Eventos ---------- */
