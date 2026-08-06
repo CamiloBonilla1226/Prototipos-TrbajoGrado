@@ -174,6 +174,31 @@
     text-transform:uppercase;letter-spacing:.4px;margin:0 0 6px;
   }
   .tramite-list{margin:0;padding-left:17px;font-size:12.3px;color:var(--muted);line-height:1.65;}
+  .tramite-p{margin:0;font-size:12.3px;color:var(--muted);line-height:1.65;}
+  .tramite-meta{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    font-size:12px;padding:9px 11px;background:var(--panel);border-radius:3px;
+  }
+  .tramite-plazo{color:var(--navy-ink);font-weight:600;}
+  .badge-disponible{
+    display:inline-flex;align-items:center;gap:6px;background:#E4F5EC;color:var(--green);
+    font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;
+  }
+  .badge-disponible::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);}
+  .tramite-etapas{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+  .tramite-etapas .etapa{
+    background:var(--panel);border-radius:4px;padding:6px 10px;
+    font-size:11.6px;font-weight:600;color:var(--navy-ink);line-height:1.4;
+  }
+  .tramite-etapas .arrow{color:#B7BCC6;font-size:13px;}
+  .tramite-nota{
+    background:#FFF8E9;border:1px solid #F0DEB4;border-radius:3px;
+    padding:11px 13px;font-size:12.2px;line-height:1.55;color:var(--text);
+  }
+  .tramite-nota b{
+    display:block;color:var(--navy-ink);font-size:11px;
+    text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;
+  }
   .tramite-card-foot{padding:14px 18px;border-top:1px solid var(--line-soft);}
   .btn-iniciar{
     width:100%;height:38px;border:0;border-radius:3px;background:var(--navy-700);
@@ -505,22 +530,43 @@
               <h3>Cancelación de Matrícula</h3>
             </div>
             <div class="tramite-card-body">
-              <p class="tramite-desc">Solicita el retiro total de tus asignaturas matriculadas en el periodo académico vigente, sin que quede registrado como pérdida académica.</p>
+              <p class="tramite-desc">Retiro total de las asignaturas matriculadas en el periodo académico vigente. El estudiante deja de cursar el semestre.</p>
+
+              <div class="tramite-meta">
+                <span class="tramite-plazo">Plazo: hasta el último día de clases del periodo</span>
+                <span class="badge-disponible">Disponible</span>
+              </div>
+
               <div>
-                <p class="tramite-sub">Requisitos</p>
+                <p class="tramite-sub">Condiciones para solicitar</p>
                 <ul class="tramite-list">
-                  <li>No haber presentado más del 60% de las evaluaciones del periodo.</li>
                   <li>Estar matriculado en el periodo académico vigente.</li>
-                  <li>Justificar el motivo de la solicitud.</li>
+                  <li>Exponer y sustentar el motivo de la solicitud.</li>
+                  <li>Encontrarse a paz y salvo con la Universidad.</li>
                 </ul>
               </div>
+
               <div>
-                <p class="tramite-sub">Anexos requeridos</p>
-                <ul class="tramite-list">
-                  <li>Solicitud firmada.</li>
-                  <li>Soporte que justifique el motivo (médico, laboral, etc.).</li>
-                  <li>Historia académica.</li>
-                </ul>
+                <p class="tramite-sub">Documentación requerida — 6 documentos</p>
+                <p class="tramite-p">Paz y salvo de Bibliotecas, Deportes y Recreación, Salud Integral y División Financiera; cupón de Confirmación de la Intervención Psicosocial; carné estudiantil o constancia de no trámite. Los paz y salvo tienen vigencia de 5 días calendario desde su expedición.</p>
+              </div>
+
+              <div>
+                <p class="tramite-sub">Etapas del trámite</p>
+                <div class="tramite-etapas">
+                  <span class="etapa">Radicación de la solicitud</span>
+                  <span class="arrow">→</span>
+                  <span class="etapa">Revisión documental en la Decanatura</span>
+                  <span class="arrow">→</span>
+                  <span class="etapa">Decisión del Decano</span>
+                  <span class="arrow">→</span>
+                  <span class="etapa">Notificación al correo institucional</span>
+                </div>
+              </div>
+
+              <div class="tramite-nota">
+                <b>Consideración importante</b>
+                La cancelación no anula el registro académico del periodo. El Decano determina, mediante resolución motivada, cuáles asignaturas quedan aprobadas, perdidas o no cursadas.
               </div>
             </div>
             <div class="tramite-card-foot">
@@ -537,20 +583,43 @@
               <h3>Cancelación de Asignatura</h3>
             </div>
             <div class="tramite-card-body">
-              <p class="tramite-desc">Solicita el retiro de una o varias asignaturas específicas del periodo académico, conservando el resto de tu matrícula activa.</p>
+              <p class="tramite-desc">Retiro de una o varias asignaturas del periodo académico vigente. El resto de la matrícula permanece activa.</p>
+
+              <div class="tramite-meta">
+                <span class="tramite-plazo">Plazo: antes de la terminación del periodo académico</span>
+                <span class="badge-disponible">Disponible</span>
+              </div>
+
               <div>
-                <p class="tramite-sub">Requisitos</p>
+                <p class="tramite-sub">Condiciones para solicitar</p>
                 <ul class="tramite-list">
-                  <li>No haber presentado más del 60% de las evaluaciones de la asignatura.</li>
-                  <li>La asignatura debe estar activa en tu matrícula del periodo.</li>
+                  <li>No cursar la asignatura en calidad de repitente.</li>
+                  <li>Que la asignatura no sea co-requisito de otra en curso.</li>
+                  <li>Contar con nota promedio igual o superior a 3.0.</li>
                 </ul>
               </div>
+
               <div>
-                <p class="tramite-sub">Anexos requeridos</p>
-                <ul class="tramite-list">
-                  <li>Solicitud firmada.</li>
-                  <li>Soporte que justifique el motivo.</li>
-                </ul>
+                <p class="tramite-sub">Documentación requerida — Sin documentos obligatorios</p>
+                <p class="tramite-p">Se requiere únicamente indicar el motivo de la cancelación. De existir un soporte que lo respalde, puede adjuntarse de manera opcional.</p>
+              </div>
+
+              <div>
+                <p class="tramite-sub">Etapas del trámite</p>
+                <div class="tramite-etapas">
+                  <span class="etapa">Selección de asignaturas y registro del motivo</span>
+                  <span class="arrow">→</span>
+                  <span class="etapa">Revisión en la Decanatura</span>
+                  <span class="arrow">→</span>
+                  <span class="etapa">Decisión del Decano</span>
+                  <span class="arrow">→</span>
+                  <span class="etapa">Notificación al correo institucional</span>
+                </div>
+              </div>
+
+              <div class="tramite-nota">
+                <b>Consideración importante</b>
+                Si al momento de la cancelación el promedio ponderado de la asignatura es inferior a 3.0, la asignatura se registra como perdida definitivamente.
               </div>
             </div>
             <div class="tramite-card-foot">
@@ -567,22 +636,43 @@
               <h3>Examen Supletorio</h3>
             </div>
             <div class="tramite-card-body">
-              <p class="tramite-desc">Solicita la oportunidad de presentar de manera extraordinaria una evaluación que no pudiste presentar en la fecha programada.</p>
+              <p class="tramite-desc">Autorización para presentar en fecha distinta un examen parcial, final o de habilitación no presentado en la fecha programada.</p>
+
+              <div class="tramite-meta">
+                <span class="tramite-plazo">Plazo: 3 días hábiles siguientes al examen</span>
+                <span class="badge-disponible">Disponible</span>
+              </div>
+
               <div>
-                <p class="tramite-sub">Requisitos</p>
+                <p class="tramite-sub">Condiciones para solicitar</p>
                 <ul class="tramite-list">
-                  <li>Justificar la inasistencia a la evaluación original.</li>
-                  <li>Radicar dentro de los 3 días hábiles siguientes a la evaluación.</li>
-                  <li>Cancelar el valor del derecho pecuniario del examen.</li>
+                  <li>Justificar la inasistencia o acreditar cruce con otro examen.</li>
+                  <li>Contar con la firma del docente que orienta la asignatura.</li>
+                  <li>Tener acordada con el docente la fecha del examen supletorio.</li>
                 </ul>
               </div>
+
               <div>
-                <p class="tramite-sub">Anexos requeridos</p>
-                <ul class="tramite-list">
-                  <li>Solicitud firmada.</li>
-                  <li>Soporte de la incapacidad o justificación.</li>
-                  <li>Visto bueno del docente.</li>
-                </ul>
+                <p class="tramite-sub">Documentación requerida — 2 documentos</p>
+                <p class="tramite-p">Formato de solicitud firmado por el docente de la asignatura y soporte de la justificación. Cuando la causal es cruce de exámenes, el soporte se sustituye por la firma del docente de la otra asignatura.</p>
+              </div>
+
+              <div>
+                <p class="tramite-sub">Etapas del trámite</p>
+                <div class="tramite-etapas">
+                  <span class="etapa">Radicación de la solicitud</span>
+                  <span class="arrow">→</span>
+                  <span class="etapa">Decisión del Decano</span>
+                  <span class="arrow">→</span>
+                  <span class="etapa">Pago del derecho pecuniario y carga del comprobante</span>
+                  <span class="arrow">→</span>
+                  <span class="etapa">Presentación del examen</span>
+                </div>
+              </div>
+
+              <div class="tramite-nota">
+                <b>Consideración importante</b>
+                Es el trámite con el plazo más corto. Los 3 días hábiles se cuentan desde la fecha del examen al que no se asistió.
               </div>
             </div>
             <div class="tramite-card-foot">
