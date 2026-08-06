@@ -173,25 +173,7 @@
     font-size:11px;font-weight:700;color:var(--navy-ink);
     text-transform:uppercase;letter-spacing:.4px;margin:0 0 6px;
   }
-  .tramite-p{margin:0;font-size:12.3px;color:var(--muted);line-height:1.65;}
-  .tramite-meta{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-    font-size:12px;padding:9px 11px;background:var(--panel);border-radius:3px;
-  }
-  .tramite-plazo{color:var(--navy-ink);font-weight:600;}
-  .badge-disponible{
-    display:inline-flex;align-items:center;gap:6px;background:#E4F5EC;color:var(--green);
-    font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;
-  }
-  .badge-disponible::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);}
-  .tramite-nota{
-    background:#FFF8E9;border:1px solid #F0DEB4;border-radius:3px;
-    padding:11px 13px;font-size:12.2px;line-height:1.55;color:var(--text);
-  }
-  .tramite-nota b{
-    display:block;color:var(--navy-ink);font-size:11px;
-    text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;
-  }
+  .tramite-list{margin:0;padding-left:17px;font-size:12.3px;color:var(--muted);line-height:1.65;}
   .tramite-card-foot{padding:14px 18px;border-top:1px solid var(--line-soft);}
   .btn-iniciar{
     width:100%;height:38px;border:0;border-radius:3px;background:var(--navy-700);
@@ -524,20 +506,21 @@
             </div>
             <div class="tramite-card-body">
               <p class="tramite-desc">Retiro total de las asignaturas matriculadas en el periodo académico vigente. El estudiante deja de cursar el semestre.</p>
-
-              <div class="tramite-meta">
-                <span class="tramite-plazo">Plazo: hasta el último día de clases del periodo</span>
-                <span class="badge-disponible">Disponible</span>
-              </div>
-
               <div>
-                <p class="tramite-sub">Documentación requerida — 6 documentos</p>
-                <p class="tramite-p">Paz y salvo de Bibliotecas, Deportes y Recreación, Salud Integral y División Financiera; cupón de Confirmación de la Intervención Psicosocial; carné estudiantil o constancia de no trámite. Los paz y salvo tienen vigencia de 5 días calendario desde su expedición.</p>
+                <p class="tramite-sub">Requisitos</p>
+                <ul class="tramite-list">
+                  <li>Estar matriculado en el periodo académico vigente.</li>
+                  <li>Exponer y sustentar el motivo de la solicitud.</li>
+                  <li>Encontrarse a paz y salvo con la Universidad.</li>
+                </ul>
               </div>
-
-              <div class="tramite-nota">
-                <b>Consideración importante</b>
-                La cancelación no anula el registro académico del periodo. El Decano determina, mediante resolución motivada, cuáles asignaturas quedan aprobadas, perdidas o no cursadas.
+              <div>
+                <p class="tramite-sub">Anexos requeridos</p>
+                <ul class="tramite-list">
+                  <li>Paz y salvo de Bibliotecas, Deportes y Recreación, Salud Integral y División Financiera.</li>
+                  <li>Cupón de Confirmación de la Intervención Psicosocial.</li>
+                  <li>Carné estudiantil o constancia de no trámite.</li>
+                </ul>
               </div>
             </div>
             <div class="tramite-card-foot">
@@ -555,20 +538,20 @@
             </div>
             <div class="tramite-card-body">
               <p class="tramite-desc">Retiro de una o varias asignaturas del periodo académico vigente. El resto de la matrícula permanece activa.</p>
-
-              <div class="tramite-meta">
-                <span class="tramite-plazo">Plazo: antes de la terminación del periodo académico</span>
-                <span class="badge-disponible">Disponible</span>
-              </div>
-
               <div>
-                <p class="tramite-sub">Documentación requerida — Sin documentos obligatorios</p>
-                <p class="tramite-p">Se requiere únicamente indicar el motivo de la cancelación. De existir un soporte que lo respalde, puede adjuntarse de manera opcional.</p>
+                <p class="tramite-sub">Requisitos</p>
+                <ul class="tramite-list">
+                  <li>No cursar la asignatura en calidad de repitente.</li>
+                  <li>Que la asignatura no sea co-requisito de otra en curso.</li>
+                  <li>Contar con nota promedio igual o superior a 3.0.</li>
+                </ul>
               </div>
-
-              <div class="tramite-nota">
-                <b>Consideración importante</b>
-                Si al momento de la cancelación el promedio ponderado de la asignatura es inferior a 3.0, la asignatura se registra como perdida definitivamente.
+              <div>
+                <p class="tramite-sub">Anexos requeridos</p>
+                <ul class="tramite-list">
+                  <li>No se exigen documentos obligatorios; solo debes indicar el motivo.</li>
+                  <li>Soporte que respalde el motivo, de forma opcional.</li>
+                </ul>
               </div>
             </div>
             <div class="tramite-card-foot">
@@ -586,20 +569,19 @@
             </div>
             <div class="tramite-card-body">
               <p class="tramite-desc">Autorización para presentar en fecha distinta un examen parcial, final o de habilitación no presentado en la fecha programada.</p>
-
-              <div class="tramite-meta">
-                <span class="tramite-plazo">Plazo: 3 días hábiles siguientes al examen</span>
-                <span class="badge-disponible">Disponible</span>
-              </div>
-
               <div>
-                <p class="tramite-sub">Documentación requerida — 2 documentos</p>
-                <p class="tramite-p">Formato de solicitud firmado por el docente de la asignatura y soporte de la justificación. Cuando la causal es cruce de exámenes, el soporte se sustituye por la firma del docente de la otra asignatura.</p>
+                <p class="tramite-sub">Requisitos</p>
+                <ul class="tramite-list">
+                  <li>Justificar la inasistencia o acreditar cruce con otro examen.</li>
+                  <li>Contar con la firma del docente que orienta la asignatura.</li>
+                </ul>
               </div>
-
-              <div class="tramite-nota">
-                <b>Consideración importante</b>
-                Es el trámite con el plazo más corto. Los 3 días hábiles se cuentan desde la fecha del examen al que no se asistió.
+              <div>
+                <p class="tramite-sub">Anexos requeridos</p>
+                <ul class="tramite-list">
+                  <li>Formato de solicitud firmado por el docente de la asignatura.</li>
+                  <li>Soporte de la justificación (o firma del docente de la otra asignatura si es cruce de exámenes).</li>
+                </ul>
               </div>
             </div>
             <div class="tramite-card-foot">
