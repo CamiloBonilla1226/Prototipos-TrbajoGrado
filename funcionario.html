@@ -715,13 +715,17 @@ const DATA = [
   {rad:'2026-CM-0121', est:'Camilo Andrés Ledezma',  doc:'1005990011', prog:'Tecnología en Telemática',    proc:PROC.CM, fecha:'2026-07-17T16:20', estado:'En Gestión', esperaDe:'Estudiante', just:'Solicito la cancelación de matrícula por prestación del servicio militar obligatorio.', anexos:['Solicitud firmada.pdf','Orden de presentación.pdf']}
 ];
 
-/* PRUEBAS: incorpora las solicitudes radicadas desde el formulario del Estudiante
-   (guardadas en localStorage) para poder mostrar de inmediato el flujo completo.
+/* PRUEBAS: incorpora la solicitud recién radicada desde el formulario del Estudiante
+   (guardada en localStorage) para poder mostrar de inmediato el flujo completo. Se
+   consume una sola vez: se agrega a esta carga de la página y luego se borra del
+   almacenamiento, así que no queda guardada para siempre ni reaparece al recargar.
    No hay backend real: esto es solo para la demostración del mockup. */
 (function cargarSolicitudesNuevas(){
   try{
-    const nuevas = JSON.parse(localStorage.getItem('acbb_solicitudes_nuevas') || '[]');
+    const KEY = 'acbb_solicitudes_nuevas';
+    const nuevas = JSON.parse(localStorage.getItem(KEY) || '[]');
     nuevas.forEach(r => { if(!DATA.some(x => x.rad === r.rad)) DATA.push(r); });
+    localStorage.removeItem(KEY);
   }catch(err){ /* almacenamiento no disponible: no afecta el resto del mockup */ }
 })();
 

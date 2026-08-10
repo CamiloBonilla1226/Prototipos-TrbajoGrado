@@ -791,13 +791,17 @@ const DATA = [
   }
 ];
 
-/* PRUEBAS: incorpora las solicitudes radicadas desde los formularios del Estudiante
-   (guardadas en localStorage) para poder mostrar de inmediato el flujo completo.
+/* PRUEBAS: incorpora la solicitud recién radicada desde el formulario del Estudiante
+   (guardada en localStorage) para poder mostrar de inmediato el flujo completo. Se
+   consume una sola vez: se agrega a esta carga de la página y luego se borra del
+   almacenamiento, así que no queda guardada para siempre ni reaparece al recargar.
    No hay backend real: esto es solo para la demostración del mockup. */
 (function cargarSolicitudesNuevas(){
   try{
-    const nuevas = JSON.parse(localStorage.getItem('acbb_solicitudes_estudiante_nuevas') || '[]');
+    const KEY = 'acbb_solicitudes_estudiante_nuevas';
+    const nuevas = JSON.parse(localStorage.getItem(KEY) || '[]');
     nuevas.forEach(r => { if(!DATA.some(x => x.rad === r.rad)) DATA.unshift(r); });
+    localStorage.removeItem(KEY);
   }catch(err){ /* almacenamiento no disponible: no afecta el resto del mockup */ }
 })();
 
