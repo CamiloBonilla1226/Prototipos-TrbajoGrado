@@ -748,26 +748,6 @@ const PROC = {
 
 const DATA = [
   {
-    rad:'2026-CM-0151', proc:PROC.CM, fecha:'2026-08-01T09:15', estado:'En trámite',
-    just:'Solicito la cancelación de matrícula del periodo académico por motivos de salud debidamente certificados por la EPS.',
-    anexos:['Solicitud firmada.pdf','Incapacidad médica EPS.pdf','Historia académica.pdf'],
-    timeline:[
-      {t:'Solicitud radicada', d:'01/08/2026', s:'done'},
-      {t:'En trámite (revisión académica)', d:'En curso', s:'current'},
-      {t:'Respuesta al Estudiante', d:'Pendiente', s:'pendiente'}
-    ]
-  },
-  {
-    rad:'2026-CA-0150', proc:PROC.CA, fecha:'2026-07-30T14:20', estado:'En trámite',
-    just:'Solicito la cancelación de la asignatura Redes de Computadores por incompatibilidad de horario con la práctica empresarial.',
-    anexos:['Solicitud firmada.pdf','Carta de coordinación.pdf'],
-    timeline:[
-      {t:'Solicitud radicada', d:'30/07/2026', s:'done'},
-      {t:'En trámite (remitida al Decano)', d:'En curso', s:'current'},
-      {t:'Respuesta al Estudiante', d:'Pendiente', s:'pendiente'}
-    ]
-  },
-  {
     rad:'2026-ES-0146', proc:PROC.ES, fecha:'2026-07-29T10:00', estado:'Pendiente de pago', decision:'Aprobada',
     just:'Solicito examen supletorio de Comunicaciones Digitales por incapacidad médica el día de la evaluación.',
     anexos:['Solicitud firmada.pdf','Incapacidad médica.pdf','Visto bueno del docente.pdf'],
@@ -790,26 +770,36 @@ const DATA = [
     ]
   },
   {
-    rad:'2026-CM-0140', proc:PROC.CM, fecha:'2026-07-20T09:00', estado:'Aprobada', decision:'Aprobada', resolucion:'Resolución 0140-2026.pdf',
+    rad:'2026-CA-0150', proc:PROC.CA, fecha:'2026-07-30T14:20', estado:'Aprobada', decision:'Aprobada', resolucion:'Resolución 0150-2026.pdf',
+    just:'Solicito la cancelación de la asignatura Redes de Computadores por incompatibilidad de horario con la práctica empresarial.',
+    anexos:['Solicitud firmada.pdf','Carta de coordinación.pdf'],
+    timeline:[
+      {t:'Solicitud radicada', d:'30/07/2026', s:'done'},
+      {t:'En trámite (Decano y Funcionario)', d:'02/08/2026', s:'done'},
+      {t:'Solicitud aprobada', d:'03/08/2026', s:'done'}
+    ]
+  },
+  {
+    rad:'2026-CM-0140', proc:PROC.CM, fecha:'2026-07-20T09:00', estado:'Rechazada', decision:'Rechazada', observacion:'La certificación laboral presentada no acredita el traslado fuera de la ciudad durante el periodo académico vigente.',
     just:'Solicito la cancelación de matrícula por traslado laboral fuera de la ciudad de Popayán.',
     anexos:['Solicitud firmada.pdf','Carta laboral.pdf','Historia académica.pdf'],
     timeline:[
       {t:'Solicitud radicada', d:'20/07/2026', s:'done'},
       {t:'En trámite (Decano y Funcionario)', d:'24/07/2026', s:'done'},
-      {t:'Solicitud aprobada', d:'25/07/2026', s:'done'}
-    ]
-  },
-  {
-    rad:'2026-CA-0134', proc:PROC.CA, fecha:'2026-07-15T15:30', estado:'Rechazada', decision:'Rechazada', observacion:'No se anexó soporte suficiente que justifique la cancelación por motivos económicos alegados.',
-    just:'Solicito la cancelación de la asignatura Electrónica Analógica II por razones económicas.',
-    anexos:['Solicitud firmada.pdf'],
-    timeline:[
-      {t:'Solicitud radicada', d:'15/07/2026', s:'done'},
-      {t:'En trámite (Decano y Funcionario)', d:'18/07/2026', s:'done'},
-      {t:'Solicitud rechazada', d:'19/07/2026', s:'rechazada'}
+      {t:'Solicitud rechazada', d:'25/07/2026', s:'rechazada'}
     ]
   }
 ];
+
+/* PRUEBAS: incorpora las solicitudes radicadas desde los formularios del Estudiante
+   (guardadas en localStorage) para poder mostrar de inmediato el flujo completo.
+   No hay backend real: esto es solo para la demostración del mockup. */
+(function cargarSolicitudesNuevas(){
+  try{
+    const nuevas = JSON.parse(localStorage.getItem('acbb_solicitudes_estudiante_nuevas') || '[]');
+    nuevas.forEach(r => { if(!DATA.some(x => x.rad === r.rad)) DATA.unshift(r); });
+  }catch(err){ /* almacenamiento no disponible: no afecta el resto del mockup */ }
+})();
 
 const ORDEN_ESTADO = {'En trámite':0,'Pendiente de pago':1,'En verificación de pago':2,'Aprobada':3,'Rechazada':4};
 const CHIP_CLASS = {
@@ -1177,7 +1167,7 @@ document.getElementById('btnLogout').addEventListener('click', () => {
 });
 
 render();
-irA('usuario');
+irA(VIEWS[location.hash.slice(1)] ? location.hash.slice(1) : 'usuario');
 </script>
 </body>
 </html>

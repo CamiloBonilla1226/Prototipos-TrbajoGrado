@@ -376,7 +376,7 @@
                 <dt>Estado actual</dt><dd><span class="chip-estado">En trámite</span></dd>
               </dl>
             </div>
-            <a class="btn btn-primary" href="estudiante.html" style="justify-content:center;">
+            <a class="btn btn-primary" href="estudiante.html#respuestas" style="justify-content:center;">
               Ir a mis trámites radicados
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
@@ -462,8 +462,8 @@ const DOCUMENTOS = [
   {id:1, nombre:'Paz y salvo',   entidad:'División de Bibliotecas',              fecha:false, formatos:['pdf']},
   {id:2, nombre:'Paz y salvo',   entidad:'División de Deportes y Recreación',    fecha:false, formatos:['pdf']},
   {id:3, nombre:'Paz y salvo',   entidad:'División de Salud Integral',           fecha:false, formatos:['pdf']},
-  {id:4, nombre:'Paz y salvo',   entidad:'División Financiera',                  fecha:false, formatos:['pdf']},
-  {id:5, nombre:'Cupón de Confirmación de la Intervención Psicosocial', entidad:'División de Salud Integral', fecha:false, formatos:['pdf']},
+  {id:4, nombre:'Cupón de Confirmación de la Intervención Psicosocial', entidad:'División de Salud Integral', fecha:false, formatos:['pdf']},
+  {id:5, nombre:'Paz y salvo',   entidad:'División Financiera',                  fecha:false, formatos:['pdf']},
   {id:6, nombre:'Carné estudiantil o constancia de no trámite',         entidad:'DARCA',                      fecha:false, formatos:['pdf','jpg','jpeg','png'], requerido:false}
 ];
 
@@ -473,7 +473,7 @@ const VIGENCIA_DIAS = 5;
 /* PRUEBAS: mientras esté en true, no exige adjuntar archivos en Documentación ni diligenciar el motivo de cancelación para avanzar. Poner en false para el prototipo final. */
 const MODO_PRUEBA_SIN_ARCHIVOS = true;
 
-/* PRUEBAS: mientras esté en true, los paz y salvo (documentos 1 a 4) aparecen ya adjuntados en Revisión y envío, simulando que el estudiante sí los subió. Poner en false para el prototipo final. */
+/* PRUEBAS: mientras esté en true, los paz y salvo y el cupón (documentos 1 a 5) aparecen ya adjuntados en Revisión y envío, simulando que el estudiante sí los subió. Poner en false para el prototipo final. */
 const MODO_PRUEBA_PAZYSALVO_ADJUNTADOS = true;
 
 /* =========================================================================
@@ -492,8 +492,9 @@ const state = {
 };
 DOCUMENTOS.forEach(d => state.docs[d.id] = {file:null, fecha:''});
 if(MODO_PRUEBA_PAZYSALVO_ADJUNTADOS){
-  [1,2,3,4].forEach(id => {
-    state.docs[id].file = {name: DOCUMENTOS.find(d => d.id === id).entidad.replace(/\s+/g,'_') + '.pdf', size: 245000};
+  [1,2,3,4,5].forEach(id => {
+    const d = DOCUMENTOS.find(x => x.id === id);
+    state.docs[id].file = {name: (d.nombre + '_' + d.entidad).replace(/\s+/g,'_') + '.pdf', size: 245000};
   });
 }
 
@@ -1139,6 +1140,7 @@ function enviar(){
     }
 
     registrarSolicitudParaFuncionario();
+    registrarSolicitudParaEstudiante();
     $('okRad').textContent = RADICADO;
     $('okFecha').textContent = fmtFechaHora(new Date());
     $('form').hidden = true;
@@ -1168,6 +1170,34 @@ function registrarSolicitudParaFuncionario(){
       resolucion: `Resolución ${RADICADO.split('-')[2]}-${RADICADO.split('-')[0]}.pdf`,
       just: state.descripcion || 'Sin descripción.',
       anexos: anexos.length ? anexos : ['Solicitud firmada.pdf']
+    };
+    const actuales = JSON.parse(localStorage.getItem(KEY) || '[]').filter(r => r.rad !== registro.rad);
+    actuales.push(registro);
+    localStorage.setItem(KEY, JSON.stringify(actuales));
+  }catch(err){ /* almacenamiento no disponible: no afecta el resto del mockup */ }
+}
+
+/* PRUEBAS: comparte la solicitud radicada con estudiante.html (vía localStorage) para
+   poder mostrar de inmediato cómo se ve en "Mis trámites radicados", en estado En trámite.
+   No hay backend real: esto es solo para la demostración del mockup. */
+function registrarSolicitudParaEstudiante(){
+  try{
+    const KEY = 'acbb_solicitudes_estudiante_nuevas';
+    const anexos = DOCUMENTOS.filter(d => state.docs[d.id].file).map(d => state.docs[d.id].file.name);
+    if(state.soporte) anexos.push(state.soporte.name);
+    const fechaTxt = fmtFecha ? fmtFecha(new Date().toISOString().slice(0,10)) : '';
+    const registro = {
+      rad: RADICADO,
+      proc: 'Cancelación de Matrícula',
+      fecha: new Date().toISOString(),
+      estado: 'En trámite',
+      just: state.descripcion || 'Sin descripción.',
+      anexos: anexos.length ? anexos : ['Solicitud firmada.pdf'],
+      timeline:[
+        {t:'Solicitud radicada', d: fechaTxt, s:'done'},
+        {t:'En trámite (revisión académica)', d:'En curso', s:'current'},
+        {t:'Respuesta al Estudiante', d:'Pendiente', s:'pendiente'}
+      ]
     };
     const actuales = JSON.parse(localStorage.getItem(KEY) || '[]').filter(r => r.rad !== registro.rad);
     actuales.push(registro);
