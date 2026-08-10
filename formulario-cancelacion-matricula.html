@@ -140,6 +140,18 @@
   tbody tr:nth-child(even){background:var(--zebra);}
   tfoot td{padding:11px 12px;font-size:12.8px;font-weight:700;color:var(--navy-ink);background:#F1F4FB;border-top:1px solid var(--line);}
   .num{text-align:right;font-variant-numeric:tabular-nums;}
+  .tbl-input{width:100%;border:1px solid var(--navy-700);border-radius:3px;padding:5px 7px;font-size:12.8px;font-family:inherit;color:var(--text);background:#fff;}
+  .tbl-input:focus{outline:none;box-shadow:0 0 0 2px #B9C7EE;}
+  .asig-view{display:block;padding:5px 7px;color:var(--text);}
+  .asig-acciones{white-space:nowrap;}
+  .asig-btns{display:flex;gap:6px;justify-content:flex-end;}
+  .icon-btn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:#fff;border-radius:3px;padding:6px 10px;font-size:12px;font-weight:600;font-family:inherit;color:var(--navy-ink);cursor:pointer;}
+  .icon-btn:hover{background:var(--panel);}
+  .icon-btn-ok{border-color:#BFE6D2;color:#1F6B4A;background:#E4F5EC;}
+  .icon-btn-ok:hover{background:#D6EEE0;}
+  .icon-btn-danger{border-color:#F0C4BF;color:#8A2C22;}
+  .icon-btn-danger:hover{background:#FBE9E7;}
+  .tbl-empty{text-align:center;color:var(--muted);font-size:12.8px;padding:22px 12px;}
   .cod{font-weight:600;color:var(--navy-ink);white-space:nowrap;}
 
   /* ---------- Documentos ---------- */
@@ -472,7 +484,8 @@ const state = {
   docs:{},           // {id:{file:{name,size}, fecha:'YYYY-MM-DD'}}
   declara:false,
   touched:{},        // pasos ya validados con error
-  enviando:false
+  enviando:false,
+  asigEditando:new Set()  // índices de MATRICULA.asignaturas en edición
 };
 DOCUMENTOS.forEach(d => state.docs[d.id] = {file:null, fecha:''});
 
@@ -700,39 +713,51 @@ function renderPaso2(){
 
 function renderPaso3(){
   const a = MATRICULA.asignaturas;
-  const totalCred = a.reduce((s,x) => s + x.creditos, 0);
+  const iconEditar = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
+  const iconGuardar = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg>`;
+  const iconEliminar = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
   return `
     <h2 class="paso-title">Asignaturas del periodo</h2>
-    <p class="paso-intro">Estas son todas las asignaturas que tienes matriculadas en el periodo ${MATRICULA.periodoAcademico}. La cancelación de matrícula las cubre en su totalidad, por lo que no se seleccionan individualmente.</p>
+    <p class="paso-intro">Ingresa el código y el nombre de cada asignatura que tienes matriculada en el periodo ${MATRICULA.periodoAcademico}. La cancelación de matrícula las cubre en su totalidad, por lo que no se seleccionan individualmente. Si te equivocas al escribir una asignatura, usa "Editar" para corregirla o "Eliminar" para quitarla de la lista.</p>
 
     <div class="table-scroll">
       <table>
         <thead>
           <tr>
-            <th>Código</th><th>Asignatura</th>
-            <th class="num">Créditos</th><th class="num">Faltas</th><th class="num">Nota actual</th>
+            <th>Código</th><th>Asignatura</th><th class="num">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          ${a.map(x => `<tr>
-            <td class="cod">${x.codigo}</td>
-            <td>${esc(x.nombre)}</td>
-            <td class="num">${x.creditos}</td>
-            <td class="num">${x.faltas}</td>
-            <td class="num">${x.nota.toFixed(1)}</td>
-          </tr>`).join('')}
+          ${a.map((x,i) => {
+            const editando = state.asigEditando.has(i);
+            return `<tr>
+            <td class="cod">${editando
+              ? `<input type="text" class="tbl-input" data-asig-codigo="${i}" value="${esc(x.codigo)}" placeholder="Ej. TEL-3204">`
+              : `<span class="asig-view">${esc(x.codigo) || '—'}</span>`}</td>
+            <td>${editando
+              ? `<input type="text" class="tbl-input" data-asig-nombre="${i}" value="${esc(x.nombre)}" placeholder="Nombre de la asignatura">`
+              : `<span class="asig-view">${esc(x.nombre) || '—'}</span>`}</td>
+            <td class="num asig-acciones">
+              <div class="asig-btns">
+                ${editando
+                  ? `<button type="button" class="icon-btn icon-btn-ok" data-asig-guardar="${i}">${iconGuardar}Guardar</button>`
+                  : `<button type="button" class="icon-btn" data-asig-editar="${i}">${iconEditar}Editar</button>`}
+                <button type="button" class="icon-btn icon-btn-danger" data-asig-eliminar="${i}">${iconEliminar}Eliminar</button>
+              </div>
+            </td>
+          </tr>`;
+          }).join('')}
+          ${a.length === 0 ? `<tr><td colspan="3" class="tbl-empty">No has agregado ninguna asignatura.</td></tr>` : ''}
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="2">${a.length} asignaturas matriculadas</td>
-            <td class="num">${totalCred}</td>
-            <td colspan="2"></td>
+            <td colspan="3">${a.length} asignatura${a.length === 1 ? '' : 's'} matriculada${a.length === 1 ? '' : 's'}</td>
           </tr>
         </tfoot>
       </table>
     </div>
 
-    <p class="foot-note">Las faltas y notas corresponden a la información registrada en el sistema académico a la fecha. La columna de situación académica la diligencia la Facultad. El Decano determinará mediante resolución motivada cuáles asignaturas quedan aprobadas, perdidas o no cursadas.</p>`;
+    <p class="foot-note">El Decano determinará mediante resolución motivada cuáles asignaturas quedan aprobadas, perdidas o no cursadas.</p>`;
 }
 
 function uploadZoneHTML(key, formatos){
@@ -836,7 +861,7 @@ function renderPaso5(){
     <div class="rev">
       <div class="rev-head"><h3>Asignaturas del periodo</h3><button class="link-btn" data-goto="4">Ver</button></div>
       <div class="rev-body">
-        <p style="margin:0 0 10px;font-size:12.8px;color:var(--muted);">La solicitud cubre las ${a.length} asignaturas matriculadas (${a.reduce((s,x) => s+x.creditos,0)} créditos).</p>
+        <p style="margin:0 0 10px;font-size:12.8px;color:var(--muted);">La solicitud cubre las ${a.length} asignaturas matriculadas.</p>
         <ul class="lista-docs">
           ${a.map(x => `<li><span class="cod">${x.codigo}</span> ${esc(x.nombre)}</li>`).join('')}
         </ul>
@@ -922,6 +947,52 @@ function enlazarPaso(){
     errBox.style.display = 'none';
     state.soporte = {name:f.name, size:f.size};
     $('soporteSlot').innerHTML = fileOkHTML(state.soporte,'soporte');
+  });
+
+  // Paso 3 — asignaturas: editar código/nombre
+  document.querySelectorAll('[data-asig-codigo]').forEach(inp => {
+    inp.addEventListener('input', e => {
+      MATRICULA.asignaturas[Number(e.target.dataset.asigCodigo)].codigo = e.target.value;
+    });
+  });
+  document.querySelectorAll('[data-asig-nombre]').forEach(inp => {
+    inp.addEventListener('input', e => {
+      MATRICULA.asignaturas[Number(e.target.dataset.asigNombre)].nombre = e.target.value;
+    });
+  });
+
+  // Paso 3 — asignaturas: botón Editar (entra en modo edición de la fila)
+  document.querySelectorAll('[data-asig-editar]').forEach(b => {
+    b.addEventListener('click', e => {
+      state.asigEditando.add(Number(e.currentTarget.dataset.asigEditar));
+      render();
+    });
+  });
+
+  // Paso 3 — asignaturas: botón Guardar (sale del modo edición)
+  document.querySelectorAll('[data-asig-guardar]').forEach(b => {
+    b.addEventListener('click', e => {
+      state.asigEditando.delete(Number(e.currentTarget.dataset.asigGuardar));
+      render();
+    });
+  });
+
+  // Paso 3 — asignaturas: botón Eliminar
+  document.querySelectorAll('[data-asig-eliminar]').forEach(b => {
+    b.addEventListener('click', e => {
+      const i = Number(e.currentTarget.dataset.asigEliminar);
+      const x = MATRICULA.asignaturas[i];
+      const nombre = (x.nombre || x.codigo) ? `"${x.nombre || x.codigo}"` : 'esta asignatura';
+      if(!confirm(`¿Eliminar ${nombre} de la lista de asignaturas?`)) return;
+      MATRICULA.asignaturas.splice(i, 1);
+      const reindexado = new Set();
+      state.asigEditando.forEach(idx => {
+        if(idx === i) return;
+        reindexado.add(idx > i ? idx - 1 : idx);
+      });
+      state.asigEditando = reindexado;
+      render();
+    });
   });
 
   // Paso 4 — fechas
