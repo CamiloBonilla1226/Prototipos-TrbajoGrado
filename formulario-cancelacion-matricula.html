@@ -473,6 +473,9 @@ const VIGENCIA_DIAS = 5;
 /* PRUEBAS: mientras esté en true, no exige adjuntar archivos en Documentación ni diligenciar el motivo de cancelación para avanzar. Poner en false para el prototipo final. */
 const MODO_PRUEBA_SIN_ARCHIVOS = true;
 
+/* PRUEBAS: mientras esté en true, los paz y salvo (documentos 1 a 4) aparecen ya adjuntados en Revisión y envío, simulando que el estudiante sí los subió. Poner en false para el prototipo final. */
+const MODO_PRUEBA_PAZYSALVO_ADJUNTADOS = true;
+
 /* =========================================================================
    ESTADO DEL FORMULARIO (en memoria, sin almacenamiento del navegador)
    ========================================================================= */
@@ -488,6 +491,11 @@ const state = {
   asigEditando:new Set()  // índices de MATRICULA.asignaturas en edición
 };
 DOCUMENTOS.forEach(d => state.docs[d.id] = {file:null, fecha:''});
+if(MODO_PRUEBA_PAZYSALVO_ADJUNTADOS){
+  [1,2,3,4].forEach(id => {
+    state.docs[id].file = {name: DOCUMENTOS.find(d => d.id === id).entidad.replace(/\s+/g,'_') + '.pdf', size: 245000};
+  });
+}
 
 /* Interruptores del panel de pruebas */
 const TEST = {primer:false, psico:false, duplicada:false, plazo:false, error:false};
@@ -1062,6 +1070,18 @@ function irAPaso(n){
   render();
 }
 
+/* Lleva la vista exactamente al campo con error, no al inicio del paso. */
+function scrollAlPrimerError(n){
+  const err = erroresPaso(n)[0];
+  if(!err) return;
+  let id = null;
+  if(err.campo === 'declara') id = 'declBox';
+  else if(err.campo === 'descripcion') id = 'fDesc';
+  else if(err.campo.startsWith('doc')) id = 'docBox' + err.campo.slice(3);
+  const el = id && $(id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
 function adelante(){
   if(state.paso === 5){ enviar(); return; }
   if(!pasoValido(state.paso)){
@@ -1083,11 +1103,12 @@ function atras(){
    ENVÍO
    ========================================================================= */
 function enviar(){
-  // Validación integral: salta al primer paso con errores
+  // Validación integral: salta al primer paso con errores y baja hasta el campo con problema
   for(const n of [2,3,5]){
     if(!pasoValido(n)){
       state.touched[n] = true;
       irAPaso(n);
+      scrollAlPrimerError(n);
       mostrarToast('<b>No se pudo enviar la solicitud.</b><br>Hay campos obligatorios sin diligenciar o documentos vencidos.', true);
       return;
     }
@@ -1117,6 +1138,7 @@ function enviar(){
       return;
     }
 
+    registrarSolicitudParaFuncionario();
     $('okRad').textContent = RADICADO;
     $('okFecha').textContent = fmtFechaHora(new Date());
     $('form').hidden = true;
@@ -1124,6 +1146,33 @@ function enviar(){
     window.scrollTo({top:0, behavior:'smooth'});
     mostrarToast('<b>Solicitud radicada.</b><br>Radicado ' + RADICADO + '. Consulta su estado en el módulo de Respuestas.');
   }, 1100);
+}
+
+/* PRUEBAS: comparte la solicitud radicada con funcionario.html (vía localStorage) para
+   poder mostrar de inmediato cómo se ve en el módulo de Respuestas del Funcionario.
+   No hay backend real: esto es solo para la demostración del mockup. */
+function registrarSolicitudParaFuncionario(){
+  try{
+    const KEY = 'acbb_solicitudes_nuevas';
+    const anexos = DOCUMENTOS.filter(d => state.docs[d.id].file).map(d => state.docs[d.id].file.name);
+    if(state.soporte) anexos.push(state.soporte.name);
+    const registro = {
+      rad: RADICADO,
+      est: SESION.nombre,
+      doc: SESION.documento,
+      prog: SESION.programa,
+      proc: 'Cancelación de Matrícula',
+      fecha: new Date().toISOString(),
+      estado: 'Respondida',
+      decision: 'Aprobada',
+      resolucion: `Resolución ${RADICADO.split('-')[2]}-${RADICADO.split('-')[0]}.pdf`,
+      just: state.descripcion || 'Sin descripción.',
+      anexos: anexos.length ? anexos : ['Solicitud firmada.pdf']
+    };
+    const actuales = JSON.parse(localStorage.getItem(KEY) || '[]').filter(r => r.rad !== registro.rad);
+    actuales.push(registro);
+    localStorage.setItem(KEY, JSON.stringify(actuales));
+  }catch(err){ /* almacenamiento no disponible: no afecta el resto del mockup */ }
 }
 
 /* =========================================================================

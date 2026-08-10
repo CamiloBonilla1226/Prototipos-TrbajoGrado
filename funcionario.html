@@ -715,6 +715,16 @@ const DATA = [
   {rad:'2026-CM-0121', est:'Camilo Andrés Ledezma',  doc:'1005990011', prog:'Tecnología en Telemática',    proc:PROC.CM, fecha:'2026-07-17T16:20', estado:'En Gestión', esperaDe:'Estudiante', just:'Solicito la cancelación de matrícula por prestación del servicio militar obligatorio.', anexos:['Solicitud firmada.pdf','Orden de presentación.pdf']}
 ];
 
+/* PRUEBAS: incorpora las solicitudes radicadas desde el formulario del Estudiante
+   (guardadas en localStorage) para poder mostrar de inmediato el flujo completo.
+   No hay backend real: esto es solo para la demostración del mockup. */
+(function cargarSolicitudesNuevas(){
+  try{
+    const nuevas = JSON.parse(localStorage.getItem('acbb_solicitudes_nuevas') || '[]');
+    nuevas.forEach(r => { if(!DATA.some(x => x.rad === r.rad)) DATA.push(r); });
+  }catch(err){ /* almacenamiento no disponible: no afecta el resto del mockup */ }
+})();
+
 const ORDEN_ESTADO = {'Pendiente':0,'En Gestión':1,'Pendiente de Respuesta':2,'Pendiente de Verificación':3,'Respondida':4};
 const PAGE_SIZE = 8;
 let page = 1, sortKey = 'fecha', sortDir = 'desc';
