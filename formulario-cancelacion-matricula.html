@@ -101,6 +101,7 @@
   .paso-intro{margin:0 0 20px;font-size:13px;color:var(--muted);line-height:1.6;}
   .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px 20px;}
   .fld{display:flex;flex-direction:column;gap:6px;}
+  .fld.wide{grid-column:1 / -1;}
   .fld label{font-size:12.5px;font-weight:600;color:var(--navy-ink);}
   .req{color:var(--accent);}
   .fld input[type=text],.fld input[type=date],.fld select,.fld textarea{
@@ -415,7 +416,7 @@ const SESION = {
   codigo:'104620145078',
   documento:'1004556612',
   tipoDocumento:'Cédula de Ciudadanía',
-  programa:'Ingeniería Electrónica y Telecomunicaciones',
+  programa:'Ingeniería de Sistemas',
   facultad:'Facultad de Ingeniería Electrónica y Telecomunicaciones',
   periodoCarrera:7,
   correo:'nsalazar@unicauca.edu.co',
@@ -650,8 +651,8 @@ function renderStepper(){
 /* =========================================================================
    RENDER DE CADA PASO
    ========================================================================= */
-function campoRO(label, valor){
-  return `<div class="fld readonly"><label>${label}</label><input type="text" value="${esc(valor)}" readonly tabindex="-1"></div>`;
+function campoRO(label, valor, extraClass){
+  return `<div class="fld readonly${extraClass ? ' ' + extraClass : ''}"><label>${label}</label><input type="text" value="${esc(valor)}" readonly tabindex="-1"></div>`;
 }
 
 function renderPaso1(){
@@ -664,7 +665,7 @@ function renderPaso1(){
       ${campoRO('Semestre', SESION.periodoCarrera + '°')}
       ${campoRO('Correo institucional', SESION.correo)}
       ${campoRO('Código', SESION.codigo)}
-      ${campoRO('Facultad', SESION.facultad)}
+      ${campoRO('Facultad', SESION.facultad, 'wide')}
       ${campoRO('Cédula', SESION.documento)}
       ${campoRO('Fecha', fmtFecha(new Date().toISOString().slice(0,10)))}
     </div>
