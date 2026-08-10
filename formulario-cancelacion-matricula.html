@@ -446,11 +446,11 @@ const RADICADO = '2026-CM-0152';
    Si el estudiante debe descargarlo, firmarlo y cargarlo, agregar un
    séptimo documento a este arreglo. */
 const DOCUMENTOS = [
-  {id:1, nombre:'Paz y salvo',   entidad:'División de Bibliotecas',              fecha:false, formatos:['pdf'], requerido:false},
-  {id:2, nombre:'Paz y salvo',   entidad:'División de Deportes y Recreación',    fecha:false, formatos:['pdf'], requerido:false},
-  {id:3, nombre:'Paz y salvo',   entidad:'División de Salud Integral',           fecha:false, formatos:['pdf'], requerido:false},
-  {id:4, nombre:'Paz y salvo',   entidad:'División Financiera',                  fecha:false, formatos:['pdf'], requerido:false},
-  {id:5, nombre:'Cupón de Confirmación de la Intervención Psicosocial', entidad:'División de Salud Integral', fecha:false, formatos:['pdf'], requerido:false},
+  {id:1, nombre:'Paz y salvo',   entidad:'División de Bibliotecas',              fecha:false, formatos:['pdf']},
+  {id:2, nombre:'Paz y salvo',   entidad:'División de Deportes y Recreación',    fecha:false, formatos:['pdf']},
+  {id:3, nombre:'Paz y salvo',   entidad:'División de Salud Integral',           fecha:false, formatos:['pdf']},
+  {id:4, nombre:'Paz y salvo',   entidad:'División Financiera',                  fecha:false, formatos:['pdf']},
+  {id:5, nombre:'Cupón de Confirmación de la Intervención Psicosocial', entidad:'División de Salud Integral', fecha:false, formatos:['pdf']},
   {id:6, nombre:'Carné estudiantil o constancia de no trámite',         entidad:'DARCA',                      fecha:false, formatos:['pdf','jpg','jpeg','png'], requerido:false}
 ];
 
@@ -764,7 +764,7 @@ function renderPaso4(){
   const err = id => errs.find(x => x.campo === 'doc'+id);
   return `
     <h2 class="paso-title">Documentación</h2>
-    <p class="paso-intro">Adjunta los ${DOCUMENTOS.length} documentos de este trámite. Ninguno es obligatorio en este prototipo: puedes avanzar sin subir archivos para ver cómo se comporta la solicitud en ese caso.</p>
+    <p class="paso-intro">Adjunta los ${DOCUMENTOS.length} documentos de este trámite. Todos son obligatorios, salvo que se indique lo contrario.</p>
 
     ${DOCUMENTOS.map(d => {
       const st = state.docs[d.id];
