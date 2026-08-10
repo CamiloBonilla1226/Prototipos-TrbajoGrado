@@ -446,11 +446,11 @@ const RADICADO = '2026-CM-0152';
    Si el estudiante debe descargarlo, firmarlo y cargarlo, agregar un
    séptimo documento a este arreglo. */
 const DOCUMENTOS = [
-  {id:1, nombre:'Paz y salvo',   entidad:'División de Bibliotecas',              fecha:true,  formatos:['pdf']},
-  {id:2, nombre:'Paz y salvo',   entidad:'División de Deportes y Recreación',    fecha:true,  formatos:['pdf']},
-  {id:3, nombre:'Paz y salvo',   entidad:'División de Salud Integral',           fecha:true,  formatos:['pdf']},
-  {id:4, nombre:'Paz y salvo',   entidad:'División Financiera',                  fecha:true,  formatos:['pdf']},
-  {id:5, nombre:'Cupón de Confirmación de la Intervención Psicosocial', entidad:'División de Salud Integral', fecha:true, formatos:['pdf']},
+  {id:1, nombre:'Paz y salvo',   entidad:'División de Bibliotecas',              fecha:false, formatos:['pdf'], requerido:false},
+  {id:2, nombre:'Paz y salvo',   entidad:'División de Deportes y Recreación',    fecha:false, formatos:['pdf'], requerido:false},
+  {id:3, nombre:'Paz y salvo',   entidad:'División de Salud Integral',           fecha:false, formatos:['pdf'], requerido:false},
+  {id:4, nombre:'Paz y salvo',   entidad:'División Financiera',                  fecha:false, formatos:['pdf'], requerido:false},
+  {id:5, nombre:'Cupón de Confirmación de la Intervención Psicosocial', entidad:'División de Salud Integral', fecha:false, formatos:['pdf'], requerido:false},
   {id:6, nombre:'Carné estudiantil o constancia de no trámite',         entidad:'DARCA',                      fecha:false, formatos:['pdf','jpg','jpeg','png'], requerido:false}
 ];
 
@@ -764,12 +764,7 @@ function renderPaso4(){
   const err = id => errs.find(x => x.campo === 'doc'+id);
   return `
     <h2 class="paso-title">Documentación</h2>
-    <p class="paso-intro">Adjunta los ${DOCUMENTOS.length} documentos de este trámite. Todos son obligatorios, salvo que se indique lo contrario.</p>
-
-    <div class="alert alert-warn">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#7A5B1B" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <div><b>Vigencia de los paz y salvo</b>Los paz y salvo tienen una vigencia de ${VIGENCIA_DIAS} días calendario desde su expedición. Todos deben estar vigentes al momento de radicar la solicitud.</div>
-    </div>
+    <p class="paso-intro">Adjunta los ${DOCUMENTOS.length} documentos de este trámite. Ninguno es obligatorio en este prototipo: puedes avanzar sin subir archivos para ver cómo se comporta la solicitud en ese caso.</p>
 
     ${DOCUMENTOS.map(d => {
       const st = state.docs[d.id];
@@ -863,9 +858,11 @@ function renderPaso5(){
             const st = state.docs[d.id];
             const v = d.fecha ? vigenciaDe(st.fecha) : null;
             return `<li>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+              ${st.file
+                ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg>`
+                : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A8F9E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>`}
               <span style="flex:1;">${esc(d.nombre)} — ${esc(d.entidad)}</span>
-              <span style="color:var(--muted);">${st.file ? esc(st.file.name) : '—'}${v && v.vencTxt ? ' · exp. ' + fmtFecha(st.fecha) : ''}</span>
+              <span style="color:var(--muted);">${st.file ? esc(st.file.name) : 'No adjuntado'}${v && v.vencTxt ? ' · exp. ' + fmtFecha(st.fecha) : ''}</span>
             </li>`;
           }).join('')}
         </ul>
