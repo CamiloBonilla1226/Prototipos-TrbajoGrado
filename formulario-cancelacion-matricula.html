@@ -458,7 +458,7 @@ const DOCUMENTOS = [
 const MAX_MB = 5;
 const VIGENCIA_DIAS = 5;
 
-/* PRUEBAS: mientras esté en true, no exige adjuntar archivos para avanzar del paso de Documentación. Poner en false para el prototipo final. */
+/* PRUEBAS: mientras esté en true, no exige adjuntar archivos en Documentación ni diligenciar el motivo de cancelación para avanzar. Poner en false para el prototipo final. */
 const MODO_PRUEBA_SIN_ARCHIVOS = true;
 
 /* =========================================================================
@@ -467,7 +467,6 @@ const MODO_PRUEBA_SIN_ARCHIVOS = true;
 const state = {
   paso:1,
   maxPasoVisto:1,
-  categoria:'',
   descripcion:'',
   soporte:null,
   docs:{},           // {id:{file:{name,size}, fecha:'YYYY-MM-DD'}}
@@ -608,8 +607,7 @@ function renderGate(){
    ========================================================================= */
 function erroresPaso(n){
   const e = [];
-  if(n === 3){
-    if(!state.categoria) e.push({campo:'categoria', msg:'Debe seleccionar una categoría.'});
+  if(n === 3 && !MODO_PRUEBA_SIN_ARCHIVOS){
     const len = state.descripcion.trim().length;
     if(len === 0) e.push({campo:'descripcion', msg:'Este campo es requerido.'});
     else if(len < 50) e.push({campo:'descripcion', msg:`La descripción debe tener al menos 50 caracteres. Actualmente tiene ${len}.`});
@@ -680,20 +678,9 @@ function renderPaso2(){
   const errs = state.touched[3] ? erroresPaso(3) : [];
   const err = c => errs.find(x => x.campo === c);
   const len = state.descripcion.length;
-  const CATS = ['Salud','Económico','Laboral','Familiar','Personal','Académico','Otro'];
   return `
     <h2 class="paso-title">Motivo de la cancelación</h2>
     <p class="paso-intro">Explica las razones que sustentan tu solicitud. Esta información será revisada por la Decanatura y sustenta la decisión del Decano.</p>
-
-    <div class="fld ${err('categoria') ? 'has-error':''}" style="max-width:340px;margin-bottom:18px;">
-      <label for="fCat">Categoría del motivo <span class="req">*</span></label>
-      <select id="fCat">
-        <option value="">Seleccione una opción</option>
-        ${CATS.map(c => `<option ${state.categoria === c ? 'selected':''}>${c}</option>`).join('')}
-      </select>
-      <div class="hint">Seleccione la categoría que mejor describe su situación.</div>
-      <div class="err">${err('categoria') ? esc(err('categoria').msg) : ''}</div>
-    </div>
 
     <div class="fld ${err('descripcion') ? 'has-error':''}" style="margin-bottom:18px;">
       <label for="fDesc">Descripción del motivo <span class="req">*</span></label>
@@ -841,9 +828,6 @@ function renderPaso5(){
     <div class="rev">
       <div class="rev-head"><h3>Motivo de la cancelación</h3><button class="link-btn" data-goto="3">Editar</button></div>
       <div class="rev-body">
-        <dl class="dl" style="margin-bottom:12px;">
-          <dt>Categoría</dt><dd>${esc(state.categoria) || '—'}</dd>
-        </dl>
         <div class="just">${esc(state.descripcion) || 'Sin descripción.'}</div>
         ${state.soporte ? `<p style="margin:12px 0 0;font-size:12.5px;color:var(--muted);">Soporte adjunto: <b style="color:var(--navy-ink);">${esc(state.soporte.name)}</b></p>` : ''}
       </div>
@@ -916,13 +900,6 @@ function render(){
    ENLACE DE EVENTOS POR PASO
    ========================================================================= */
 function enlazarPaso(){
-  // Paso 2
-  const cat = $('fCat');
-  if(cat) cat.addEventListener('change', e => {
-    state.categoria = e.target.value;
-    if(state.touched[2]) render();
-  });
-
   const desc = $('fDesc');
   if(desc) desc.addEventListener('input', e => {
     state.descripcion = e.target.value;
