@@ -473,11 +473,11 @@ const EXAMENES_BASE = [
 /* Asignaturas matriculadas en el periodo, para el caso de cruce de exámenes.
    Origen en la implementación definitiva: registro académico (SIMCA). */
 const ASIGNATURAS_MATRICULADAS = [
-  { codigo:'TEL-3204', nombre:'Comunicaciones Digitales',        grupo:'A' },
-  { codigo:'TEL-3311', nombre:'Redes de Computadores',           grupo:'A' },
-  { codigo:'ELE-3108', nombre:'Procesamiento Digital de Señales', grupo:'B' },
-  { codigo:'ELE-3220', nombre:'Electrónica de Potencia',          grupo:'B' },
-  { codigo:'HUM-1105', nombre:'Ética y Sociedad',                 grupo:'C' }
+  { codigo:'TEL-3204', nombre:'Comunicaciones Digitales',        grupo:'A', docente:'Ing. Fabián Castillo Rengifo' },
+  { codigo:'TEL-3311', nombre:'Redes de Computadores',           grupo:'A', docente:'Ing. Marta Lucía Ordóñez' },
+  { codigo:'ELE-3108', nombre:'Procesamiento Digital de Señales', grupo:'B', docente:'Ing. Diana Patricia Muñoz' },
+  { codigo:'ELE-3220', nombre:'Electrónica de Potencia',          grupo:'B', docente:'Ing. Óscar Bermúdez Paz' },
+  { codigo:'HUM-1105', nombre:'Ética y Sociedad',                 grupo:'C', docente:'Mg. Claudia Rengifo Muñoz' }
 ];
 
 const CATEGORIAS_CAUSA = [
@@ -759,6 +759,7 @@ function renderPaso1(){
     <h2 class="paso-title">Información del solicitante</h2>
     <p class="paso-intro">Estos datos se toman automáticamente de tu sesión y del registro académico. Verifícalos antes de continuar.</p>
     <div class="grid-2">
+      ${campoRO('Fecha de la solicitud', fmtFechaLarga(isoHoy()))}
       ${campoRO('Nombre', SESION.nombre)}
       ${campoRO('Programa', SESION.programa)}
       ${campoRO('Código', SESION.codigo)}
@@ -900,6 +901,7 @@ function renderPaso3(){
         </div>
         ${aCruce ? campoRO('Grupo', aCruce.grupo) : ''}
         ${aCruce ? campoRO('Código de la asignatura', aCruce.codigo) : ''}
+        ${aCruce ? campoRO('Docente de la asignatura', aCruce.docente) : ''}
         <div class="fld ${err('cruceFecha') ? 'has-error' : ''}">
           <label for="fCruceFecha">Fecha del examen que sí presentaste <span class="req">*</span></label>
           <input type="date" id="fCruceFecha" value="${state.cruceFecha}" max="${isoHoy()}">
@@ -968,6 +970,7 @@ function renderPaso4(){
     ? `<dl class="dl">
         <dt>Causa</dt><dd>Cruce con el examen de otra asignatura</dd>
         <dt>Asignatura del cruce</dt><dd>${aCruce ? esc(aCruce.nombre) + ' (' + aCruce.codigo + ') — Grupo ' + aCruce.grupo : '—'}</dd>
+        <dt>Docente de la asignatura del cruce</dt><dd>${aCruce ? esc(aCruce.docente) : '—'}</dd>
         <dt>Examen que sí presentó</dt><dd>${state.cruceFecha ? fmtFecha(state.cruceFecha) : '—'} ${state.cruceHora ? 'a las ' + fmtHora(state.cruceHora) : ''}</dd>
         <dt>Anexo de justificación</dt><dd>No aplica para cruce de exámenes</dd>
       </dl>`
@@ -995,6 +998,7 @@ function renderPaso4(){
       <div class="rev-head"><h3>Solicitante</h3><button type="button" class="link-btn" data-goto="1">Editar</button></div>
       <div class="rev-body">
         <dl class="dl">
+          <dt>Fecha de la solicitud</dt><dd>${fmtFechaLarga(isoHoy())}</dd>
           <dt>Nombre completo</dt><dd>${esc(SESION.nombre)}</dd>
           <dt>Código estudiantil</dt><dd>${SESION.codigo}</dd>
           <dt>Programa</dt><dd>${esc(SESION.programa)}</dd>
