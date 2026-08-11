@@ -208,14 +208,6 @@
   .spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
   @keyframes sp{to{transform:rotate(360deg);}}
 
-  /* ---------- Panel de pruebas ---------- */
-  .test{position:fixed;left:16px;bottom:16px;z-index:90;font-size:12px;}
-  .test-btn{background:#3A3F4B;color:#fff;border:0;border-radius:20px;padding:8px 14px;font-size:11.5px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(20,26,56,.25);}
-  .test-panel{background:#2C3038;color:#EDEFF6;border-radius:6px;padding:14px;width:260px;box-shadow:0 14px 34px rgba(20,26,56,.4);margin-bottom:9px;}
-  .test-panel h4{margin:0 0 4px;font-size:12px;color:#fff;}
-  .test-panel p{margin:0 0 11px;font-size:11px;color:#A9AFBB;line-height:1.5;}
-  .test-row{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:11.8px;}
-  .test-row input{accent-color:#7FA0F0;width:14px;height:14px;}
 
   /* ---------- Footer ---------- */
   footer{border-top:1px solid var(--line);padding:18px 26px 22px;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.9;background:#fff;}
@@ -381,18 +373,6 @@
   </div>
 </div>
 
-<!-- ===================== PANEL DE PRUEBAS ===================== -->
-<div class="test">
-  <div class="test-panel" id="testPanel" hidden>
-    <h4>Panel de pruebas</h4>
-    <p>Solo del prototipo. Permite demostrar los escenarios alternos sin modificar el código.</p>
-    <label class="test-row"><input type="checkbox" id="tDuplicada"> Ya tiene una solicitud en curso</label>
-    <label class="test-row"><input type="checkbox" id="tPlazo"> Plazo del trámite vencido</label>
-    <label class="test-row"><input type="checkbox" id="tError"> Forzar error del servidor al enviar</label>
-  </div>
-  <button class="test-btn" id="testBtn">Panel de pruebas</button>
-</div>
-
 <!-- ===================== TOAST ===================== -->
 <div class="toast" id="toast" role="status" aria-live="polite">
   <div class="toast-icon" id="toastIcon">
@@ -458,9 +438,6 @@ const state = {
   asigEditando:new Set()  // índices de ASIGNATURAS en edición
 };
 
-/* Interruptores del panel de pruebas */
-const TEST = {duplicada:false, plazo:false, error:false};
-
 /* =========================================================================
    UTILIDADES
    ========================================================================= */
@@ -499,7 +476,7 @@ function renderGate(){
   const bloqueos = [];
 
   // Plazo del trámite
-  const vencido = TEST.plazo || hoy() > new Date(PERIODO.ultimoDiaCancelacionAsignatura + 'T00:00:00');
+  const vencido = hoy() > new Date(PERIODO.ultimoDiaCancelacionAsignatura + 'T00:00:00');
   if(vencido){
     bloqueos.push({
       titulo:'El plazo para este trámite ya venció',
@@ -508,7 +485,7 @@ function renderGate(){
   }
 
   // Solicitud duplicada
-  const duplicada = TEST.duplicada || SOLICITUDES_EN_CURSO.length > 0;
+  const duplicada = SOLICITUDES_EN_CURSO.length > 0;
   if(duplicada){
     bloqueos.push({
       titulo:'Ya tienes una solicitud de este trámite en curso',
@@ -947,19 +924,6 @@ function enviar(){
     state.enviando = false;
     btn.disabled = false;
 
-    if(TEST.error){
-      // Error del servidor: no se pierde nada de lo diligenciado
-      render();
-      $('errorEnvio').innerHTML = `
-        <div class="alert alert-danger">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8A2C22" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5h.01" stroke-linecap="round"/></svg>
-          <div><b>No se pudo enviar la solicitud</b>Ocurrió un error de conexión con el servidor y la solicitud no fue radicada. Tu información se conservó por completo: puedes intentar el envío nuevamente.</div>
-        </div>`;
-      mostrarToast('<b>Error al enviar la solicitud.</b><br>La información diligenciada se conservó. Intenta nuevamente.', true);
-      window.scrollTo({top:0, behavior:'smooth'});
-      return;
-    }
-
     registrarSolicitudParaFuncionario();
     registrarSolicitudParaEstudiante();
     $('okRad').textContent = RADICADO;
@@ -1078,26 +1042,7 @@ $('btnLogout').addEventListener('click', () => {
   mostrarToast('<b>Sesión cerrada.</b><br>Has salido de Gestión de Procesos Académicos FIET.');
 });
 
-/* Panel de pruebas */
-$('testBtn').addEventListener('click', () => {
-  $('testPanel').hidden = !$('testPanel').hidden;
-});
-[['tDuplicada','duplicada'],['tPlazo','plazo'],['tError','error']]
-  .forEach(([id,key]) => {
-    $(id).addEventListener('change', e => {
-      TEST[key] = e.target.checked;
-      if(['duplicada','plazo'].includes(key)){
-        $('done').hidden = true;
-        $('form').hidden = true;
-        $('gate').hidden = false;
-        renderGate();
-        window.scrollTo({top:0, behavior:'smooth'});
-      }
-    });
-  });
-
-/* Arranque: se entra directo al formulario. El panel de pruebas permite
-   forzar escenarios que sí requieren pasar por la verificación de procedencia. */
+/* Arranque: se entra directo al formulario. */
 $('form').hidden = false;
 render();
 </script>
