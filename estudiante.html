@@ -174,6 +174,7 @@
     text-transform:uppercase;letter-spacing:.4px;margin:0 0 6px;
   }
   .tramite-list{margin:0;padding-left:17px;font-size:12.3px;color:var(--muted);line-height:1.65;}
+  .tramite-list .link-btn{display:block;margin-top:2px;font-size:12px;}
   .tramite-card-foot{padding:14px 18px;border-top:1px solid var(--line-soft);}
   .btn-iniciar{
     width:100%;height:38px;border:0;border-radius:3px;background:var(--navy-700);
@@ -579,8 +580,12 @@
               <div>
                 <p class="tramite-sub">Anexos requeridos</p>
                 <ul class="tramite-list">
-                  <li>Formato de solicitud firmado por el docente de la asignatura.</li>
-                  <li>Soporte de la justificación (o firma del docente de la otra asignatura si es cruce de exámenes).</li>
+                  <li>Formato firmado por el docente que orienta la asignatura, siempre obligatorio.
+                    <button class="link-btn" type="button" data-plantilla-es="principal">Descargar formato</button>
+                  </li>
+                  <li>Soporte de la justificación, opcional, o formato firmado por el docente de la asignatura con la que se presenta el cruce si esa es la causa.
+                    <button class="link-btn" type="button" data-plantilla-es="cruce">Descargar formato</button>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -1153,6 +1158,92 @@ document.getElementById('btnLogout').addEventListener('click', () => {
 
 render();
 irA(VIEWS[location.hash.slice(1)] ? location.hash.slice(1) : 'usuario');
+
+/* =========================================================================
+   PLANTILLAS DESCARGABLES — anexos de Examen Supletorio
+   Mismo diseño usado en formulario-examen-supletorio.html. Aquí se descargan
+   en blanco (el estudiante aún no ha diligenciado la solicitud).
+   ========================================================================= */
+function escPlantillaES(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtFechaLargaHoy(){
+  const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const d = new Date();
+  return `${d.getDate()} de ${MESES[d.getMonth()]} de ${d.getFullYear()}`;
+}
+function construirDocumentoPlantillaES(titulo, intro, filas){
+  const filasHTML = filas.map(([et,v]) => `
+    <div style="margin-bottom:11px;">
+      <div style="font-family:Calibri,Arial,sans-serif;font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;color:#555;margin-bottom:2px;">${escPlantillaES(et)}</div>
+      <div style="font-family:Calibri,Arial,sans-serif;font-size:12px;border-bottom:1px solid #000;padding-bottom:3px;min-height:14px;">${escPlantillaES(v || '')}</div>
+    </div>`).join('');
+  return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+    <head><meta charset="utf-8"><title>${escPlantillaES(titulo)}</title></head>
+    <body style="font-family:Calibri,Arial,sans-serif;font-size:13px;color:#000;line-height:1.55;padding:10px 6px;">
+      <div style="font-size:15px;font-weight:bold;color:#000;letter-spacing:.3px;">UNIVERSIDAD DEL CAUCA</div>
+      <div style="font-size:11.5px;color:#444;">Facultad de Ingeniería Electrónica y Telecomunicaciones</div>
+      <div style="border-top:2px solid #000;margin:8px 0 16px;"></div>
+
+      <h2 style="color:#000;text-align:center;text-transform:uppercase;letter-spacing:.4px;font-size:15px;margin:0 0 4px;">${escPlantillaES(titulo)}</h2>
+      <p style="text-align:center;color:#555;font-size:11px;margin:0 0 20px;">Anexo del trámite de Examen Supletorio &nbsp;·&nbsp; Generado el ${fmtFechaLargaHoy()}</p>
+
+      <p style="margin:0 0 18px;">${intro}</p>
+
+      <div style="width:100%;max-width:420px;margin-bottom:20px;">${filasHTML}</div>
+
+      <p style="margin:0 0 30px;font-size:12px;color:#333;">
+        El docente cuya firma se registra a continuación certifica haber recibido y verificado la información consignada en este formato.
+      </p>
+
+      <div style="margin-bottom:34px;">
+        <div style="font-family:Calibri,Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#555;margin-bottom:32px;">Nombre del docente</div>
+        <div style="font-family:Calibri,Arial,sans-serif;font-size:13px;letter-spacing:1px;">_______________________________________</div>
+      </div>
+      <div>
+        <div style="font-family:Calibri,Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#555;margin-bottom:42px;">Firma del docente</div>
+        <div style="font-family:Calibri,Arial,sans-serif;font-size:13px;letter-spacing:1px;">_______________________________________</div>
+      </div>
+
+      <div style="border-top:1px solid #999;margin-top:40px;padding-top:8px;font-family:Calibri,Arial,sans-serif;font-size:10px;color:#777;">
+        Documento generado por el Sistema de Gestión de Procesos Académicos FIET, Universidad del Cauca. Este formato hace parte de los anexos de la solicitud de Examen Supletorio y no requiere radicación independiente.
+      </div>
+    </body>
+  </html>`;
+}
+function descargarArchivoDocES(html, nombre){
+  const blob = new Blob(['﻿', html], {type:'application/msword'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = nombre;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function descargarPlantillaES(tipo){
+  const nombreEstudiante = 'Nicolás Salazar';
+  const codigoEstudiante = '104620145078';
+  const programaEstudiante = 'Ingeniería Electrónica y Telecomunicaciones';
+  if(tipo === 'cruce'){
+    const intro = `El(la) estudiante <b>${escPlantillaES(nombreEstudiante)}</b>, código <b>${escPlantillaES(codigoEstudiante)}</b>, del programa de <b>${escPlantillaES(programaEstudiante)}</b>, presentó un cruce de horario con el examen de la asignatura que se relaciona a continuación, motivo por el cual no concurrió al examen objeto de esta solicitud.`;
+    const html = construirDocumentoPlantillaES('Formato de novedad — Cruce de exámenes', intro, [
+      ['Asignatura con la que se presenta el cruce', ''],
+      ['Código de la asignatura', ''],
+      ['Fecha del examen', ''],
+      ['Hora del examen', '']
+    ]);
+    descargarArchivoDocES(html, 'formato-firma-docente-cruce.doc');
+  }else{
+    const intro = `El(la) estudiante <b>${escPlantillaES(nombreEstudiante)}</b>, código <b>${escPlantillaES(codigoEstudiante)}</b>, del programa de <b>${escPlantillaES(programaEstudiante)}</b>, solicita autorización de examen supletorio para la asignatura y fechas que se relacionan a continuación.`;
+    const html = construirDocumentoPlantillaES('Formato de novedad — Examen supletorio', intro, [
+      ['Asignatura', ''],
+      ['Código de la asignatura', ''],
+      ['Fecha del examen no presentado', ''],
+      ['Fecha acordada para el examen supletorio', '']
+    ]);
+    descargarArchivoDocES(html, 'formato-firma-docente.doc');
+  }
+}
+document.querySelectorAll('[data-plantilla-es]').forEach(b => {
+  b.addEventListener('click', () => descargarPlantillaES(b.dataset.plantillaEs));
+});
 </script>
 </body>
 </html>
