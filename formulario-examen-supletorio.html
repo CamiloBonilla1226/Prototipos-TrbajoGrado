@@ -765,7 +765,6 @@ function renderPaso1(){
       ${campoRO('Código', SESION.codigo)}
       ${campoRO('Semestre', SESION.periodoCarrera + '°')}
       ${campoRO(SESION.tipoDocumento, SESION.documento)}
-      ${campoRO('Periodo académico', PERIODO.periodoAcademico)}
       ${campoRO('Correo institucional', SESION.correo)}
       <div class="fld ${errTel ? 'has-error' : ''}">
         <label for="fTel">Teléfono de contacto <span class="req">*</span></label>
@@ -1004,7 +1003,6 @@ function renderPaso4(){
           <dt>Periodo de carrera</dt><dd>${SESION.periodoCarrera}°</dd>
           <dt>Correo institucional</dt><dd>${SESION.correo}</dd>
           <dt>Teléfono de contacto</dt><dd>${esc(state.telefono) || '—'}</dd>
-          <dt>Periodo académico</dt><dd>${PERIODO.periodoAcademico}</dd>
         </dl>
       </div>
     </div>
