@@ -734,6 +734,12 @@ const PAGE_SIZE = 8;
 let page = 1, sortKey = 'fecha', sortDir = 'desc';
 
 /* ---------- Iconos de estado ---------- */
+function iconDecision(d){
+  if(d === 'Rechazada')
+    return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D0463B" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>';
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.5L16 9.5"/></svg>';
+}
+
 function iconEstado(e){
   if(e === 'Pendiente')
     return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E0952B" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>';
@@ -895,7 +901,6 @@ function renderRespuestas(){
   table.hidden = false; empty.hidden = true;
   const slice = rows.slice((pageR-1)*PAGE_SIZE, pageR*PAGE_SIZE);
   tbody.innerHTML = slice.map(r => {
-    const aprobada = r.decision === 'Aprobada';
     return `
     <tr>
       <td class="radicado">${r.rad}</td>
@@ -903,7 +908,7 @@ function renderRespuestas(){
       <td class="doc">${r.doc}</td>
       <td>${r.proc}</td>
       <td class="fecha">${fmtFecha(r.fecha)}</td>
-      <td><span class="chip-decision ${aprobada ? 'is-aprobada' : 'is-rechazada'}">${r.decision}</span></td>
+      <td><span class="estado">${iconDecision(r.decision)}${r.decision}</span></td>
       <td>
         <button class="btn-eye" data-rad="${r.rad}" title="Ver detalle" aria-label="Ver detalle de ${r.rad}">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2F6FD0" stroke-width="1.7">
