@@ -769,7 +769,7 @@ function renderPaso1(){
       ${campoRO('Correo institucional', SESION.correo)}
       <div class="fld ${errTel ? 'has-error' : ''}">
         <label for="fTel">Teléfono de contacto <span class="req">*</span></label>
-        <input type="tel" id="fTel" value="${esc(state.telefono)}" placeholder="318 442 7790" inputmode="tel">
+        <input type="tel" id="fTel" value="${esc(state.telefono)}" placeholder=" Ej: 318 442 7790" inputmode="tel">
         <div class="err">${errTel ? esc(errTel.msg) : ''}</div>
       </div>
     </div>
