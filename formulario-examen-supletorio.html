@@ -615,8 +615,15 @@ function renderGate(){
 /* =========================================================================
    VALIDACIÓN POR PASO
    ========================================================================= */
+/* Prototipo de demostración: la validación de campos obligatorios queda
+   desactivada para poder recorrer el formulario libremente ante el cliente,
+   sin modificar el diseño (asteriscos, mensajes y checkbox de escenarios
+   se mantienen tal cual). Cambiar a true para reactivarla. */
+const VALIDACION_ACTIVA = false;
+
 function erroresPaso(n){
   const e = [];
+  if(!VALIDACION_ACTIVA) return e;
 
   if(n === 1 && debeValidar()){
     const t = state.telefono.replace(/\D/g,'');
