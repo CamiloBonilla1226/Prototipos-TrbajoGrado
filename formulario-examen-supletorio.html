@@ -707,56 +707,42 @@ function renderPaso1(){
    PLANTILLAS DESCARGABLES (formato de firma del docente)
    ========================================================================= */
 function construirDocumentoHTML(titulo, intro, filas){
-  const filasHTML = filas.map(([et,v], i) => `<tr>
-      <td style="padding:9px 12px;border:1px solid #C6D6F5;font-weight:bold;width:230px;background:${i % 2 ? '#F4F6FB' : '#EAF0FE'};color:#1B2660;">${esc(et)}</td>
-      <td style="padding:9px 12px;border:1px solid #C6D6F5;background:${i % 2 ? '#FBFCFE' : '#fff'};">${esc(v || '')}</td>
-    </tr>`).join('');
+  const filasHTML = filas.map(([et,v]) => `
+    <div style="margin-bottom:11px;">
+      <div style="font-family:Calibri,Arial,sans-serif;font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;color:#555;margin-bottom:2px;">${esc(et)}</div>
+      <div style="font-family:Calibri,Arial,sans-serif;font-size:12px;border-bottom:1px solid #000;padding-bottom:3px;min-height:14px;">${esc(v || '')}</div>
+    </div>`).join('');
   const hoyLargo = fmtFechaLarga(isoHoy());
   return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
     <head><meta charset="utf-8"><title>${esc(titulo)}</title></head>
-    <body style="font-family:Calibri,Arial,sans-serif;font-size:13px;color:#2C3038;line-height:1.55;padding:10px 6px;">
-      <table style="width:100%;border-collapse:collapse;margin-bottom:4px;">
-        <tr>
-          <td style="vertical-align:middle;">
-            <div style="font-size:15px;font-weight:bold;color:#1B2660;letter-spacing:.3px;">UNIVERSIDAD DEL CAUCA</div>
-            <div style="font-size:11.5px;color:#6E7480;">Facultad de Ingeniería Electrónica y Telecomunicaciones</div>
-          </td>
-          <td style="text-align:right;vertical-align:middle;">
-            <div style="display:inline-block;border:1px solid #B23B2E;color:#B23B2E;font-weight:bold;font-size:10.5px;letter-spacing:.4px;padding:5px 10px;">EXAMEN SUPLETORIO</div>
-          </td>
-        </tr>
-      </table>
-      <div style="border-top:3px solid #1B2660;border-bottom:1px solid #C6D6F5;padding:3px 0;margin-bottom:16px;"></div>
+    <body style="font-family:Calibri,Arial,sans-serif;font-size:13px;color:#000;line-height:1.55;padding:10px 6px;">
+      <div style="font-size:15px;font-weight:bold;color:#000;letter-spacing:.3px;">UNIVERSIDAD DEL CAUCA</div>
+      <div style="font-size:11.5px;color:#444;">Facultad de Ingeniería Electrónica y Telecomunicaciones</div>
+      <div style="border-top:2px solid #000;margin:8px 0 16px;"></div>
 
-      <h2 style="color:#1B2660;text-align:center;text-transform:uppercase;letter-spacing:.4px;font-size:15.5px;margin:0 0 4px;">${esc(titulo)}</h2>
-      <p style="text-align:center;color:#6E7480;font-size:11.5px;margin:0 0 20px;">Anexo del trámite de Examen Supletorio &nbsp;·&nbsp; Generado el ${hoyLargo}</p>
+      <h2 style="color:#000;text-align:center;text-transform:uppercase;letter-spacing:.4px;font-size:15px;margin:0 0 4px;">${esc(titulo)}</h2>
+      <p style="text-align:center;color:#555;font-size:11px;margin:0 0 20px;">Anexo del trámite de Examen Supletorio &nbsp;·&nbsp; Generado el ${hoyLargo}</p>
 
-      <p style="margin:0 0 16px;">${intro}</p>
+      <p style="margin:0 0 18px;">${intro}</p>
 
-      <table style="border-collapse:collapse;width:100%;margin-bottom:26px;">${filasHTML}</table>
+      <div style="width:100%;max-width:420px;margin-bottom:20px;">${filasHTML}</div>
 
-      <p style="margin:0 0 34px;font-size:12.5px;color:#444;">
+      <p style="margin:0 0 30px;font-size:12px;color:#333;">
         El docente cuya firma se registra a continuación certifica haber recibido y verificado la información consignada en este formato.
       </p>
 
-      <table style="width:100%;border-collapse:collapse;">
-        <tr>
-          <td style="width:55%;vertical-align:top;">
-            <div style="border-top:1px solid #2C3038;width:85%;margin-bottom:5px;"></div>
-            <div style="font-weight:bold;">Firma del docente</div>
-          </td>
-          <td style="width:45%;vertical-align:top;">
-            <div style="border-top:1px solid #2C3038;width:85%;margin-bottom:5px;"></div>
-            <div style="font-weight:bold;">Nombre y C.C.</div>
-          </td>
-        </tr>
-      </table>
+      <div style="margin-bottom:44px;">
+        <div style="font-family:Calibri,Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#555;margin-bottom:34px;">Nombre del docente</div>
+        <div style="border-bottom:1px solid #000;width:75%;"></div>
+      </div>
+      <div>
+        <div style="font-family:Calibri,Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#555;margin-bottom:44px;">Firma del docente</div>
+        <div style="border-bottom:1px solid #000;width:75%;"></div>
+      </div>
 
-      <table style="width:100%;border-collapse:collapse;margin-top:40px;">
-        <tr><td style="border-top:1px solid #E3E6EC;padding-top:8px;font-size:10.5px;color:#9AA2B1;">
-          Documento generado por el Sistema de Gestión de Procesos Académicos FIET, Universidad del Cauca. Este formato hace parte de los anexos de la solicitud de Examen Supletorio y no requiere radicación independiente.
-        </td></tr>
-      </table>
+      <div style="border-top:1px solid #999;margin-top:40px;padding-top:8px;font-family:Calibri,Arial,sans-serif;font-size:10px;color:#777;">
+        Documento generado por el Sistema de Gestión de Procesos Académicos FIET, Universidad del Cauca. Este formato hace parte de los anexos de la solicitud de Examen Supletorio y no requiere radicación independiente.
+      </div>
     </body>
   </html>`;
 }
@@ -772,6 +758,7 @@ function descargarPlantillaPrincipal(){
   const intro = `El(la) estudiante <b>${esc(SESION.nombre)}</b>, código <b>${esc(SESION.codigo)}</b>, del programa de <b>${esc(SESION.programa)}</b>, solicita autorización de examen supletorio para la asignatura y fechas que se relacionan a continuación.`;
   const html = construirDocumentoHTML('Formato de novedad — Examen supletorio', intro, [
     ['Asignatura', state.asigNombre],
+    ['Código de la asignatura', state.asigCodigo],
     ['Fecha del examen no presentado', state.fechaNoPresentado ? fmtFecha(state.fechaNoPresentado) : ''],
     ['Fecha acordada para el examen supletorio', state.fechaPropuesta ? fmtFecha(state.fechaPropuesta) : '']
   ]);
