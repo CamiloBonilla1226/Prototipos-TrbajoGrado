@@ -332,6 +332,34 @@
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#25407E" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg>
               <div><b>El trámite procede</b>Puedes continuar con la solicitud. El examen supletorio se solicita <b style="display:inline;">a más tardar tres días hábiles</b> después de la fecha del examen al que no concurriste, por lo que el plazo se cuenta por separado para cada examen.</div>
             </div>
+
+            <div class="subhead">Documentos que debes descargar y hacer firmar
+              <small>Necesitas estos formatos firmados por el o los docentes para adjuntarlos en el formulario. Puedes descargarlos desde ya y tenerlos listos antes de continuar.</small>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="border:1px solid var(--line);border-radius:3px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E7480" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:1px;"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-weight:700;font-size:13px;color:var(--navy-ink);">Formato del docente que orienta la asignatura</div>
+                  <div style="font-size:12.3px;color:var(--muted);margin-top:3px;line-height:1.6;">Obligatorio para toda solicitud. Debe firmarlo el docente de la asignatura del examen al que no concurriste, como constancia de que acordó contigo la nueva fecha del supletorio.</div>
+                  <button type="button" class="link-btn" id="btnDescargarFirmaGate" style="margin-top:9px;display:inline-flex;align-items:center;gap:7px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+                    Descargar formato
+                  </button>
+                </div>
+              </div>
+              <div style="border:1px solid var(--line);border-radius:3px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E7480" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:1px;"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-weight:700;font-size:13px;color:var(--navy-ink);">Formato del docente de la asignatura con la que se presenta el cruce</div>
+                  <div style="font-size:12.3px;color:var(--muted);margin-top:3px;line-height:1.6;">Solo aplica si tu causa para no presentar el examen fue un cruce con el examen de otra asignatura. Debe firmarlo el docente de esa otra asignatura.</div>
+                  <button type="button" class="link-btn" id="btnDescargarFirmaCruceGate" style="margin-top:9px;display:inline-flex;align-items:center;gap:7px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+                    Descargar formato
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="acciones">
             <a class="btn btn-ghost" href="estudiante.html">
@@ -1342,6 +1370,8 @@ $('btnGate').addEventListener('click', () => {
   $('form').hidden = false;
   render();
 });
+$('btnDescargarFirmaGate').addEventListener('click', descargarPlantillaPrincipal);
+$('btnDescargarFirmaCruceGate').addEventListener('click', descargarPlantillaCruce);
 $('btnAdelante').addEventListener('click', adelante);
 $('btnAtras').addEventListener('click', atras);
 document.querySelectorAll('.step').forEach(b => {
