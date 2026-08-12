@@ -506,7 +506,7 @@ const state = {
   examenes:[],
   paso:1,
   maxPasoVisto:1,
-  telefono:SESION.telefono,
+  telefono:'',
   examenId:null,
   fechaPropuesta:'',
   horaPropuesta:'',
@@ -770,7 +770,6 @@ function renderPaso1(){
       <div class="fld ${errTel ? 'has-error' : ''}">
         <label for="fTel">Teléfono de contacto <span class="req">*</span></label>
         <input type="tel" id="fTel" value="${esc(state.telefono)}" placeholder="318 442 7790" inputmode="tel">
-        <div class="hint">Es el número al que la Secretaría de la FIET te llamará para coordinar la realización del examen. Puedes corregirlo aquí.</div>
         <div class="err">${errTel ? esc(errTel.msg) : ''}</div>
       </div>
     </div>
@@ -1181,7 +1180,7 @@ function atras(){
 
 function hayDatos(){
   return !!(state.examenId || state.fechaPropuesta || state.horaPropuesta || state.tipoCausa ||
-            state.descripcion.trim() || state.anexo || state.telefono !== SESION.telefono);
+            state.descripcion.trim() || state.anexo || state.telefono.trim());
 }
 
 function salirDelFormulario(){
