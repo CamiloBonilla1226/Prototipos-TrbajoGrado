@@ -238,16 +238,6 @@
   .toast.is-error .toast-icon{background:var(--red);}
   .toast-text{font-size:13.2px;line-height:1.6;}
 
-  /* ---------- Panel de escenarios (solo para la sustentación) ---------- */
-  .esc{position:fixed;left:16px;bottom:16px;z-index:110;font-size:12px;}
-  .esc-btn{background:var(--navy-900);color:#fff;border:0;border-radius:20px;padding:9px 15px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(20,26,56,.3);display:flex;align-items:center;gap:8px;font-family:inherit;}
-  .esc-panel{background:#fff;border:1px solid var(--line);border-radius:5px;box-shadow:0 14px 34px rgba(20,26,56,.25);padding:14px 16px;width:300px;margin-bottom:9px;}
-  .esc-panel h4{margin:0 0 3px;font-size:12.5px;color:var(--navy-ink);}
-  .esc-panel .esc-sub{margin:0 0 12px;font-size:11.5px;color:var(--muted);line-height:1.5;}
-  .esc-opt{display:flex;gap:9px;align-items:flex-start;padding:7px 0;font-size:12.3px;line-height:1.5;cursor:pointer;color:var(--text);}
-  .esc-opt input{margin-top:2px;accent-color:var(--navy-700);flex:0 0 auto;}
-  .esc-sep{border:0;border-top:1px solid var(--line-soft);margin:10px 0;}
-
   @media (max-width:860px){
     :root{--sidebar-w:64px;}
     .nav-item span.label{display:none;}
@@ -257,8 +247,6 @@
     .step-label{display:none;}
     .dl,.resumen .dl,.ok-box .dl{grid-template-columns:1fr;gap:3px 0;}
     .dl dd{margin-bottom:8px;}
-    .esc{left:10px;bottom:10px;}
-    .esc-panel{width:calc(100vw - 32px);max-width:300px;}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 </style>
@@ -448,22 +436,6 @@
 <!-- ===================== MODAL ===================== -->
 <div id="modalSlot"></div>
 
-<!-- ===================== PANEL DE ESCENARIOS (sustentación) ===================== -->
-<div class="esc">
-  <div class="esc-panel" id="escPanel" hidden>
-    <h4>Escenarios de demostración</h4>
-    <p class="esc-sub">Solo para la sustentación. No forma parte de la aplicación.</p>
-    <label class="esc-opt"><input type="radio" name="esc" value="normal" checked><span><b>Camino normal.</b> Sin solicitudes previas en curso.</span></label>
-    <label class="esc-opt"><input type="radio" name="esc" value="duplicada"><span><b>Solicitud duplicada.</b> Ya hay un supletorio en curso.</span></label>
-    <hr class="esc-sep">
-    <label class="esc-opt"><input type="checkbox" id="escValidar" checked><span><b>Exigir validación completa.</b> Desmarca para recorrer el formulario sin diligenciar campos.</span></label>
-  </div>
-  <button class="esc-btn" id="escBtn" type="button" aria-expanded="false">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
-    Escenarios
-  </button>
-</div>
-
 <script>
 /* =========================================================================
    DATOS SIMULADOS
@@ -617,8 +589,8 @@ function renderGate(){
    ========================================================================= */
 /* Prototipo de demostración: la validación de campos obligatorios queda
    desactivada para poder recorrer el formulario libremente ante el cliente,
-   sin modificar el diseño (asteriscos, mensajes y checkbox de escenarios
-   se mantienen tal cual). Cambiar a true para reactivarla. */
+   sin modificar el diseño (asteriscos y mensajes se mantienen tal cual).
+   Cambiar a true para reactivarla. */
 const VALIDACION_ACTIVA = false;
 
 function erroresPaso(n){
@@ -1410,20 +1382,6 @@ $('btnLogout').addEventListener('click', () => {
 /* Aviso de pérdida de datos */
 window.addEventListener('beforeunload', e => {
   if(!state.radicado && !$('form').hidden && hayDatos()){ e.preventDefault(); e.returnValue = ''; }
-});
-
-/* Panel de escenarios */
-$('escBtn').addEventListener('click', () => {
-  const p = $('escPanel');
-  p.hidden = !p.hidden;
-  $('escBtn').setAttribute('aria-expanded', String(!p.hidden));
-});
-document.querySelectorAll('input[name="esc"]').forEach(r => {
-  r.addEventListener('change', e => { state.escenario = e.target.value; aplicarEscenario(); });
-});
-$('escValidar').addEventListener('change', e => {
-  state.validar = e.target.checked;
-  if(!$('form').hidden) render();
 });
 
 /* Arranque */

@@ -229,16 +229,6 @@
   .btn-eye:hover{background:#E3EBFA;}
   .btn-eye:focus-visible{outline:2px solid var(--link);outline-offset:1px;}
 
-  .chip-estado{
-    display:inline-block;padding:4px 11px;border-radius:20px;
-    font-size:12px;font-weight:700;letter-spacing:.2px;white-space:nowrap;
-  }
-  .chip-estado.en-tramite{background:#EAF0FE;color:var(--state-blue);}
-  .chip-estado.pendiente-pago{background:#FDF3E3;color:var(--amber);}
-  .chip-estado.en-verificacion{background:#EAF0FE;color:var(--state-blue);}
-  .chip-estado.aprobada{background:#E4F5EC;color:var(--green);}
-  .chip-estado.rechazada{background:#FBE9E7;color:var(--red);}
-
   /* ---------- Empty state ---------- */
   .empty{padding:44px 20px;text-align:center;}
   .empty h3{margin:14px 0 6px;font-size:14.5px;color:var(--navy-ink);}
@@ -811,13 +801,6 @@ const DATA = [
 })();
 
 const ORDEN_ESTADO = {'En trámite':0,'Pendiente de pago':1,'En verificación de pago':2,'Aprobada':3,'Rechazada':4};
-const CHIP_CLASS = {
-  'En trámite':'en-tramite',
-  'Pendiente de pago':'pendiente-pago',
-  'En verificación de pago':'en-verificacion',
-  'Aprobada':'aprobada',
-  'Rechazada':'rechazada'
-};
 const PAGE_SIZE = 8;
 let page = 1, sortKey = 'fecha', sortDir = 'desc';
 
@@ -892,7 +875,7 @@ function render(){
       <td class="radicado">${r.rad}</td>
       <td>${r.proc}</td>
       <td class="fecha">${fmtFecha(r.fecha)}</td>
-      <td><span class="chip-estado ${CHIP_CLASS[r.estado]}">${r.estado}</span></td>
+      <td><span class="estado">${iconEstado(r.estado)}${r.estado}</span></td>
       <td>
         <div class="acciones-multi">
           <button class="btn-eye" data-rad="${r.rad}" title="Ver seguimiento" aria-label="Ver seguimiento de ${r.rad}">
