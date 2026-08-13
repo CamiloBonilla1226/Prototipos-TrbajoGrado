@@ -27,6 +27,8 @@
     --navy-800:#232F6E;
     --navy-700:#2A3A86;
     --navy-ink:#1F2A6D;
+    /* Azul exacto de la tarjeta de Mi usuario en el panel de Funcionario */
+    --card-navy:#1E257B;
     --accent:#B23B2E;
     --link:#2F6FD0;
     --green:#2E9E6B;
@@ -90,25 +92,43 @@
   .crumbs span{margin:0 7px;color:var(--navy-ink);font-weight:700;}
   .section-tab{display:inline-block;font-size:15px;font-weight:600;color:var(--navy-ink);padding-bottom:7px;border-bottom:3px solid var(--accent);margin-bottom:26px;}
 
-  /* ---------- Tarjeta de bienvenida (Mi usuario) ---------- */
+  /* ---------- Tarjeta de bienvenida (Mi usuario) ----------
+     Reproduce la tarjeta del panel de Funcionario Académico:
+     título centrado, columna izquierda con avatar y fecha de vinculación,
+     columna derecha con la lista de datos.                                */
   .bienvenida{display:flex;justify-content:center;padding:6px 0 40px;}
   .user-card{
     background:#fff;border:1px solid var(--line);border-radius:8px;
     box-shadow:0 4px 16px rgba(27,38,96,.10);
-    width:100%;max-width:380px;padding:24px 26px 22px;
+    width:100%;max-width:520px;padding:26px 30px 30px;
   }
   .user-card h2{
-    margin:0 0 18px;font-size:20px;font-weight:600;color:var(--navy-700);
-    text-align:center;line-height:1.35;
+    margin:0 0 24px;font-size:21px;font-weight:700;color:var(--card-navy);
+    text-align:center;line-height:1.35;letter-spacing:-.1px;
   }
-  .user-card dl{display:block;margin:0;font-size:12.8px;line-height:1.65;}
-  .user-card .row{margin-bottom:9px;}
-  .user-card dt{display:inline;font-weight:700;color:var(--navy-ink);}
-  .user-card dd{display:inline;margin:0;color:var(--muted);}
-  .estado-ok{display:inline-flex;align-items:center;gap:5px;}
-  .estado-ok svg{flex:0 0 auto;}
+  .user-grid{display:grid;grid-template-columns:132px 1fr;gap:0 22px;align-items:start;}
+
+  /* Columna izquierda */
+  .user-aside{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:4px;}
+  .user-avatar{
+    width:86px;height:86px;border-radius:50%;border:1px solid #C9CDD6;
+    display:flex;align-items:center;justify-content:center;
+    font-size:30px;font-weight:600;color:#111;letter-spacing:.5px;
+  }
+  .user-joined{margin-top:20px;font-size:14px;line-height:1.6;}
+  .user-joined .k{display:block;font-weight:700;color:var(--card-navy);}
+  .user-joined .v{display:block;color:#111;}
+
+  /* Columna derecha */
+  .user-datos{display:flex;flex-direction:column;gap:11px;font-size:14px;line-height:1.35;}
+  .user-datos .k{font-weight:700;color:var(--card-navy);}
+  .user-datos .v{color:#111;}
+  /* Valores que en el panel de Funcionario se muestran en azul y sin negrita.
+     Ver nota al final del archivo: es una inconsistencia heredada. */
+  .user-datos .v-navy{color:var(--card-navy);font-weight:400;}
+
   .btn-pass{
-    margin-top:12px;background:var(--navy-700);border:0;border-radius:4px;
+    margin-top:22px;background:var(--navy-700);border:0;border-radius:4px;
     padding:7px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;
   }
   .btn-pass:hover{background:#31439B;}
@@ -155,7 +175,9 @@
     .nav-item{justify-content:center;padding:13px 0;}
     .nav-item .bar{display:none;}
     .app-title{font-size:14px;}
-    .user-card{max-width:100%;}
+    .user-card{max-width:100%;padding:22px 18px 24px;}
+    .user-grid{grid-template-columns:1fr;gap:22px 0;}
+    .user-aside{align-items:flex-start;text-align:left;}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 </style>
@@ -248,23 +270,29 @@
       <section id="modMiUsuario">
         <div class="bienvenida">
           <div class="user-card">
-            <h2>Bienvenid@, <span id="cardUser">amunozc</span></h2>
-            <dl>
-              <div class="row"><dt>Nombre completo:</dt> <dd id="cNombre"></dd></div>
-              <div class="row"><dt>Username:</dt> <dd id="cUsername"></dd></div>
-              <div class="row"><dt>Tipo de documento:</dt> <dd id="cTipoDoc"></dd></div>
-              <div class="row"><dt>Número de documento:</dt> <dd id="cNumDoc"></dd></div>
-              <div class="row"><dt>Correo electrónico:</dt> <dd id="cCorreo"></dd></div>
-              <div class="row"><dt>Teléfono:</dt> <dd id="cTelefono"></dd></div>
-              <div class="row"><dt>Estado:</dt>
-                <dd><span class="estado-ok">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4" fill="#2E9E6B"/><path d="M6.5 12.4l3.7 3.6L17.5 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  <span id="cEstado"></span>
-                </span></dd>
+            <h2>Bienvenid@, <span id="cardUser"></span> !</h2>
+
+            <div class="user-grid">
+              <div class="user-aside">
+                <div class="user-avatar" id="cardAvatar" aria-hidden="true"></div>
+                <p class="user-joined">
+                  <span class="k">Te uniste el :</span>
+                  <span class="v" id="cVinculacion"></span>
+                </p>
               </div>
-              <div class="row"><dt>Tipo de usuario:</dt> <dd id="cTipoUsr"></dd></div>
-              <div class="row"><dt>Roles:</dt> <dd id="cRoles"></dd></div>
-            </dl>
+
+              <dl class="user-datos">
+                <div><span class="k">Codigo:</span> <span class="v" id="cCodigo"></span></div>
+                <div><span class="k">N identificación:</span> <span class="v" id="cNumDoc"></span></div>
+                <div><span class="k">Tipo de documento:</span> <span class="v" id="cTipoDoc"></span></div>
+                <div><span class="k">Nombres:</span> <span class="v-navy" id="cNombres"></span></div>
+                <div><span class="k">Apellidos:</span> <span class="v-navy" id="cApellidos"></span></div>
+                <div><span class="k">Teléfono:</span> <span class="v" id="cTelefono"></span></div>
+                <div><span class="k">Usuario:</span> <span class="v" id="cUsuario"></span></div>
+                <div><span class="k">Correo:</span> <span class="v"><span class="v-navy" id="cCorreoUsr"></span><span id="cCorreoDom"></span></span></div>
+              </dl>
+            </div>
+
             <button class="btn-pass" id="btnPass" type="button" title="Cambiar contraseña" aria-label="Cambiar contraseña">
               <span class="dot"></span><span class="dot"></span><span class="dot"></span>
             </button>
@@ -311,16 +339,21 @@
    antes de la sustentación. Los valores de abajo son de ejemplo.
    ========================================================================= */
 const DECANO = {
+  codigo:'104619021506',
+  numeroDocumento:'104567284',
+  tipoDocumento:'Cedula',
   nombres:'Andrés Felipe',
   apellidos:'Muñoz Certuche',
-  username:'amunozc',
-  tipoDocumento:'Cédula de ciudadanía',
-  numeroDocumento:'10542118',
+  telefono:'3105320861',
+  usuario:'amunozc',
   correo:'amunozc@unicauca.edu.co',
-  telefono:'+573100000000',
+  vinculacion:'30/01/2024',
+  /* Campos que sí existen en la vista actual de JDCE pero que la tarjeta del
+     panel de Funcionario no muestra. Se conservan aquí a la espera de decidir
+     si se incorporan a la tarjeta.
+     El valor de tipoUsuario se reproduce literal del Manual de Usuario V1.0
+     de JDCE, incluida la ausencia de tilde en "Maxima". */
   estado:'Activo',
-  /* Valor tal como aparece en el listado de tipos de usuario del Manual de
-     Usuario V1.0 de JDCE (sin tilde en "Maxima"). Se reproduce literal. */
   tipoUsuario:'Maxima autoridad FIET - Decano',
   roles:'Decano'
 };
@@ -345,20 +378,27 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>'
    MI USUARIO
    ========================================================================= */
 function pintarUsuario(){
-  const nombreCompleto = `${DECANO.nombres} ${DECANO.apellidos}`;
-  $('cardUser').textContent  = DECANO.username;
-  $('cNombre').textContent   = nombreCompleto;
-  $('cUsername').textContent = DECANO.username;
-  $('cTipoDoc').textContent  = DECANO.tipoDocumento;
-  $('cNumDoc').textContent   = DECANO.numeroDocumento;
-  $('cCorreo').textContent   = DECANO.correo;
-  $('cTelefono').textContent = DECANO.telefono;
-  $('cEstado').textContent   = DECANO.estado;
-  $('cTipoUsr').textContent  = DECANO.tipoUsuario;
-  $('cRoles').textContent    = DECANO.roles;
+  const primerNombre   = DECANO.nombres.split(' ')[0];
+  const primerApellido = DECANO.apellidos.split(' ')[0];
+  const iniciales = (primerNombre[0] + primerApellido[0]).toUpperCase();
+  const arroba = DECANO.correo.indexOf('@');
 
-  $('topName').textContent = `${DECANO.nombres.split(' ')[0]} ${DECANO.apellidos.split(' ')[0]}`;
-  $('avatarIni').textContent = (DECANO.nombres[0] + DECANO.apellidos[0]).toUpperCase();
+  $('cardUser').textContent    = primerNombre;
+  $('cardAvatar').textContent  = iniciales;
+  $('cVinculacion').textContent = DECANO.vinculacion;
+
+  $('cCodigo').textContent     = DECANO.codigo;
+  $('cNumDoc').textContent     = DECANO.numeroDocumento;
+  $('cTipoDoc').textContent    = DECANO.tipoDocumento;
+  $('cNombres').textContent    = DECANO.nombres;
+  $('cApellidos').textContent  = DECANO.apellidos;
+  $('cTelefono').textContent   = DECANO.telefono;
+  $('cUsuario').textContent    = DECANO.usuario;
+  $('cCorreoUsr').textContent  = DECANO.correo.slice(0, arroba);
+  $('cCorreoDom').textContent  = DECANO.correo.slice(arroba);
+
+  $('topName').textContent   = `${primerNombre} ${primerApellido}`;
+  $('avatarIni').textContent = iniciales;
 }
 
 /* =========================================================================
