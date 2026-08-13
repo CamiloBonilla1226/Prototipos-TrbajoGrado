@@ -89,6 +89,163 @@
   .crumbs span{margin:0 7px;color:var(--navy-ink);font-weight:700;}
   .section-tab{display:inline-block;font-size:15px;font-weight:600;color:var(--navy-ink);padding-bottom:7px;border-bottom:3px solid var(--accent);margin-bottom:26px;}
 
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:3px;
+    box-shadow:0 1px 3px rgba(27,38,96,.06);
+    max-width:1020px;margin:0 auto 26px;
+  }
+  .card-head{
+    display:flex;align-items:center;gap:10px;
+    padding:15px 18px;border-bottom:1px solid var(--line-soft);
+  }
+  .card-head h2{margin:0;font-size:15px;font-weight:700;color:var(--navy-ink);}
+  .card-body{padding:16px 18px 0;}
+
+  /* ---------- Filtros ---------- */
+  .filters{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding-bottom:16px;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field label{font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+  .field select,.field input{
+    height:34px;border:1px solid var(--line);border-radius:3px;
+    padding:0 10px;font-size:13px;color:var(--text);background:#fff;min-width:190px;
+  }
+  .field select:focus,.field input:focus{outline:2px solid #B9C7EE;outline-offset:0;border-color:var(--navy-700);}
+  .search-wrap{position:relative;}
+  .search-wrap input{padding-right:32px;}
+  .search-wrap svg{position:absolute;right:9px;top:9px;opacity:.5;}
+  .btn-clear{
+    height:34px;padding:0 15px;border:1px solid var(--navy-700);background:#fff;
+    color:var(--navy-700);border-radius:3px;font-size:13px;font-weight:600;cursor:pointer;
+  }
+  .btn-clear:hover{background:var(--navy-700);color:#fff;}
+  .btn-clear:focus-visible{outline:2px solid #B9C7EE;outline-offset:2px;}
+
+  /* ---------- Tabla ---------- */
+  .table-scroll{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;min-width:860px;}
+  thead th{
+    background:var(--navy-700);color:#fff;font-size:12.5px;font-weight:600;
+    text-align:left;padding:11px 12px;white-space:nowrap;
+    border-right:1px solid rgba(255,255,255,.14);
+  }
+  thead th:last-child{border-right:0;}
+  thead th.sortable{cursor:pointer;user-select:none;}
+  thead th.sortable:hover{background:#31439B;}
+  thead th .sort{margin-left:6px;opacity:.75;}
+  tbody td{
+    padding:11px 12px;font-size:12.8px;border-bottom:1px solid var(--line-soft);
+    border-right:1px solid var(--line-soft);
+    vertical-align:middle;
+  }
+  tbody td:last-child{border-right:0;}
+  tbody tr:nth-child(even){background:var(--zebra);}
+  tbody tr:hover{background:#F1F4FB;}
+  .radicado{font-variant-numeric:tabular-nums;font-weight:600;color:var(--navy-ink);white-space:nowrap;}
+  .doc{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap;}
+  .fecha{white-space:nowrap;color:var(--muted);}
+  .estado{display:flex;align-items:center;gap:7px;white-space:nowrap;}
+  .btn-eye{background:none;border:0;cursor:pointer;padding:4px;border-radius:3px;line-height:0;}
+  .btn-eye:hover{background:#E3EBFA;}
+  .btn-eye:focus-visible{outline:2px solid var(--link);outline-offset:1px;}
+
+  /* ---------- Estado vacío ---------- */
+  .empty{padding:44px 20px;text-align:center;}
+  .empty h3{margin:14px 0 6px;font-size:14.5px;color:var(--navy-ink);}
+  .empty p{margin:0;font-size:13px;color:var(--muted);max-width:430px;margin-inline:auto;line-height:1.55;}
+  .empty .btn-clear{margin-top:16px;}
+
+  /* ---------- Paginación ---------- */
+  .pager{display:flex;justify-content:center;padding:18px 0 20px;}
+  .pager-box{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;}
+  .pager-box button{
+    min-width:42px;height:38px;border:0;border-right:1px solid var(--line);
+    background:#fff;color:var(--navy-ink);font-size:13px;font-weight:600;cursor:pointer;padding:0 12px;
+  }
+  .pager-box button:last-child{border-right:0;}
+  .pager-box button:hover:not(:disabled):not(.is-current){background:#EEF1F9;}
+  .pager-box button.is-current{background:var(--navy-700);color:#fff;cursor:default;}
+  .pager-box button:disabled{color:#B7BCC6;cursor:not-allowed;}
+  .pager-box button.dots{cursor:default;color:var(--muted);}
+
+  /* ---------- Modal de detalle / decisión ---------- */
+  .backdrop{
+    position:fixed;inset:0;background:rgba(20,26,56,.45);
+    display:none;align-items:flex-start;justify-content:center;padding:40px 16px;
+    overflow-y:auto;z-index:50;
+  }
+  .backdrop.open{display:flex;}
+  .modal-det{
+    background:#fff;border-radius:4px;width:100%;max-width:660px;
+    box-shadow:0 14px 44px rgba(20,26,56,.28);
+  }
+  .modal-det .modal-head{
+    background:var(--navy-700);color:#fff;padding:14px 18px;
+    display:flex;align-items:center;justify-content:space-between;border-radius:4px 4px 0 0;
+  }
+  .modal-det .modal-head h3{margin:0;font-size:14.5px;font-weight:700;}
+  .modal-det .modal-close{background:none;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:0 4px;}
+  .modal-det .modal-close:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+  .modal-det .modal-body{padding:18px;}
+  .dl{display:grid;grid-template-columns:170px 1fr;gap:9px 14px;font-size:13px;}
+  .dl dt{color:var(--muted);font-weight:600;}
+  .dl dd{margin:0;color:var(--text);}
+  .dl-compact{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--line-soft);}
+  .modal-sub{
+    margin:20px 0 9px;font-size:12px;font-weight:700;color:var(--navy-ink);
+    text-transform:uppercase;letter-spacing:.5px;
+  }
+  .just{
+    background:var(--panel);border-left:3px solid var(--navy-700);padding:11px 13px;
+    font-size:13px;line-height:1.6;border-radius:0 3px 3px 0;
+  }
+  .anexos{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:3px;}
+  .anexos li{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:10px 12px;border-bottom:1px solid var(--line-soft);font-size:13px;
+  }
+  .anexos li:last-child{border-bottom:0;}
+  .anexo-name{display:flex;align-items:center;gap:9px;min-width:0;}
+  .anexo-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .anexo-actions{display:flex;gap:14px;flex:0 0 auto;}
+  .link-btn{background:none;border:0;color:var(--link);font-size:12.5px;font-weight:600;cursor:pointer;padding:0;}
+  .link-btn:hover{text-decoration:underline;}
+  .modal-foot{
+    padding:14px 18px;border-top:1px solid var(--line-soft);display:flex;
+    justify-content:flex-end;gap:10px;flex-wrap:wrap;
+  }
+  .btn{height:36px;padding:0 16px;border-radius:3px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;}
+  .btn-ghost{background:var(--panel);border-color:#B7BCC6;color:var(--navy-ink);}
+  .btn-ghost:hover{background:#E7EAF1;border-color:var(--navy-700);}
+  .btn-danger{background:#fff;border-color:var(--red);color:var(--red);}
+  .btn-danger:hover{background:var(--red);color:#fff;}
+  .btn-primary{background:var(--navy-700);color:#fff;}
+  .btn-primary:hover{background:#31439B;}
+  .btn:focus-visible,.link-btn:focus-visible{outline:2px solid #B9C7EE;outline-offset:2px;}
+  .note{
+    margin:16px 0 0;font-size:12px;color:var(--muted);background:#FFF8E9;
+    border:1px solid #F0DEB4;border-radius:3px;padding:9px 11px;line-height:1.55;
+  }
+  .field-block{margin-bottom:14px;}
+  .field-block > label{display:block;font-size:12.5px;font-weight:600;color:var(--navy-ink);margin-bottom:7px;}
+  .req{color:var(--accent);}
+  .field-block textarea{
+    width:100%;border:1px solid var(--line);border-radius:3px;padding:9px 11px;
+    font-size:13px;font-family:inherit;color:var(--text);resize:vertical;
+  }
+  .field-block textarea:focus{outline:2px solid #B9C7EE;outline-offset:0;border-color:var(--navy-700);}
+  .field-block textarea.is-invalid{border-color:var(--accent);}
+  .field-error{margin:7px 0 0;font-size:12px;color:var(--accent);font-weight:600;}
+  .dialog-note{
+    margin:14px 0 0;font-size:12.5px;color:var(--muted);background:var(--panel);
+    border-radius:3px;padding:10px 12px;line-height:1.55;
+  }
+  .chip-decision{
+    display:inline-block;padding:4px 11px;border-radius:20px;
+    font-size:12px;font-weight:700;letter-spacing:.2px;
+  }
+  .chip-decision.is-aprobada{background:#E4F5EC;color:var(--green);}
+  .chip-decision.is-rechazada{background:#FBE9E7;color:var(--red);}
+
   /* ---------- Tarjeta de bienvenida (Mi usuario) ----------
      Idéntica a la tarjeta "Mi Usuario" del panel de Funcionario Académico
      y del panel de Estudiante (mismas clases y medidas).                  */
@@ -150,6 +307,8 @@
     .nav-item .bar{display:none;}
     .app-title{font-size:15px;}
     .crumbs{margin-bottom:16px;}
+    .dl{grid-template-columns:1fr;gap:3px 0;}
+    .dl dd{margin-bottom:8px;}
     .user-grid{flex-direction:column;align-items:center;text-align:center;}
     .user-fields{grid-template-columns:1fr;text-align:center;}
   }
@@ -278,6 +437,130 @@
           </div>
       </section>
 
+      <!-- ===================== MÓDULO: SOLICITUDES (evaluación del Decano) ===================== -->
+      <section id="modSolicitudes" hidden>
+        <div class="card">
+          <div class="card-head">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A3A86" stroke-width="1.6" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+            <h2>Solicitudes remitidas por el Funcionario Académico</h2>
+          </div>
+
+          <div class="card-body">
+            <div class="filters">
+              <div class="field">
+                <label for="fDProceso">Tipo de proceso académico</label>
+                <select id="fDProceso">
+                  <option value="">Todos</option>
+                  <option>Cancelación de Matrícula</option>
+                  <option>Cancelación de Asignatura</option>
+                  <option>Examen Supletorio</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="fDDoc">Número de identificación</label>
+                <div class="search-wrap">
+                  <input id="fDDoc" type="text" inputmode="numeric" placeholder="Ej. 1061789234" autocomplete="off">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2C3038" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                </div>
+              </div>
+              <button class="btn-clear" id="btnClearD">Limpiar filtros</button>
+            </div>
+
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Radicado</th>
+                    <th>Estudiante</th>
+                    <th>Documento</th>
+                    <th>Tipo de proceso</th>
+                    <th class="sortable" data-sort="fecha">Fecha de remisión <span class="sort">⇅</span></th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyD"></tbody>
+              </table>
+            </div>
+
+            <div class="empty" id="emptyD" hidden>
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#9AA2B1" stroke-width="1.3" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+              <h3 id="emptyTitleD"></h3>
+              <p id="emptyTextD"></p>
+              <button class="btn-clear" id="emptyClearD" hidden>Limpiar filtros</button>
+            </div>
+          </div>
+
+          <div class="pager" id="pagerD"></div>
+        </div>
+      </section>
+
+      <!-- ===================== MÓDULO: RESPUESTAS (historial del Decano) ===================== -->
+      <section id="modRespuestas" hidden>
+        <div class="card">
+          <div class="card-head">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A3A86" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 8-16 8 3-8-3-8z"/></svg>
+            <h2>Historial de solicitudes evaluadas</h2>
+          </div>
+
+          <div class="card-body">
+            <div class="filters">
+              <div class="field">
+                <label for="fRDProceso">Tipo de proceso académico</label>
+                <select id="fRDProceso">
+                  <option value="">Todos</option>
+                  <option>Cancelación de Matrícula</option>
+                  <option>Cancelación de Asignatura</option>
+                  <option>Examen Supletorio</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="fRDDecision">Decisión</label>
+                <select id="fRDDecision">
+                  <option value="">Todos</option>
+                  <option>Aprobada</option>
+                  <option>Rechazada</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="fRDDoc">Número de identificación</label>
+                <div class="search-wrap">
+                  <input id="fRDDoc" type="text" inputmode="numeric" placeholder="Ej. 1061789234" autocomplete="off">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2C3038" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                </div>
+              </div>
+              <button class="btn-clear" id="btnClearRD">Limpiar filtros</button>
+            </div>
+
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Radicado</th>
+                    <th>Estudiante</th>
+                    <th>Documento</th>
+                    <th>Tipo de proceso</th>
+                    <th class="sortable" data-sort="fecha">Fecha de decisión <span class="sort">⇅</span></th>
+                    <th class="sortable" data-sort="decision">Decisión <span class="sort">⇅</span></th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyRD"></tbody>
+              </table>
+            </div>
+
+            <div class="empty" id="emptyRD" hidden>
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#9AA2B1" stroke-width="1.3" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+              <h3 id="emptyTitleRD"></h3>
+              <p id="emptyTextRD"></p>
+              <button class="btn-clear" id="emptyClearRD" hidden>Limpiar filtros</button>
+            </div>
+          </div>
+
+          <div class="pager" id="pagerRD"></div>
+        </div>
+      </section>
+
       <!-- ===================== MÓDULOS NO IMPLEMENTADOS ===================== -->
       <section id="modStub" hidden>
         <div class="placeholder">
@@ -303,8 +586,57 @@
   <div class="toast-text" id="toastText"></div>
 </div>
 
-<!-- ===================== MODAL ===================== -->
-<div id="modalSlot"></div>
+<!-- ===================== MODAL DETALLE ===================== -->
+<div class="backdrop" id="backdropD" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+  <div class="modal-det">
+    <div class="modal-head">
+      <h3 id="dTitle">Detalle de la solicitud</h3>
+      <button class="modal-close" id="dClose" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="modal-body">
+      <dl class="dl">
+        <dt>Número de radicado</dt><dd id="dRad"></dd>
+        <dt>Tipo de proceso académico</dt><dd id="dProc"></dd>
+        <dt>Estudiante</dt><dd id="dEst"></dd>
+        <dt>Documento</dt><dd id="dDoc"></dd>
+        <dt>Programa</dt><dd id="dProg"></dd>
+        <dt>Fecha de remisión</dt><dd id="dFec"></dd>
+        <dt>Estado actual</dt><dd id="dEstado"></dd>
+      </dl>
+
+      <div class="modal-sub">Justificación de la solicitud</div>
+      <div class="just" id="dJust"></div>
+
+      <div class="modal-sub">Anexos adjuntos por el Estudiante</div>
+      <ul class="anexos" id="dAnexos"></ul>
+
+      <div id="dExtra"></div>
+
+      <p class="note" id="dNote"></p>
+    </div>
+    <div class="modal-foot" id="dFoot"></div>
+  </div>
+</div>
+
+<!-- ===================== MODAL APROBAR / RECHAZAR ===================== -->
+<div class="backdrop" id="backdropAccionD" role="dialog" aria-modal="true" aria-labelledby="aDTitle">
+  <div class="modal-det">
+    <div class="modal-head">
+      <h3 id="aDTitle">Aprobar solicitud</h3>
+      <button class="modal-close" id="aDClose" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="modal-body">
+      <dl class="dl dl-compact">
+        <dt>Estudiante</dt><dd id="aDEst"></dd>
+        <dt>Documento</dt><dd id="aDDoc"></dd>
+        <dt>Tipo de proceso</dt><dd id="aDProc"></dd>
+        <dt>Número de radicado</dt><dd id="aDRad"></dd>
+      </dl>
+      <div id="aDCentro"></div>
+    </div>
+    <div class="modal-foot" id="aDFoot"></div>
+  </div>
+</div>
 
 <script>
 /* =========================================================================
@@ -377,6 +709,455 @@ function pintarUsuario(){
 }
 
 /* =========================================================================
+   SOLICITUDES REMITIDAS POR EL FUNCIONARIO — evaluación del Decano
+   Estados desde la perspectiva del Decano: Pendiente (debe decidir) o
+   Respondida (ya aprobó o rechazó). Al decidir, la solicitud sale de la
+   bandeja de Solicitudes y pasa al historial de Respuestas.
+   ========================================================================= */
+const PROC = {
+  CM:'Cancelación de Matrícula',
+  CA:'Cancelación de Asignatura',
+  ES:'Examen Supletorio'
+};
+
+const SOLICITUDES = [
+  {rad:'2026-ES-0144', est:'Juan Sebastián Paz',     doc:'1004556612', prog:'Tecnología en Telemática', proc:PROC.ES, fecha:'2026-07-27T15:40', estado:'Pendiente', just:'Solicito examen supletorio de Bases de Datos por calamidad doméstica presentada el día de la evaluación.', anexos:['Solicitud firmada.pdf','Certificado de defunción.pdf']},
+  {rad:'2026-CM-0121', est:'Camilo Andrés Ledezma',  doc:'1005990011', prog:'Tecnología en Telemática', proc:PROC.CM, fecha:'2026-07-18T09:15', estado:'Pendiente', just:'Solicito la cancelación de matrícula por prestación del servicio militar obligatorio.', anexos:['Solicitud firmada.pdf','Orden de presentación.pdf'], resolucion:'Resolución 0121-2026.pdf'},
+  {rad:'2026-CA-0151', est:'Julián David Rosero',    doc:'1066123456', prog:'Ingeniería de Sistemas', proc:PROC.CA, fecha:'2026-07-29T08:15', estado:'Pendiente', just:'Solicito la cancelación de la asignatura Cálculo Multivariado por incompatibilidad de horario con una asignatura obligatoria del plan de estudios.', anexos:['Solicitud firmada.pdf','Horario académico.pdf'], resolucion:'Resolución 0151-2026.pdf'},
+  {rad:'2026-CM-0142', est:'Diana Carolina Bolaños', doc:'1061223344', prog:'Ingeniería de Sistemas', proc:PROC.CM, fecha:'2026-07-27T09:10', estado:'Respondida', decision:'Aprobada', resolucion:'Resolución 0142-2026.pdf', just:'Solicito la cancelación de matrícula por traslado laboral fuera de la ciudad de Popayán a partir del mes de agosto.', anexos:['Solicitud firmada.pdf','Carta laboral.pdf','Historia académica.pdf']},
+  {rad:'2026-CA-0127', est:'Daniel Esteban Vidal',   doc:'1058445566', prog:'Ingeniería en Automática Industrial', proc:PROC.CA, fecha:'2026-07-19T14:40', estado:'Respondida', decision:'Rechazada', observacion:'La asignatura para la cual se solicita la cancelación no presenta cruce real según el horario oficial registrado en el sistema académico.', just:'Solicito la cancelación de la asignatura Instrumentación Industrial por superposición con el curso de nivelación autorizado.', anexos:['Solicitud firmada.pdf']},
+  {rad:'2026-CA-0139', est:'Kevin Steven Muñoz',     doc:'1007889900', prog:'Ingeniería Electrónica y Telecomunicaciones', proc:PROC.CA, fecha:'2026-07-24T11:20', estado:'Respondida', decision:'Aprobada', resolucion:'Resolución 0139-2026.pdf', just:'Solicito la cancelación de la asignatura Electrónica Analógica II por bajo rendimiento derivado de una situación familiar.', anexos:['Solicitud firmada.pdf','Historia académica.pdf']},
+  {rad:'2026-CM-0136', est:'Óscar Iván Chicangana',  doc:'1059334455', prog:'Ingeniería en Automática Industrial', proc:PROC.CM, fecha:'2026-07-23T16:05', estado:'Respondida', decision:'Rechazada', observacion:'No se anexó soporte suficiente que justifique la cancelación por motivos económicos alegados.', just:'Solicito la cancelación de matrícula por razones económicas que me impiden sostener el semestre en curso.', anexos:['Solicitud firmada.pdf','Declaración de renta familiar.pdf']}
+];
+
+function fmtFecha(iso){
+  const d = new Date(iso);
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  let h = d.getHours(); const ampm = h >= 12 ? 'pm' : 'am';
+  h = h % 12 || 12;
+  return `${dd}/${mm}/${d.getFullYear()} - ${h}:${String(d.getMinutes()).padStart(2,'0')} ${ampm}`;
+}
+function iconPendiente(){
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E0952B" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>';
+}
+function iconDecision(d){
+  if(d === 'Rechazada')
+    return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D0463B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>';
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.5L16 9.5"/></svg>';
+}
+
+const PAGE_SIZE = 8;
+let pageD = 1, sortDirD = 'desc', pageRD = 1, sortKeyRD = 'fecha', sortDirRD = 'desc';
+
+/* ---------- Bandeja: Solicitudes pendientes ---------- */
+function getFilteredD(){
+  const p = $('fDProceso').value;
+  const d = $('fDDoc').value.trim();
+  return SOLICITUDES
+    .filter(r => r.estado === 'Pendiente' && (!p || r.proc === p) && (!d || r.doc.includes(d)))
+    .sort((a,b) => {
+      if(a.fecha < b.fecha) return sortDirD === 'asc' ? -1 : 1;
+      if(a.fecha > b.fecha) return sortDirD === 'asc' ? 1 : -1;
+      return 0;
+    });
+}
+function hasFiltersD(){
+  return !!($('fDProceso').value || $('fDDoc').value.trim());
+}
+function renderD(){
+  const rows = getFilteredD();
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  if(pageD > totalPages) pageD = totalPages;
+
+  const tbody = $('tbodyD'), empty = $('emptyD');
+  const table = document.querySelector('#modSolicitudes .table-scroll');
+  const pager = $('pagerD');
+
+  if(rows.length === 0){
+    table.hidden = true; pager.innerHTML = ''; empty.hidden = false;
+    const filtered = hasFiltersD();
+    $('emptyTitleD').textContent = filtered ? 'No se encontraron solicitudes' : 'No hay solicitudes pendientes por evaluar';
+    $('emptyTextD').textContent = filtered
+      ? 'Ninguna solicitud coincide con los criterios aplicados. Ajusta los filtros o límpialos para volver al listado completo.'
+      : 'En este momento no hay solicitudes remitidas por el Funcionario Académico a la espera de tu decisión.';
+    $('emptyClearD').hidden = !filtered;
+    return;
+  }
+
+  table.hidden = false; empty.hidden = true;
+  const slice = rows.slice((pageD-1)*PAGE_SIZE, pageD*PAGE_SIZE);
+  tbody.innerHTML = slice.map(r => `
+    <tr>
+      <td class="radicado">${r.rad}</td>
+      <td>${r.est}</td>
+      <td class="doc">${r.doc}</td>
+      <td>${r.proc}</td>
+      <td class="fecha">${fmtFecha(r.fecha)}</td>
+      <td><span class="estado">${iconPendiente()}${r.estado}</span></td>
+      <td>
+        <button class="btn-eye" data-rad="${r.rad}" title="Ver detalle" aria-label="Ver detalle de ${r.rad}">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2F6FD0" stroke-width="1.7" aria-hidden="true">
+            <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.7"/>
+          </svg>
+        </button>
+      </td>
+    </tr>`).join('');
+
+  renderPagerD(totalPages);
+}
+function renderPagerD(total){
+  const pager = $('pagerD');
+  let btns = `<button ${pageD===1?'disabled':''} data-go="${pageD-1}">&lt; Anterior</button>`;
+  const nums = [];
+  for(let i=1;i<=total;i++){
+    if(i===1 || i===total || Math.abs(i-pageD)<=1) nums.push(i);
+    else if(nums[nums.length-1] !== '…') nums.push('…');
+  }
+  nums.forEach(n => {
+    btns += (n === '…')
+      ? `<button class="dots" disabled>…</button>`
+      : `<button class="${n===pageD?'is-current':''}" data-go="${n}">${n}</button>`;
+  });
+  btns += `<button ${pageD===total?'disabled':''} data-go="${pageD+1}">Siguiente &gt;</button>`;
+  pager.innerHTML = `<div class="pager-box">${btns}</div>`;
+}
+function limpiarD(){
+  $('fDProceso').value = '';
+  $('fDDoc').value = '';
+  pageD = 1; renderD();
+}
+
+/* ---------- Historial: Respuestas del Decano ---------- */
+function getFilteredRD(){
+  const p = $('fRDProceso').value;
+  const dec = $('fRDDecision').value;
+  const d = $('fRDDoc').value.trim();
+  const rows = SOLICITUDES.filter(r =>
+    r.estado === 'Respondida' && (!p || r.proc === p) && (!dec || r.decision === dec) && (!d || r.doc.includes(d))
+  );
+  const ORDEN_DECISION = {'Aprobada':0,'Rechazada':1};
+  rows.sort((a,b)=>{
+    let va, vb;
+    if(sortKeyRD === 'decision'){ va = ORDEN_DECISION[a.decision]; vb = ORDEN_DECISION[b.decision]; }
+    else { va = a.fecha; vb = b.fecha; }
+    if(va < vb) return sortDirRD === 'asc' ? -1 : 1;
+    if(va > vb) return sortDirRD === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return rows;
+}
+function hasFiltersRD(){
+  return !!($('fRDProceso').value || $('fRDDecision').value || $('fRDDoc').value.trim());
+}
+function renderRD(){
+  const rows = getFilteredRD();
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  if(pageRD > totalPages) pageRD = totalPages;
+
+  const tbody = $('tbodyRD'), empty = $('emptyRD');
+  const table = document.querySelector('#modRespuestas .table-scroll');
+  const pager = $('pagerRD');
+
+  if(rows.length === 0){
+    table.hidden = true; pager.innerHTML = ''; empty.hidden = false;
+    const filtered = hasFiltersRD();
+    $('emptyTitleRD').textContent = filtered ? 'No se encontraron respuestas' : 'Aún no hay solicitudes evaluadas';
+    $('emptyTextRD').textContent = filtered
+      ? 'Ninguna respuesta coincide con los criterios aplicados. Ajusta los filtros o límpialos para volver al listado completo.'
+      : 'Cuando apruebes o rechaces una solicitud, quedará registrada aquí como historial de solo lectura.';
+    $('emptyClearRD').hidden = !filtered;
+    return;
+  }
+
+  table.hidden = false; empty.hidden = true;
+  const slice = rows.slice((pageRD-1)*PAGE_SIZE, pageRD*PAGE_SIZE);
+  tbody.innerHTML = slice.map(r => `
+    <tr>
+      <td class="radicado">${r.rad}</td>
+      <td>${r.est}</td>
+      <td class="doc">${r.doc}</td>
+      <td>${r.proc}</td>
+      <td class="fecha">${fmtFecha(r.fecha)}</td>
+      <td><span class="estado">${iconDecision(r.decision)}${r.decision}</span></td>
+      <td>
+        <button class="btn-eye" data-rad="${r.rad}" title="Ver detalle" aria-label="Ver detalle de ${r.rad}">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2F6FD0" stroke-width="1.7" aria-hidden="true">
+            <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.7"/>
+          </svg>
+        </button>
+      </td>
+    </tr>`).join('');
+
+  renderPagerRD(totalPages);
+}
+function renderPagerRD(total){
+  const pager = $('pagerRD');
+  let btns = `<button ${pageRD===1?'disabled':''} data-go="${pageRD-1}">&lt; Anterior</button>`;
+  const nums = [];
+  for(let i=1;i<=total;i++){
+    if(i===1 || i===total || Math.abs(i-pageRD)<=1) nums.push(i);
+    else if(nums[nums.length-1] !== '…') nums.push('…');
+  }
+  nums.forEach(n => {
+    btns += (n === '…')
+      ? `<button class="dots" disabled>…</button>`
+      : `<button class="${n===pageRD?'is-current':''}" data-go="${n}">${n}</button>`;
+  });
+  btns += `<button ${pageRD===total?'disabled':''} data-go="${pageRD+1}">Siguiente &gt;</button>`;
+  pager.innerHTML = `<div class="pager-box">${btns}</div>`;
+}
+function limpiarRD(){
+  $('fRDProceso').value = '';
+  $('fRDDecision').value = '';
+  $('fRDDoc').value = '';
+  pageRD = 1; renderRD();
+}
+
+['fDProceso'].forEach(id => $(id).addEventListener('change', () => { pageD=1; renderD(); }));
+$('fDDoc').addEventListener('input', () => { pageD=1; renderD(); });
+$('btnClearD').addEventListener('click', limpiarD);
+$('emptyClearD').addEventListener('click', limpiarD);
+
+['fRDProceso','fRDDecision'].forEach(id => $(id).addEventListener('change', () => { pageRD=1; renderRD(); }));
+$('fRDDoc').addEventListener('input', () => { pageRD=1; renderRD(); });
+$('btnClearRD').addEventListener('click', limpiarRD);
+$('emptyClearRD').addEventListener('click', limpiarRD);
+
+$('tbodyD').addEventListener('click', e => {
+  const b = e.target.closest('.btn-eye');
+  if(b) abrirDetalleD(b.dataset.rad);
+});
+$('tbodyRD').addEventListener('click', e => {
+  const b = e.target.closest('.btn-eye');
+  if(b) abrirDetalleD(b.dataset.rad);
+});
+$('pagerD').addEventListener('click', e => {
+  const b = e.target.closest('button[data-go]');
+  if(b && !b.disabled){ pageD = Number(b.dataset.go); renderD(); window.scrollTo({top:0,behavior:'smooth'}); }
+});
+$('pagerRD').addEventListener('click', e => {
+  const b = e.target.closest('button[data-go]');
+  if(b && !b.disabled){ pageRD = Number(b.dataset.go); renderRD(); window.scrollTo({top:0,behavior:'smooth'}); }
+});
+
+/* ---------- Modal de detalle ---------- */
+const backdropD = $('backdropD');
+let lastFocusD = null;
+
+function anexosHtml(anexos){
+  return anexos.map(a => `
+    <li>
+      <span class="anexo-name">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D0463B" stroke-width="1.6" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/></svg>
+        <span>${a}</span>
+      </span>
+      <span class="anexo-actions">
+        <button class="link-btn" type="button">Visualizar</button>
+        <button class="link-btn" type="button">Descargar</button>
+      </span>
+    </li>`).join('');
+}
+
+function abrirDetalleD(rad){
+  const r = SOLICITUDES.find(x => x.rad === rad);
+  if(!r) return;
+  lastFocusD = document.activeElement;
+
+  $('dTitle').textContent = r.estado === 'Pendiente' ? 'Detalle de la solicitud' : 'Detalle de la respuesta';
+  $('dRad').textContent = r.rad;
+  $('dProc').textContent = r.proc;
+  $('dEst').textContent = r.est;
+  $('dDoc').textContent = r.doc;
+  $('dProg').textContent = r.prog;
+  $('dFec').textContent = fmtFecha(r.fecha);
+  $('dEstado').innerHTML = r.estado === 'Pendiente'
+    ? `<span class="estado">${iconPendiente()}${r.estado}</span>`
+    : `<span class="estado">${iconDecision(r.decision)}${r.decision}</span>`;
+  $('dJust').textContent = r.just;
+  $('dAnexos').innerHTML = anexosHtml(r.anexos);
+
+  let extra = '';
+  if(r.resolucion){
+    extra += `
+      <div class="modal-sub">${r.estado === 'Pendiente' ? 'Resolución remitida por el Funcionario' : 'Resolución'}</div>
+      <ul class="anexos">
+        <li>
+          <span class="anexo-name">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D0463B" stroke-width="1.6" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/></svg>
+            <span>${r.resolucion}</span>
+          </span>
+          <span class="anexo-actions">
+            <button class="link-btn" type="button">Visualizar</button>
+            <button class="link-btn" type="button">Descargar</button>
+          </span>
+        </li>
+      </ul>`;
+  }
+  if(r.estado === 'Respondida' && r.decision === 'Rechazada'){
+    extra += `
+      <div class="modal-sub">Motivo del rechazo</div>
+      <div class="just">${r.observacion || 'No se registró una observación.'}</div>`;
+  }
+  $('dExtra').innerHTML = extra;
+
+  const notas = {
+    'Pendiente': 'Esta solicitud fue remitida por el Funcionario Académico y está a la espera de tu decisión.',
+    'Respondida': 'Ya tomaste una decisión sobre esta solicitud. El detalle es de solo lectura.'
+  };
+  $('dNote').textContent = notas[r.estado] || '';
+
+  $('dFoot').innerHTML = r.estado === 'Pendiente'
+    ? `<button class="btn btn-ghost" data-close>Cerrar</button>
+       <button class="btn btn-danger" data-accion="rechazar" data-rad="${r.rad}">Rechazar solicitud</button>
+       <button class="btn btn-primary" data-accion="aprobar" data-rad="${r.rad}">Aprobar solicitud</button>`
+    : `<button class="btn btn-ghost" data-close>Cerrar</button>`;
+
+  backdropD.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  $('dClose').focus();
+}
+function cerrarDetalleD(){
+  backdropD.classList.remove('open');
+  document.body.style.overflow = '';
+  if(lastFocusD) lastFocusD.focus();
+}
+$('dClose').addEventListener('click', cerrarDetalleD);
+backdropD.addEventListener('click', e => {
+  if(e.target === backdropD || e.target.hasAttribute('data-close')) cerrarDetalleD();
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && backdropD.classList.contains('open')) cerrarDetalleD();
+});
+$('dFoot').addEventListener('click', e => {
+  const bAprobar  = e.target.closest('[data-accion="aprobar"]');
+  const bRechazar = e.target.closest('[data-accion="rechazar"]');
+  if(bAprobar){ cerrarDetalleD(); abrirAprobar(bAprobar.dataset.rad); }
+  if(bRechazar){ cerrarDetalleD(); abrirRechazar(bRechazar.dataset.rad); }
+});
+
+/* ---------- Modal Aprobar / Rechazar ---------- */
+const backdropAccionD = $('backdropAccionD');
+let accionRadD = null, accionModoD = null, accionLastFocusD = null;
+
+function llenarDatosAccionD(r){
+  $('aDEst').textContent  = r.est;
+  $('aDDoc').textContent  = r.doc;
+  $('aDProc').textContent = r.proc;
+  $('aDRad').textContent  = r.rad;
+}
+function abrirBackdropAccionD(){
+  backdropAccionD.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  $('aDClose').focus();
+}
+function cerrarAccionD(){
+  backdropAccionD.classList.remove('open');
+  document.body.style.overflow = '';
+  if(accionLastFocusD) accionLastFocusD.focus();
+}
+
+function abrirAprobar(rad){
+  const r = SOLICITUDES.find(x => x.rad === rad);
+  if(!r) return;
+  accionRadD = rad; accionModoD = 'aprobar';
+  accionLastFocusD = document.activeElement;
+
+  $('aDTitle').textContent = 'Aprobar solicitud';
+  llenarDatosAccionD(r);
+
+  $('aDCentro').innerHTML = r.resolucion
+    ? `<p class="dialog-note">Al aprobar, quedará registrada tu decisión junto con la resolución remitida por el Funcionario Académico. El Funcionario podrá enviar la respuesta al Estudiante.</p>`
+    : `<p class="dialog-note">Al aprobar, quedará registrada tu decisión. El Funcionario Académico podrá enviar la respuesta al Estudiante.</p>`;
+
+  $('aDFoot').innerHTML = `
+    <button class="btn btn-ghost" data-close>Cancelar</button>
+    <button class="btn btn-primary" id="aDConfirmar">Aprobar solicitud</button>`;
+
+  abrirBackdropAccionD();
+}
+
+function abrirRechazar(rad){
+  const r = SOLICITUDES.find(x => x.rad === rad);
+  if(!r) return;
+  accionRadD = rad; accionModoD = 'rechazar';
+  accionLastFocusD = document.activeElement;
+
+  $('aDTitle').textContent = 'Rechazar solicitud';
+  llenarDatosAccionD(r);
+
+  $('aDCentro').innerHTML = `
+    <div class="field-block">
+      <label for="aDObs">Observaciones <span class="req">*</span></label>
+      <textarea id="aDObs" rows="4" placeholder="Describe el motivo del rechazo de la solicitud..."></textarea>
+      <p class="field-error" id="aDObsError" hidden>Debes registrar una observación con el motivo del rechazo.</p>
+    </div>
+    <p class="dialog-note">Esta observación se comunicará al Estudiante a través del Funcionario Académico.</p>`;
+
+  $('aDFoot').innerHTML = `
+    <button class="btn btn-ghost" data-close>Cancelar</button>
+    <button class="btn btn-danger" id="aDConfirmar">Rechazar solicitud</button>`;
+
+  abrirBackdropAccionD();
+}
+
+function confirmarAccionD(){
+  const r = SOLICITUDES.find(x => x.rad === accionRadD);
+  if(!r) return;
+
+  if(accionModoD === 'aprobar'){
+    r.decision = 'Aprobada';
+    r.estado = 'Respondida';
+    cerrarAccionD();
+    renderD(); renderRD();
+    mostrarToast('<b>Solicitud aprobada.</b><br>El Funcionario Académico podrá enviar la respuesta al Estudiante.');
+    return;
+  }
+
+  if(accionModoD === 'rechazar'){
+    const campo = $('aDObs');
+    const obs = campo.value.trim();
+    const err = $('aDObsError');
+    if(!obs){
+      err.hidden = false;
+      campo.classList.add('is-invalid');
+      return;
+    }
+    err.hidden = true;
+    campo.classList.remove('is-invalid');
+    r.decision = 'Rechazada';
+    r.observacion = obs;
+    r.estado = 'Respondida';
+    cerrarAccionD();
+    renderD(); renderRD();
+    mostrarToast('<b>Solicitud rechazada.</b><br>Se registró tu observación para el Funcionario Académico.');
+  }
+}
+
+$('aDFoot').addEventListener('click', e => {
+  if(e.target.hasAttribute('data-close')){ cerrarAccionD(); return; }
+  if(e.target.id === 'aDConfirmar') confirmarAccionD();
+});
+$('aDClose').addEventListener('click', cerrarAccionD);
+backdropAccionD.addEventListener('click', e => {
+  if(e.target === backdropAccionD) cerrarAccionD();
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && backdropAccionD.classList.contains('open')) cerrarAccionD();
+});
+
+document.querySelectorAll('#modSolicitudes th.sortable').forEach(th => th.addEventListener('click', () => {
+  sortDirD = sortDirD === 'asc' ? 'desc' : 'asc';
+  renderD();
+}));
+
+document.querySelectorAll('#modRespuestas th.sortable').forEach(th => th.addEventListener('click', () => {
+  const k = th.dataset.sort;
+  sortDirRD = (sortKeyRD === k && sortDirRD === 'asc') ? 'desc' : 'asc';
+  sortKeyRD = k; renderRD();
+}));
+
+/* =========================================================================
    NAVEGACIÓN ENTRE MÓDULOS
    ========================================================================= */
 function abrirModulo(clave){
@@ -392,10 +1173,15 @@ function abrirModulo(clave){
   $('crumbMod').textContent = mod.nombre;
   $('sectionTab').textContent = mod.nombre;
 
-  const esMiUsuario = clave === 'mi-usuario';
-  $('modMiUsuario').hidden = !esMiUsuario;
-  $('modStub').hidden = esMiUsuario;
-  if(!esMiUsuario) $('stubTitulo').textContent = mod.nombre;
+  const SECCIONES_REALES = {'mi-usuario':'modMiUsuario', 'solicitudes':'modSolicitudes', 'respuestas':'modRespuestas'};
+  const idReal = SECCIONES_REALES[clave];
+
+  Object.values(SECCIONES_REALES).forEach(id => $(id).hidden = (id !== idReal));
+  $('modStub').hidden = !!idReal;
+  if(!idReal) $('stubTitulo').textContent = mod.nombre;
+
+  if(clave === 'solicitudes') renderD();
+  if(clave === 'respuestas') renderRD();
 
   document.title = `Gestión de Procesos Académicos FIET — ${mod.nombre}`;
   window.scrollTo({top:0, behavior:'smooth'});
@@ -423,7 +1209,7 @@ document.addEventListener('click', e => {
 });
 $('btnLogout').addEventListener('click', () => {
   userDropdown.hidden = true;
-  mostrarToast('<b>Sesión cerrada.</b><br>Has salido de Gestión de Solicitudes Consejo de Facultad FIET.');
+  mostrarToast('<b>Sesión cerrada.</b><br>Has salido de Gestión de Procesos Académicos FIET.');
 });
 
 /* =========================================================================
