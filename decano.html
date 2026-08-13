@@ -92,11 +92,10 @@
   /* ---------- Tarjeta de bienvenida (Mi usuario) ----------
      Idéntica a la tarjeta "Mi Usuario" del panel de Funcionario Académico
      y del panel de Estudiante (mismas clases y medidas).                  */
-  .bienvenida{display:flex;justify-content:center;padding:6px 0 40px;}
   .user-card{
     background:#fff;border:1px solid var(--line);border-radius:3px;
     box-shadow:0 1px 3px rgba(27,38,96,.06);
-    width:100%;max-width:680px;
+    max-width:680px;margin:0 auto 26px;
   }
   .user-card-body{padding:32px 36px 34px;}
   .user-welcome{
@@ -183,7 +182,7 @@
       </button>
 
       <button class="nav-item" type="button" data-mod="solicitudes" title="Solicitudes">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3.5h14v17l-2.3-1.6-2.4 1.6-2.3-1.6L9.7 20.5 7.3 18.9 5 20.5z"/><path d="M8.5 8h7M8.5 11.5h7M8.5 15h4"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
         <span class="bar" aria-hidden="true">|</span><span class="label">Solicitudes</span>
       </button>
 
@@ -241,9 +240,8 @@
 
       <!-- ===================== MÓDULO: MI USUARIO ===================== -->
       <section id="modMiUsuario">
-        <div class="bienvenida">
-          <div class="user-card">
-            <div class="user-card-body">
+        <div class="user-card">
+          <div class="user-card-body">
               <h2 class="user-welcome">Bienvenid@, <span id="cardUser"></span>!</h2>
               <div class="user-grid">
                 <div class="user-side">
@@ -273,7 +271,6 @@
               </div>
             </div>
           </div>
-        </div>
       </section>
 
       <!-- ===================== MÓDULOS NO IMPLEMENTADOS ===================== -->
