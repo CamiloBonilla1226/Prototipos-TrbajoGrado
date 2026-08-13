@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi usuario — Gestión de Solicitudes Consejo de Facultad FIET</title>
+<!--
+  ============================================================================
+  decano.html — RECREACIÓN DE LA VISTA ACTUAL DEL DECANO (sistema JDCE)
+
+  Este archivo NO es todavía la vista de ACBB. Es la reproducción de cómo se
+  ve HOY el Decano en el sistema "Gestión de Solicitudes dirigidas al Consejo
+  de Facultad FIET" de Julián Camacho, tomada de la Figura 2 (página 8) de su
+  Manual de Usuario V1.0 y del listado de módulos de la Figura 4.
+
+  Sirve como línea base: sobre esta vista se adaptarán después los módulos
+  propios de ACBB.
+
+  Alcance implementado: únicamente "Mi usuario".
+  Los siete módulos restantes se listan en el menú, se pueden abrir y muestran
+  un marcador de módulo no incluido en el prototipo.
+  ============================================================================
+-->
+<style>
+  :root{
+    --navy-900:#1B2660;
+    --navy-800:#232F6E;
+    --navy-700:#2A3A86;
+    --navy-ink:#1F2A6D;
+    --accent:#B23B2E;
+    --link:#2F6FD0;
+    --green:#2E9E6B;
+    --red:#D0463B;
+    --panel:#F4F5F8;
+    --line:#E3E6EC;
+    --line-soft:#EDEFF3;
+    --text:#2C3038;
+    --muted:#6E7480;
+    --zebra:#FAFBFC;
+    --sidebar-w:210px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI","Nunito Sans",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    color:var(--text);background:#fff;font-size:14px;-webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;}
+
+  /* ---------- Layout ---------- */
+  .app{display:flex;min-height:100vh;}
+  .sidebar{width:var(--sidebar-w);flex:0 0 var(--sidebar-w);background:var(--navy-900);display:flex;flex-direction:column;}
+  .main{flex:1;min-width:0;display:flex;flex-direction:column;}
+
+  /* ---------- Sidebar ---------- */
+  .crest{height:112px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,.10);}
+  .crest img{display:block;object-fit:contain;}
+  .crest .crest-fallback{display:none;color:#fff;font-size:12px;font-weight:700;letter-spacing:.5px;text-align:center;line-height:1.5;opacity:.9;}
+  .nav{padding:18px 0 22px;}
+  .nav-item{
+    width:100%;display:flex;align-items:center;gap:11px;padding:11px 16px;
+    background:none;border:0;cursor:pointer;color:#EDEFF6;font-size:13.5px;
+    text-align:left;border-left:3px solid transparent;text-decoration:none;font-family:inherit;
+  }
+  .nav-item:hover{background:rgba(255,255,255,.07);}
+  .nav-item.is-active{background:rgba(255,255,255,.11);border-left-color:#fff;font-weight:600;}
+  .nav-item .bar{opacity:.55;}
+  .nav-item:focus-visible{outline:2px solid #9FB6FF;outline-offset:-2px;}
+  .nav-item svg{flex:0 0 auto;}
+
+  /* ---------- Topbar ---------- */
+  .topbar{height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;border-bottom:1px solid var(--line);background:#fff;}
+  .app-title{font-size:19px;font-weight:700;color:var(--navy-ink);letter-spacing:.1px;margin:0;}
+  .user-chip{position:relative;display:flex;align-items:center;}
+  .user-chip-btn{display:flex;align-items:center;gap:11px;background:none;border:0;cursor:pointer;padding:6px 8px;border-radius:5px;font-family:inherit;}
+  .user-chip-btn:hover{background:var(--panel);}
+  .avatar{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--navy-ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;color:var(--navy-ink);}
+  .user-meta{line-height:1.35;text-align:left;}
+  .user-name{font-weight:700;font-size:13px;color:var(--navy-ink);}
+  .user-role{font-size:12.5px;color:var(--navy-ink);display:flex;align-items:center;gap:5px;}
+  .user-chip-btn[aria-expanded="true"] .user-role svg{transform:rotate(180deg);}
+  .user-dropdown{position:absolute;top:calc(100% + 6px);right:0;min-width:190px;background:#fff;border:1px solid var(--line);border-radius:5px;box-shadow:0 12px 28px rgba(20,26,56,.2);padding:6px;z-index:60;}
+  .user-dropdown-item{width:100%;display:flex;align-items:center;gap:10px;background:none;border:0;padding:10px 11px;border-radius:3px;font-size:13px;font-weight:600;color:var(--red);cursor:pointer;text-align:left;font-family:inherit;}
+  .user-dropdown-item:hover{background:#FBE9E7;}
+
+  /* ---------- Contenido ---------- */
+  .content{flex:1;padding:16px 26px 0;}
+  .crumbs{font-size:12.5px;color:var(--muted);margin-bottom:22px;}
+  .crumbs b{color:var(--navy-ink);font-weight:600;}
+  .crumbs span{margin:0 7px;color:var(--navy-ink);font-weight:700;}
+  .section-tab{display:inline-block;font-size:15px;font-weight:600;color:var(--navy-ink);padding-bottom:7px;border-bottom:3px solid var(--accent);margin-bottom:26px;}
+
+  /* ---------- Tarjeta de bienvenida (Mi usuario) ---------- */
+  .bienvenida{display:flex;justify-content:center;padding:6px 0 40px;}
+  .user-card{
+    background:#fff;border:1px solid var(--line);border-radius:8px;
+    box-shadow:0 4px 16px rgba(27,38,96,.10);
+    width:100%;max-width:380px;padding:24px 26px 22px;
+  }
+  .user-card h2{
+    margin:0 0 18px;font-size:20px;font-weight:600;color:var(--navy-700);
+    text-align:center;line-height:1.35;
+  }
+  .user-card dl{display:block;margin:0;font-size:12.8px;line-height:1.65;}
+  .user-card .row{margin-bottom:9px;}
+  .user-card dt{display:inline;font-weight:700;color:var(--navy-ink);}
+  .user-card dd{display:inline;margin:0;color:var(--muted);}
+  .estado-ok{display:inline-flex;align-items:center;gap:5px;}
+  .estado-ok svg{flex:0 0 auto;}
+  .btn-pass{
+    margin-top:12px;background:var(--navy-700);border:0;border-radius:4px;
+    padding:7px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;
+  }
+  .btn-pass:hover{background:#31439B;}
+  .btn-pass:focus-visible{outline:2px solid #B9C7EE;outline-offset:2px;}
+  .btn-pass .dot{width:4px;height:4px;border-radius:50%;background:#fff;display:block;}
+
+  /* ---------- Marcador de módulo no implementado ---------- */
+  .stub{max-width:640px;margin:10px auto 46px;text-align:center;padding:44px 26px;border:1px dashed #C3CAD9;border-radius:6px;background:var(--zebra);}
+  .stub-icon{width:54px;height:54px;border-radius:50%;background:#EAF0FE;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+  .stub h2{margin:0 0 8px;font-size:16px;color:var(--navy-ink);}
+  .stub p{margin:0 auto;max-width:420px;font-size:13px;color:var(--muted);line-height:1.7;}
+
+  /* ---------- Modal ---------- */
+  .modal-bg{position:fixed;inset:0;background:rgba(20,26,56,.45);display:flex;align-items:center;justify-content:center;z-index:120;padding:20px;}
+  .modal{background:#fff;border-radius:10px;box-shadow:0 20px 50px rgba(20,26,56,.35);max-width:520px;width:100%;}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 26px 6px;}
+  .modal-head h3{margin:0;font-size:17px;font-weight:700;color:var(--navy-700);}
+  .modal-close{background:none;border:0;color:var(--red);font-size:17px;font-weight:700;cursor:pointer;line-height:1;padding:4px 6px;border-radius:3px;font-family:inherit;}
+  .modal-close:hover{background:#FBE9E7;}
+  .modal-body{padding:14px 26px 6px;}
+  .campo{border:1px solid var(--line);border-radius:6px;padding:12px 14px 10px;margin-bottom:14px;}
+  .campo:focus-within{border-color:var(--navy-700);box-shadow:0 0 0 2px #B9C7EE;}
+  .campo label{display:block;font-size:13px;font-weight:600;color:var(--navy-700);margin-bottom:5px;}
+  .campo .req{color:var(--red);}
+  .campo input{width:100%;border:0;outline:none;font-size:13.5px;color:var(--text);font-family:inherit;background:transparent;padding:0;}
+  .modal-acciones{display:flex;justify-content:flex-end;padding:12px 26px 22px;border-top:1px solid var(--line-soft);margin-top:8px;}
+  .btn{height:38px;padding:0 20px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;font-family:inherit;}
+  .btn-primary{background:var(--navy-700);color:#fff;}
+  .btn-primary:hover{background:#31439B;}
+  .btn:focus-visible{outline:2px solid #B9C7EE;outline-offset:2px;}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--line);padding:18px 26px 22px;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.9;background:#fff;}
+
+  /* ---------- Toast ---------- */
+  .toast{position:fixed;right:22px;bottom:22px;max-width:380px;z-index:100;background:#1B2660;color:#fff;border-radius:6px;border-left:5px solid var(--green);box-shadow:0 14px 34px rgba(20,26,56,.4);padding:15px 18px;display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(10px) scale(.98);pointer-events:none;transition:opacity .22s ease,transform .22s ease;}
+  .toast.show{opacity:1;transform:translateY(0) scale(1);}
+  .toast-icon{flex:0 0 auto;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--green);}
+  .toast-text{font-size:13.2px;line-height:1.6;}
+
+  @media (max-width:860px){
+    :root{--sidebar-w:64px;}
+    .nav-item span.label{display:none;}
+    .nav-item{justify-content:center;padding:13px 0;}
+    .nav-item .bar{display:none;}
+    .app-title{font-size:14px;}
+    .user-card{max-width:100%;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar">
+    <div class="crest">
+      <img src="img/escudo.png" width="90" height="90" alt="Escudo Universidad del Cauca"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="crest-fallback">UNIVERSIDAD<br>DEL CAUCA</div>
+    </div>
+    <nav class="nav" id="nav" aria-label="Navegación principal">
+
+      <button class="nav-item is-active" type="button" data-mod="mi-usuario" title="Mi usuario">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19a6 6 0 0 1 11 0"/></svg>
+        <span class="bar" aria-hidden="true">|</span><span class="label">Mi usuario</span>
+      </button>
+
+      <button class="nav-item" type="button" data-mod="usuarios" title="Usuarios">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19a6 6 0 0 1 12 0"/><path d="M16.5 6.4a3 3 0 0 1 0 5.6"/><path d="M17.5 14.2A5.4 5.4 0 0 1 21 19"/></svg>
+        <span class="bar" aria-hidden="true">|</span><span class="label">Usuarios</span>
+      </button>
+
+      <button class="nav-item" type="button" data-mod="roles" title="Roles">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.5" cy="12" r="3.5"/><path d="M10 12h10"/><path d="M17 12v3"/><path d="M20 12v2.5"/></svg>
+        <span class="bar" aria-hidden="true">|</span><span class="label">Roles</span>
+      </button>
+
+      <button class="nav-item" type="button" data-mod="solicitudes" title="Solicitudes">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3.5h14v17l-2.3-1.6-2.4 1.6-2.3-1.6L9.7 20.5 7.3 18.9 5 20.5z"/><path d="M8.5 8h7M8.5 11.5h7M8.5 15h4"/></svg>
+        <span class="bar" aria-hidden="true">|</span><span class="label">Solicitudes</span>
+      </button>
+
+      <button class="nav-item" type="button" data-mod="orden-del-dia" title="Orden del día">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.4 5.4l1.7 1.7M16.9 16.9l1.7 1.7M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7"/></svg>
+        <span class="bar" aria-hidden="true">|</span><span class="label">Orden del día</span>
+      </button>
+
+      <button class="nav-item" type="button" data-mod="respuestas" title="Respuestas">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 8-16 8 3-8-3-8z"/></svg>
+        <span class="bar" aria-hidden="true">|</span><span class="label">Respuestas</span>
+      </button>
+
+      <button class="nav-item" type="button" data-mod="configuracion" title="Configuración">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.2 14.4a1.5 1.5 0 0 0 .3 1.7l.1.1a1.8 1.8 0 1 1-2.6 2.6l-.1-.1a1.5 1.5 0 0 0-1.7-.3 1.5 1.5 0 0 0-.9 1.4v.2a1.8 1.8 0 1 1-3.6 0V20a1.5 1.5 0 0 0-1-1.4 1.5 1.5 0 0 0-1.7.3l-.1.1a1.8 1.8 0 1 1-2.6-2.6l.1-.1a1.5 1.5 0 0 0 .3-1.7 1.5 1.5 0 0 0-1.4-.9H4a1.8 1.8 0 1 1 0-3.6h.2a1.5 1.5 0 0 0 1.4-1 1.5 1.5 0 0 0-.3-1.7l-.1-.1a1.8 1.8 0 1 1 2.6-2.6l.1.1a1.5 1.5 0 0 0 1.7.3H9.7a1.5 1.5 0 0 0 .9-1.4V4a1.8 1.8 0 1 1 3.6 0v.2a1.5 1.5 0 0 0 .9 1.4 1.5 1.5 0 0 0 1.7-.3l.1-.1a1.8 1.8 0 1 1 2.6 2.6l-.1.1a1.5 1.5 0 0 0-.3 1.7v.1a1.5 1.5 0 0 0 1.4.9h.2a1.8 1.8 0 1 1 0 3.6H20a1.5 1.5 0 0 0-1.4.9z"/></svg>
+        <span class="bar" aria-hidden="true">|</span><span class="label">Configuración</span>
+      </button>
+
+      <button class="nav-item" type="button" data-mod="historial" title="Historial">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 1 2.6 6.1"/><path d="M3.5 12V8M3.5 12h4"/><path d="M12 7.5V12l3 1.8"/></svg>
+        <span class="bar" aria-hidden="true">|</span><span class="label">Historial</span>
+      </button>
+
+    </nav>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="main">
+    <header class="topbar">
+      <h1 class="app-title">Gestión de Solicitudes Consejo de Facultad FIET</h1>
+      <div class="user-chip">
+        <button class="user-chip-btn" id="userMenuBtn" aria-haspopup="true" aria-expanded="false">
+          <div class="avatar" id="avatarIni" aria-hidden="true">AM</div>
+          <div class="user-meta">
+            <div class="user-name" id="topName">Andrés Muñoz</div>
+            <div class="user-role">Decano
+              <svg width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="#1F2A6D" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+            </div>
+          </div>
+        </button>
+        <div class="user-dropdown" id="userDropdown" hidden>
+          <button class="user-dropdown-item" id="btnLogout" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B23B2E" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="crumbs">
+        <b>Decano</b><span>&gt;</span><b id="crumbMod">Mi usuario</b>
+      </div>
+      <div class="section-tab" id="sectionTab">Información de Usuario</div>
+
+      <!-- ===================== MÓDULO: MI USUARIO ===================== -->
+      <section id="modMiUsuario">
+        <div class="bienvenida">
+          <div class="user-card">
+            <h2>Bienvenid@, <span id="cardUser">amunozc</span></h2>
+            <dl>
+              <div class="row"><dt>Nombre completo:</dt> <dd id="cNombre"></dd></div>
+              <div class="row"><dt>Username:</dt> <dd id="cUsername"></dd></div>
+              <div class="row"><dt>Tipo de documento:</dt> <dd id="cTipoDoc"></dd></div>
+              <div class="row"><dt>Número de documento:</dt> <dd id="cNumDoc"></dd></div>
+              <div class="row"><dt>Correo electrónico:</dt> <dd id="cCorreo"></dd></div>
+              <div class="row"><dt>Teléfono:</dt> <dd id="cTelefono"></dd></div>
+              <div class="row"><dt>Estado:</dt>
+                <dd><span class="estado-ok">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4" fill="#2E9E6B"/><path d="M6.5 12.4l3.7 3.6L17.5 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span id="cEstado"></span>
+                </span></dd>
+              </div>
+              <div class="row"><dt>Tipo de usuario:</dt> <dd id="cTipoUsr"></dd></div>
+              <div class="row"><dt>Roles:</dt> <dd id="cRoles"></dd></div>
+            </dl>
+            <button class="btn-pass" id="btnPass" type="button" title="Cambiar contraseña" aria-label="Cambiar contraseña">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== MÓDULOS NO IMPLEMENTADOS ===================== -->
+      <section id="modStub" hidden>
+        <div class="stub">
+          <div class="stub-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2A3A86" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 9.5h17M8 5v4.5"/></svg>
+          </div>
+          <h2 id="stubTitulo">Módulo</h2>
+          <p>Este módulo hace parte de la vista actual del Decano, pero todavía no se ha reconstruido en el prototipo. Por ahora solo está implementado <b>Mi usuario</b>.</p>
+        </div>
+      </section>
+
+    </div>
+
+    <footer>
+      2026 &nbsp;|&nbsp; Gestión de Procesos Académicos FIET &nbsp;|&nbsp; Facultad de Ingeniería Electrónica y Telecomunicaciones<br>
+      División de Tecnologías de la Información y las Comunicaciones &nbsp;|&nbsp; Versión 1.0.0
+    </footer>
+  </div>
+</div>
+
+<!-- ===================== TOAST ===================== -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <div class="toast-icon" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+  </div>
+  <div class="toast-text" id="toastText"></div>
+</div>
+
+<!-- ===================== MODAL ===================== -->
+<div id="modalSlot"></div>
+
+<script>
+/* =========================================================================
+   DATOS SIMULADOS DEL DECANO
+   Origen en el sistema real: tabla de usuarios de JDCE.
+   PENDIENTE: confirmar el nombre y los datos reales del Decano de la FIET
+   antes de la sustentación. Los valores de abajo son de ejemplo.
+   ========================================================================= */
+const DECANO = {
+  nombres:'Andrés Felipe',
+  apellidos:'Muñoz Certuche',
+  username:'amunozc',
+  tipoDocumento:'Cédula de ciudadanía',
+  numeroDocumento:'10542118',
+  correo:'amunozc@unicauca.edu.co',
+  telefono:'+573100000000',
+  estado:'Activo',
+  /* Valor tal como aparece en el listado de tipos de usuario del Manual de
+     Usuario V1.0 de JDCE (sin tilde en "Maxima"). Se reproduce literal. */
+  tipoUsuario:'Maxima autoridad FIET - Decano',
+  roles:'Decano'
+};
+
+/* Módulos de la vista actual del Decano (Figura 4 del Manual de Usuario V1.0).
+   Solo "Mi usuario" está implementado en este prototipo. */
+const MODULOS = {
+  'mi-usuario':    {nombre:'Mi usuario',     tab:'Información de Usuario'},
+  'usuarios':      {nombre:'Usuarios',       tab:'Gestión de Usuarios'},
+  'roles':         {nombre:'Roles',          tab:'Gestión de Roles'},
+  'solicitudes':   {nombre:'Solicitudes',    tab:'Gestión de Solicitudes'},
+  'orden-del-dia': {nombre:'Orden del día',  tab:'Orden del Día'},
+  'respuestas':    {nombre:'Respuestas',     tab:'Gestión de Respuestas'},
+  'configuracion': {nombre:'Configuración',  tab:'Configuración'},
+  'historial':     {nombre:'Historial',      tab:'Historial'}
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* =========================================================================
+   MI USUARIO
+   ========================================================================= */
+function pintarUsuario(){
+  const nombreCompleto = `${DECANO.nombres} ${DECANO.apellidos}`;
+  $('cardUser').textContent  = DECANO.username;
+  $('cNombre').textContent   = nombreCompleto;
+  $('cUsername').textContent = DECANO.username;
+  $('cTipoDoc').textContent  = DECANO.tipoDocumento;
+  $('cNumDoc').textContent   = DECANO.numeroDocumento;
+  $('cCorreo').textContent   = DECANO.correo;
+  $('cTelefono').textContent = DECANO.telefono;
+  $('cEstado').textContent   = DECANO.estado;
+  $('cTipoUsr').textContent  = DECANO.tipoUsuario;
+  $('cRoles').textContent    = DECANO.roles;
+
+  $('topName').textContent = `${DECANO.nombres.split(' ')[0]} ${DECANO.apellidos.split(' ')[0]}`;
+  $('avatarIni').textContent = (DECANO.nombres[0] + DECANO.apellidos[0]).toUpperCase();
+}
+
+/* =========================================================================
+   NAVEGACIÓN ENTRE MÓDULOS
+   ========================================================================= */
+function abrirModulo(clave){
+  const mod = MODULOS[clave];
+  if(!mod) return;
+
+  document.querySelectorAll('.nav-item').forEach(b => {
+    const activo = b.dataset.mod === clave;
+    b.classList.toggle('is-active', activo);
+    if(activo) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+
+  $('crumbMod').textContent = mod.nombre;
+  $('sectionTab').textContent = mod.tab;
+
+  const esMiUsuario = clave === 'mi-usuario';
+  $('modMiUsuario').hidden = !esMiUsuario;
+  $('modStub').hidden = esMiUsuario;
+  if(!esMiUsuario) $('stubTitulo').textContent = mod.nombre;
+
+  document.title = `${mod.nombre} — Gestión de Solicitudes Consejo de Facultad FIET`;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.querySelectorAll('.nav-item').forEach(b => {
+  b.addEventListener('click', () => abrirModulo(b.dataset.mod));
+});
+
+/* =========================================================================
+   MODAL — CAMBIAR CONTRASEÑA
+   Prototipo sin backend: el diálogo reproduce la Figura 3 del Manual de
+   Usuario V1.0. No valida, no envía ni almacena nada.
+   ========================================================================= */
+function abrirCambiarPass(){
+  $('modalSlot').innerHTML = `
+    <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+      <div class="modal">
+        <div class="modal-head">
+          <h3 id="modalTitulo">Cambiar Contraseña</h3>
+          <button type="button" class="modal-close" id="modalCerrar" aria-label="Cerrar">X</button>
+        </div>
+        <div class="modal-body">
+          <div class="campo">
+            <label for="passActual">Contraseña Actual <span class="req">*</span></label>
+            <input type="password" id="passActual" autocomplete="off">
+          </div>
+          <div class="campo">
+            <label for="passNueva">Nueva Contraseña <span class="req">*</span></label>
+            <input type="password" id="passNueva" autocomplete="off">
+          </div>
+        </div>
+        <div class="modal-acciones">
+          <button type="button" class="btn btn-primary" id="modalGuardar">Guardar</button>
+        </div>
+      </div>
+    </div>`;
+
+  const cerrar = () => { $('modalSlot').innerHTML = ''; document.removeEventListener('keydown', onEsc); $('btnPass').focus(); };
+  const onEsc = e => { if(e.key === 'Escape') cerrar(); };
+  document.addEventListener('keydown', onEsc);
+  $('modalCerrar').addEventListener('click', cerrar);
+  $('modalBg').addEventListener('click', e => { if(e.target.id === 'modalBg') cerrar(); });
+  $('modalGuardar').addEventListener('click', () => {
+    cerrar();
+    mostrarToast('<b>Prototipo sin backend.</b><br>El cambio de contraseña no se procesa en esta maqueta.');
+  });
+  $('passActual').focus();
+}
+$('btnPass').addEventListener('click', abrirCambiarPass);
+
+/* =========================================================================
+   MENÚ DE USUARIO
+   ========================================================================= */
+const userMenuBtn = $('userMenuBtn'), userDropdown = $('userDropdown');
+userMenuBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  const abierto = !userDropdown.hidden;
+  userDropdown.hidden = abierto;
+  userMenuBtn.setAttribute('aria-expanded', String(!abierto));
+});
+document.addEventListener('click', e => {
+  if(!userDropdown.hidden && !e.target.closest('.user-chip')){
+    userDropdown.hidden = true;
+    userMenuBtn.setAttribute('aria-expanded','false');
+  }
+});
+$('btnLogout').addEventListener('click', () => {
+  userDropdown.hidden = true;
+  mostrarToast('<b>Sesión cerrada.</b><br>Has salido de Gestión de Solicitudes Consejo de Facultad FIET.');
+});
+
+/* =========================================================================
+   TOAST
+   ========================================================================= */
+let toastTimer = null;
+function mostrarToast(html){
+  const t = $('toast');
+  $('toastText').innerHTML = html;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 4500);
+}
+
+/* Arranque */
+pintarUsuario();
+abrirModulo('mi-usuario');
+</script>
+</body>
+</html>
