@@ -68,6 +68,7 @@
 
   .nav-item.has-sub .nav-caret{margin-left:auto;flex:0 0 auto;opacity:.7;transition:transform .15s ease;}
   .nav-item.has-sub[aria-expanded="true"] .nav-caret{transform:rotate(180deg);}
+  .nav-sub[hidden]{display:none;}
   .nav-sub{display:flex;flex-direction:column;}
   .nav-subitem{
     width:100%;display:flex;align-items:center;gap:8px;padding:10px 16px 10px 40px;
@@ -1203,7 +1204,6 @@ function abrirModulo(clave){
     b.classList.toggle('is-active', activo);
     if(activo) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
   });
-  $('navGA').classList.toggle('is-active', esHijoGA);
   if(esHijoGA){
     $('navGA').setAttribute('aria-expanded', 'true');
     $('subGA').hidden = false;
