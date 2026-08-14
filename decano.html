@@ -66,6 +66,18 @@
   .nav-item:focus-visible{outline:2px solid #9FB6FF;outline-offset:-2px;}
   .nav-item svg{flex:0 0 auto;}
 
+  .nav-item.has-sub .nav-caret{margin-left:auto;flex:0 0 auto;opacity:.7;transition:transform .15s ease;}
+  .nav-item.has-sub[aria-expanded="true"] .nav-caret{transform:rotate(180deg);}
+  .nav-sub{display:flex;flex-direction:column;background:rgba(0,0,0,.14);}
+  .nav-subitem{
+    width:100%;display:flex;align-items:center;gap:9px;padding:9px 16px 9px 49px;
+    background:none;border:0;cursor:pointer;color:#D7DCEA;font-size:12.8px;text-align:left;
+    border-left:3px solid transparent;
+  }
+  .nav-subitem:hover{background:rgba(255,255,255,.07);color:#fff;}
+  .nav-subitem.is-active{background:rgba(255,255,255,.11);border-left-color:#fff;font-weight:600;color:#fff;}
+  .nav-subitem:focus-visible{outline:2px solid #9FB6FF;outline-offset:-2px;}
+
   /* ---------- Topbar ---------- */
   .topbar{height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;border-bottom:1px solid var(--line);background:#fff;}
   .app-title{font-size:19px;font-weight:700;color:var(--navy-ink);letter-spacing:.1px;margin:0;}
@@ -305,6 +317,8 @@
     .nav-item span.label{display:none;}
     .nav-item{justify-content:center;padding:13px 0;}
     .nav-item .bar{display:none;}
+    .nav-item.has-sub .nav-caret{display:none;}
+    .nav-sub{display:none;}
     .app-title{font-size:15px;}
     .crumbs{margin-bottom:16px;}
     .dl{grid-template-columns:1fr;gap:3px 0;}
@@ -345,10 +359,21 @@
         <span class="bar" aria-hidden="true">|</span><span class="label">Solicitudes</span>
       </button>
 
-      <button class="nav-item" type="button" data-mod="modulo-academico" title="Módulo académico">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5L2.5 9 12 13.5 21.5 9 12 4.5z"/><path d="M6 11v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5"/><path d="M21.5 9v6"/></svg>
-        <span class="bar" aria-hidden="true">|</span><span class="label">Módulo académico</span>
-      </button>
+      <div class="nav-group">
+        <button class="nav-item has-sub" type="button" id="navGA" aria-expanded="false" aria-controls="subGA" title="Gestión académica">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5L2.5 9 12 13.5 21.5 9 12 4.5z"/><path d="M6 11v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5"/><path d="M21.5 9v6"/></svg>
+          <span class="bar" aria-hidden="true">|</span><span class="label">Gestión académica</span>
+          <svg class="nav-caret" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+        </button>
+        <div class="nav-sub" id="subGA" hidden>
+          <button class="nav-subitem" type="button" data-mod="ga-solicitudes">
+            <span class="label">Solicitudes</span>
+          </button>
+          <button class="nav-subitem" type="button" data-mod="ga-respuestas">
+            <span class="label">Respuestas</span>
+          </button>
+        </div>
+      </div>
 
       <button class="nav-item" type="button" data-mod="orden-del-dia" title="Orden del día">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.4 5.4l1.7 1.7M16.9 16.9l1.7 1.7M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7"/></svg>
@@ -398,7 +423,7 @@
 
     <div class="content">
       <div class="crumbs">
-        <b>Decano</b><span>&gt;</span><b id="crumbMod">Mi usuario</b>
+        <b>Decano</b><span>&gt;</span><b id="crumbGrupo" hidden></b><span id="crumbGrupoSep" hidden>&gt;</span><b id="crumbMod">Mi usuario</b>
       </div>
       <div class="section-tab" id="sectionTab">Mi usuario</div>
 
@@ -437,8 +462,8 @@
           </div>
       </section>
 
-      <!-- ===================== MÓDULO: MÓDULO ACADÉMICO (evaluación del Decano) ===================== -->
-      <section id="modModuloAcademico" hidden>
+      <!-- ===================== MÓDULO: GESTIÓN ACADÉMICA · SOLICITUDES (evaluación del Decano) ===================== -->
+      <section id="modGASolicitudes" hidden>
         <div class="card">
           <div class="card-head">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A3A86" stroke-width="1.6" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
@@ -493,7 +518,10 @@
 
           <div class="pager" id="pagerD"></div>
         </div>
+      </section>
 
+      <!-- ===================== MÓDULO: GESTIÓN ACADÉMICA · RESPUESTAS (historial del Decano) ===================== -->
+      <section id="modGARespuestas" hidden>
         <div class="card">
           <div class="card-head">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A3A86" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 8-16 8 3-8-3-8z"/></svg>
@@ -665,15 +693,16 @@ const DECANO = {
 /* Módulos de la vista actual del Decano (Figura 4 del Manual de Usuario V1.0).
    Solo "Mi usuario" está implementado en este prototipo. */
 const MODULOS = {
-  'mi-usuario':    {nombre:'Mi usuario'},
-  'usuarios':      {nombre:'Usuarios'},
-  'roles':         {nombre:'Roles'},
-  'solicitudes':   {nombre:'Solicitudes'},
-  'modulo-academico': {nombre:'Módulo académico'},
-  'orden-del-dia': {nombre:'Orden del día'},
-  'respuestas':    {nombre:'Respuestas'},
-  'configuracion': {nombre:'Configuración'},
-  'historial':     {nombre:'Historial'}
+  'mi-usuario':      {nombre:'Mi usuario'},
+  'usuarios':        {nombre:'Usuarios'},
+  'roles':           {nombre:'Roles'},
+  'solicitudes':     {nombre:'Solicitudes'},
+  'ga-solicitudes':  {nombre:'Solicitudes', grupo:'Gestión académica'},
+  'ga-respuestas':   {nombre:'Respuestas', grupo:'Gestión académica'},
+  'orden-del-dia':   {nombre:'Orden del día'},
+  'respuestas':      {nombre:'Respuestas'},
+  'configuracion':   {nombre:'Configuración'},
+  'historial':       {nombre:'Historial'}
 };
 
 const $ = id => document.getElementById(id);
@@ -1161,30 +1190,54 @@ function abrirModulo(clave){
   const mod = MODULOS[clave];
   if(!mod) return;
 
-  document.querySelectorAll('.nav-item').forEach(b => {
+  const esHijoGA = clave === 'ga-solicitudes' || clave === 'ga-respuestas';
+
+  document.querySelectorAll('.nav-item[data-mod]').forEach(b => {
     const activo = b.dataset.mod === clave;
     b.classList.toggle('is-active', activo);
     if(activo) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
   });
+  document.querySelectorAll('.nav-subitem').forEach(b => {
+    const activo = b.dataset.mod === clave;
+    b.classList.toggle('is-active', activo);
+    if(activo) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  $('navGA').classList.toggle('is-active', esHijoGA);
+  if(esHijoGA){
+    $('navGA').setAttribute('aria-expanded', 'true');
+    $('subGA').hidden = false;
+  }
 
   $('crumbMod').textContent = mod.nombre;
   $('sectionTab').textContent = mod.nombre;
+  $('crumbGrupo').hidden = !mod.grupo;
+  $('crumbGrupoSep').hidden = !mod.grupo;
+  if(mod.grupo) $('crumbGrupo').textContent = mod.grupo;
 
-  const SECCIONES_REALES = {'mi-usuario':'modMiUsuario', 'modulo-academico':'modModuloAcademico'};
+  const SECCIONES_REALES = {'mi-usuario':'modMiUsuario', 'ga-solicitudes':'modGASolicitudes', 'ga-respuestas':'modGARespuestas'};
   const idReal = SECCIONES_REALES[clave];
 
   Object.values(SECCIONES_REALES).forEach(id => $(id).hidden = (id !== idReal));
   $('modStub').hidden = !!idReal;
   if(!idReal) $('stubTitulo').textContent = mod.nombre;
 
-  if(clave === 'modulo-academico'){ renderD(); renderRD(); }
+  if(clave === 'ga-solicitudes') renderD();
+  if(clave === 'ga-respuestas') renderRD();
 
   document.title = `Gestión de Procesos Académicos FIET — ${mod.nombre}`;
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-document.querySelectorAll('.nav-item').forEach(b => {
+document.querySelectorAll('.nav-item[data-mod]').forEach(b => {
   b.addEventListener('click', () => abrirModulo(b.dataset.mod));
+});
+document.querySelectorAll('.nav-subitem').forEach(b => {
+  b.addEventListener('click', () => abrirModulo(b.dataset.mod));
+});
+$('navGA').addEventListener('click', () => {
+  const abierto = $('navGA').getAttribute('aria-expanded') === 'true';
+  $('navGA').setAttribute('aria-expanded', String(!abierto));
+  $('subGA').hidden = abierto;
 });
 
 /* =========================================================================
