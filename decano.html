@@ -437,8 +437,8 @@
           </div>
       </section>
 
-      <!-- ===================== MÓDULO: SOLICITUDES (evaluación del Decano) ===================== -->
-      <section id="modSolicitudes" hidden>
+      <!-- ===================== MÓDULO: MÓDULO ACADÉMICO (evaluación del Decano) ===================== -->
+      <section id="modModuloAcademico" hidden>
         <div class="card">
           <div class="card-head">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A3A86" stroke-width="1.6" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
@@ -467,7 +467,7 @@
             </div>
 
             <div class="table-scroll">
-              <table>
+              <table id="tablaD">
                 <thead>
                   <tr>
                     <th>Radicado</th>
@@ -493,10 +493,7 @@
 
           <div class="pager" id="pagerD"></div>
         </div>
-      </section>
 
-      <!-- ===================== MÓDULO: RESPUESTAS (historial del Decano) ===================== -->
-      <section id="modRespuestas" hidden>
         <div class="card">
           <div class="card-head">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A3A86" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 8-16 8 3-8-3-8z"/></svg>
@@ -533,7 +530,7 @@
             </div>
 
             <div class="table-scroll">
-              <table>
+              <table id="tablaRD">
                 <thead>
                   <tr>
                     <th>Radicado</th>
@@ -771,7 +768,7 @@ function renderD(){
   if(pageD > totalPages) pageD = totalPages;
 
   const tbody = $('tbodyD'), empty = $('emptyD');
-  const table = document.querySelector('#modSolicitudes .table-scroll');
+  const table = tbody.closest('.table-scroll');
   const pager = $('pagerD');
 
   if(rows.length === 0){
@@ -856,7 +853,7 @@ function renderRD(){
   if(pageRD > totalPages) pageRD = totalPages;
 
   const tbody = $('tbodyRD'), empty = $('emptyRD');
-  const table = document.querySelector('#modRespuestas .table-scroll');
+  const table = tbody.closest('.table-scroll');
   const pager = $('pagerRD');
 
   if(rows.length === 0){
@@ -1146,12 +1143,12 @@ document.addEventListener('keydown', e => {
   if(e.key === 'Escape' && backdropAccionD.classList.contains('open')) cerrarAccionD();
 });
 
-document.querySelectorAll('#modSolicitudes th.sortable').forEach(th => th.addEventListener('click', () => {
+document.querySelectorAll('#tablaD th.sortable').forEach(th => th.addEventListener('click', () => {
   sortDirD = sortDirD === 'asc' ? 'desc' : 'asc';
   renderD();
 }));
 
-document.querySelectorAll('#modRespuestas th.sortable').forEach(th => th.addEventListener('click', () => {
+document.querySelectorAll('#tablaRD th.sortable').forEach(th => th.addEventListener('click', () => {
   const k = th.dataset.sort;
   sortDirRD = (sortKeyRD === k && sortDirRD === 'asc') ? 'desc' : 'asc';
   sortKeyRD = k; renderRD();
@@ -1173,15 +1170,14 @@ function abrirModulo(clave){
   $('crumbMod').textContent = mod.nombre;
   $('sectionTab').textContent = mod.nombre;
 
-  const SECCIONES_REALES = {'mi-usuario':'modMiUsuario', 'solicitudes':'modSolicitudes', 'respuestas':'modRespuestas'};
+  const SECCIONES_REALES = {'mi-usuario':'modMiUsuario', 'modulo-academico':'modModuloAcademico'};
   const idReal = SECCIONES_REALES[clave];
 
   Object.values(SECCIONES_REALES).forEach(id => $(id).hidden = (id !== idReal));
   $('modStub').hidden = !!idReal;
   if(!idReal) $('stubTitulo').textContent = mod.nombre;
 
-  if(clave === 'solicitudes') renderD();
-  if(clave === 'respuestas') renderRD();
+  if(clave === 'modulo-academico'){ renderD(); renderRD(); }
 
   document.title = `Gestión de Procesos Académicos FIET — ${mod.nombre}`;
   window.scrollTo({top:0, behavior:'smooth'});
