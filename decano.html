@@ -68,14 +68,15 @@
 
   .nav-item.has-sub .nav-caret{margin-left:auto;flex:0 0 auto;opacity:.7;transition:transform .15s ease;}
   .nav-item.has-sub[aria-expanded="true"] .nav-caret{transform:rotate(180deg);}
-  .nav-sub{display:flex;flex-direction:column;background:rgba(0,0,0,.14);}
+  .nav-sub{display:flex;flex-direction:column;}
   .nav-subitem{
-    width:100%;display:flex;align-items:center;gap:9px;padding:9px 16px 9px 49px;
-    background:none;border:0;cursor:pointer;color:#D7DCEA;font-size:12.8px;text-align:left;
+    width:100%;display:flex;align-items:center;gap:8px;padding:10px 16px 10px 40px;
+    background:none;border:0;cursor:pointer;color:#EDEFF6;font-size:13.5px;text-align:left;
     border-left:3px solid transparent;
   }
-  .nav-subitem:hover{background:rgba(255,255,255,.07);color:#fff;}
-  .nav-subitem.is-active{background:rgba(255,255,255,.11);border-left-color:#fff;font-weight:600;color:#fff;}
+  .nav-subitem .sub-marker{opacity:.6;}
+  .nav-subitem:hover{background:rgba(255,255,255,.07);}
+  .nav-subitem.is-active{background:rgba(255,255,255,.11);border-left-color:#fff;font-weight:600;}
   .nav-subitem:focus-visible{outline:2px solid #9FB6FF;outline-offset:-2px;}
 
   /* ---------- Topbar ---------- */
@@ -367,10 +368,10 @@
         </button>
         <div class="nav-sub" id="subGA" hidden>
           <button class="nav-subitem" type="button" data-mod="ga-solicitudes">
-            <span class="label">Solicitudes</span>
+            <span class="sub-marker" aria-hidden="true">&gt;</span><span class="label">Solicitudes</span>
           </button>
           <button class="nav-subitem" type="button" data-mod="ga-respuestas">
-            <span class="label">Respuestas</span>
+            <span class="sub-marker" aria-hidden="true">&gt;</span><span class="label">Respuestas</span>
           </button>
         </div>
       </div>
