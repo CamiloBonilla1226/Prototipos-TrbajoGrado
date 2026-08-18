@@ -190,33 +190,7 @@
   .chip.f{background:#EDEFF8}
   .chip.d{background:#FBEEEC}
 
-  /* ============ TABLA COMPARATIVA ============ */
-  .tabla-wrap{overflow-x:auto;border:1px solid var(--linea);border-radius:11px;background:#fff}
-  table{border-collapse:collapse;width:100%;min-width:820px;font-size:13.5px}
-  th,td{padding:12px 15px;text-align:left;vertical-align:top;border-bottom:1px solid #EDEFF3}
-  thead th{background:var(--navy-2);color:#fff;font-weight:600;font-size:13px;position:sticky;top:0}
-  thead th:first-child{background:var(--navy)}
-  tbody th{font-weight:600;color:var(--navy);width:210px;background:#FAFAFC}
-  tbody tr:nth-child(even) td,tbody tr:nth-child(even) th{background:#F8F9FB}
-  tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
-  td .si{color:var(--verde);font-weight:650}
-  td .no{color:var(--rojo);font-weight:650}
-  td small{display:block;color:var(--gris);font-size:11.5px;margin-top:3px}
-
-  /* ============ PREGUNTAS ============ */
-  .preguntas{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
-  .pq{background:#fff;border:1px solid var(--linea);border-left:4px solid var(--rojo);border-radius:11px;padding:14px 16px}
-  .pq .ref{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:650;color:var(--rojo);display:block;margin-bottom:5px}
-  .pq h3{margin:0 0 5px;font-size:14.5px;font-weight:600}
-  .pq p{margin:0;font-size:12.8px;color:var(--gris)}
-
-  .nota{
-    margin-top:22px;background:#FFFBF0;border:1px solid #E8D093;border-radius:10px;
-    padding:14px 16px;font-size:13px;color:#6B4E12;
-  }
-  .nota b{color:#553D06}
-
-  @media (max-width:820px){
+    @media (max-width:820px){
     .malla,.carriles{grid-template-columns:1fr}
     .carriles{position:static}
     .banda{display:none}
@@ -249,8 +223,6 @@
   <div class="tabs-inner" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-panel="p-cancel">Cancelación de Matrícula y de Asignatura</button>
     <button class="tab" role="tab" aria-selected="false" data-panel="p-supl">Examen Supletorio</button>
-    <button class="tab" role="tab" aria-selected="false" data-panel="p-dif">Diferencias entre los tres trámites</button>
-    <button class="tab" role="tab" aria-selected="false" data-panel="p-preg">Lo que necesitamos confirmar</button>
   </div>
 </nav>
 
@@ -298,90 +270,6 @@
       <svg class="wires" data-wires aria-hidden="true"></svg>
       <div class="etiquetas" data-etiquetas></div>
       <div class="malla" data-malla></div>
-    </div>
-  </section>
-
-  <!-- ============ DIFERENCIAS ============ -->
-  <section class="panel" id="p-dif" hidden>
-    <h2 class="titulo-flujo">En qué se parecen y en qué se separan los tres trámites</h2>
-    <p class="subtitulo-flujo">Los tres comparten la misma ruta de aprobación —Estudiante, Funcionario, Decano, Funcionario— pero se separan en el documento que se radica, en el acto administrativo que producen y en el cierre.</p>
-    <div class="tabla-wrap">
-      <table>
-        <thead>
-          <tr><th scope="col"></th><th scope="col">Cancelación de Matrícula</th><th scope="col">Cancelación de Asignatura</th><th scope="col">Examen Supletorio</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Formato que radica el Estudiante</th>
-            <td>FOR-14<small>PA-GA-4.2-FOR-14 v2</small></td>
-            <td>FOR-9<small>PA-GA-4.2-FOR-9 v4</small></td>
-            <td>FOR-23<small>PM-FO-4-FOR-23</small></td>
-          </tr>
-          <tr>
-            <th scope="row">Procedimiento institucional</th>
-            <td>PR-32<small>por confirmar en la sesión</small></td>
-            <td>PR-7<small>Adiciones y cancelaciones de asignaturas</small></td>
-            <td>PR-28<small>Solicitud de examen supletorio</small></td>
-          </tr>
-          <tr>
-            <th scope="row">¿Produce resolución?</th>
-            <td><span class="si">Sí</span></td>
-            <td><span class="si">Sí</span></td>
-            <td><span class="no">No</span><small>el trámite cierra sin acto administrativo</small></td>
-          </tr>
-          <tr>
-            <th scope="row">¿Quién prepara la resolución y cuándo?</th>
-            <td colspan="2">El Funcionario, <b>antes</b> de remitir al Decano. Dos caminos: adjuntar el PDF ya elaborado o generarla dentro de la aplicación.</td>
-            <td>No aplica</td>
-          </tr>
-          <tr>
-            <th scope="row">¿Requiere pago del Estudiante?</th>
-            <td><span class="no">No</span></td>
-            <td><span class="no">No</span></td>
-            <td><span class="si">Sí</span><small>el Funcionario envía el recibo y el Estudiante sube el comprobante</small></td>
-          </tr>
-          <tr>
-            <th scope="row">Quién toma la decisión</th>
-            <td colspan="3">El <b>Decano</b>, de manera unipersonal, en los tres trámites.</td>
-          </tr>
-          <tr>
-            <th scope="row">Pasos hasta el cierre</th>
-            <td>5</td>
-            <td>5</td>
-            <td>7</td>
-          </tr>
-          <tr>
-            <th scope="row">Cómo cierra el trámite</th>
-            <td colspan="2">El Funcionario envía la respuesta con la resolución firmada. El sistema guarda copia en las carpetas <b>DARCA</b> y <b>DECANATURA</b>, identificadas con el radicado.</td>
-            <td>El Funcionario verifica el comprobante de pago y cierra la solicitud.</td>
-          </tr>
-          <tr>
-            <th scope="row">Si se rechaza</th>
-            <td colspan="3">El trámite queda cerrado. Hoy el prototipo <b>no contempla corrección ni reenvío</b>: el Estudiante debe radicar una solicitud nueva.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="nota"><b>Punto a discutir:</b> el rechazo cierra el trámite sin posibilidad de subsanar. Si en la práctica ustedes llaman al estudiante para que complete un documento faltante, ese comportamiento todavía no está en el sistema.</div>
-  </section>
-
-  <!-- ============ PREGUNTAS ============ -->
-  <section class="panel" id="p-preg" hidden>
-    <h2 class="titulo-flujo">Lo que necesitamos confirmar con ustedes</h2>
-    <p class="subtitulo-flujo">Cada punto corresponde a un paso del flujo donde el prototipo tomó una decisión que hay que contrastar con la práctica real de la Decanatura.</p>
-    <div class="preguntas">
-      <div class="pq"><span class="ref">Paso 5 · Respuesta al Estudiante</span><h3>¿Cómo se notifica al Estudiante?</h3><p>El prototipo dice “respuesta enviada”, pero no está definido si el sistema envía el correo, si ustedes lo envían aparte, y si la resolución va adjunta o se descarga desde la aplicación.</p></div>
-      <div class="pq"><span class="ref">Paso 3 · Resolución</span><h3>¿La resolución se elabora antes o después de que el Decano decida?</h3><p>Hoy el Funcionario la prepara antes de remitir. Eso significa redactar el acto administrativo asumiendo que será aprobado.</p></div>
-      <div class="pq"><span class="ref">Paso 3 · Resolución</span><h3>¿Quién asigna el número de resolución y en qué momento?</h3><p>Y la firma del Decano: ¿es física o digital? Si es física, ¿qué papel cumple el sistema en ese momento?</p></div>
-      <div class="pq"><span class="ref">Paso 5 · Cierre</span><h3>¿Realmente se necesitan las dos copias, DARCA y DECANATURA?</h3><p>¿Alguien más recibe copia: Registro y Control, la coordinación del programa, el docente?</p></div>
-      <div class="pq"><span class="ref">Supletorio · Paso 5</span><h3>¿Quién genera el recibo de pago?</h3><p>¿Lo produce la División Financiera o la Decanatura? ¿Hay plazo para pagar y qué pasa si el Estudiante no paga?</p></div>
-      <div class="pq"><span class="ref">Supletorio · Cierre</span><h3>¿Quién le avisa al docente que el supletorio fue aprobado?</h3><p>El docente no aparece como actor en el sistema, pero es quien aplica la prueba.</p></div>
-      <div class="pq"><span class="ref">Supletorio · Paso 7</span><h3>Si el comprobante no sirve, ¿el Estudiante puede volver a subirlo?</h3><p>Necesitamos definir si el trámite se devuelve a “Pendiente de pago” o si se cierra como rechazado.</p></div>
-      <div class="pq"><span class="ref">Paso 2 · Revisión</span><h3>Si falta un documento, ¿ustedes rechazan o piden completar?</h3><p>El prototipo solo permite rechazar y cerrar. Si en la práctica se pide completar, falta un estado en el sistema.</p></div>
-      <div class="pq"><span class="ref">Paso 4 · Decisión</span><h3>¿Los tres trámites los decide el Decano solo?</h3><p>¿O alguno pasa por Consejo de Facultad, por ejemplo una cancelación de matrícula extemporánea?</p></div>
-      <div class="pq"><span class="ref">Paso 1 · Radicación</span><h3>¿Hay fechas límite para radicar cada trámite?</h3><p>Y si las hay: ¿el sistema debe bloquear la radicación fuera de plazo o solo advertir y dejar radicar?</p></div>
-      <div class="pq"><span class="ref">Paso 2 · Asignación</span><h3>¿Quién asigna la solicitud al funcionario?</h3><p>¿Cuántas personas atienden estos trámites y se puede reasignar en vacaciones o incapacidad?</p></div>
-      <div class="pq"><span class="ref">Vocabulario</span><h3>¿Los nombres de los estados se entienden?</h3><p>En trámite, Pendiente, En gestión, Pendiente de pago, Respondida, Aprobada, Rechazada. ¿Cómo los llaman ustedes hoy?</p></div>
     </div>
   </section>
 </main>
@@ -438,7 +326,7 @@ const FLUJOS = {
     ],
     enlaces:[
       {de:'a1', a:'a2'},
-      {de:'a2', a:'a3', etq:'No cumple requisitos', tono:'no'},
+      {de:'a2', a:'a3', lado:true, etq:'No cumple requisitos', tono:'no'},
       {de:'a2', a:'a4', etq:'Cumple requisitos', tono:'ok'},
       {de:'a4', a:'a5'},
       {de:'a5', a:'a6', etq:'Aprueba o rechaza'},
@@ -510,10 +398,10 @@ const FLUJOS = {
     ],
     enlaces:[
       {de:'b1', a:'b2'},
-      {de:'b2', a:'b3', etq:'No cumple requisitos', tono:'no'},
+      {de:'b2', a:'b3', lado:true, etq:'No cumple requisitos', tono:'no'},
       {de:'b2', a:'b4', etq:'Cumple requisitos', tono:'ok'},
       {de:'b4', a:'b5'},
-      {de:'b5', a:'b6', etq:'Rechaza', tono:'no'},
+      {de:'b5', a:'b6', lado:true, etq:'Rechaza', tono:'no'},
       {de:'b5', a:'b7', etq:'Aprueba', tono:'ok'},
       {de:'b7', a:'b8'},
       {de:'b8', a:'b9'},
@@ -624,6 +512,14 @@ function trazar(panelId){
       d = `M ${A.der} ${y1} L ${canal-R} ${y1} Q ${canal} ${y1} ${canal} ${y1-R} L ${canal} ${y2+R} Q ${canal} ${y2} ${canal-R} ${y2} L ${B.der+4} ${y2}`;
       lx = canal - 14; ly = (y1 + y2)/2;
       anclaje = 'translate(-100%,-50%)';
+    } else if(en.lado){
+      const y0 = A.aba - 26;
+      const s = Math.sign(B.cx - A.cx);
+      const x0 = s < 0 ? A.izq - 2 : A.der + 2;
+      const y2 = B.arr - 4;
+      const R = Math.min(13, Math.abs(B.cx - x0)/2, Math.abs(y2 - y0)/2);
+      d = `M ${x0} ${y0} L ${B.cx - s*R} ${y0} Q ${B.cx} ${y0} ${B.cx} ${y0+R} L ${B.cx} ${y2}`;
+      lx = (x0 + B.cx)/2; ly = y0;
     } else {
       const x1 = A.cx, y1 = A.aba, x2 = B.cx, y2 = B.arr - 4;
       if(Math.abs(x2 - x1) < 2){
