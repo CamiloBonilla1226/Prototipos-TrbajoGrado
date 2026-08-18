@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flujo de los procesos académicos — Decanatura FIET</title>
+<style>
+  :root{
+    --navy:#1B2660;
+    --navy-2:#2A3A86;
+    --card-navy:#1E257B;
+    --rojo:#B23B2E;
+    --verde:#17714F;
+    --lane-est:#4A63C7;
+    --lane-fun:#1B2660;
+    --lane-dec:#B23B2E;
+    --tinta:#1A1D26;
+    --gris:#6E7480;
+    --linea:#D9DCE4;
+    --fondo:#F4F5F8;
+    --wire:#8890A8;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--fondo);
+    color:var(--tinta);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ============ ENCABEZADO ============ */
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:22px clamp(18px,4vw,44px) 20px;
+  }
+  .head-inner{max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between}
+  h1{margin:0;font-size:clamp(20px,2.4vw,27px);font-weight:650;letter-spacing:-.01em}
+  header p{margin:5px 0 0;font-size:14px;color:#B9C0DC;max-width:70ch}
+  .sello{
+    border:1px solid rgba(255,255,255,.32);
+    border-radius:999px;
+    padding:6px 14px;
+    font-size:11.5px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:#D6DBF0;
+    white-space:nowrap;
+  }
+
+  /* ============ PESTAÑAS ============ */
+  nav.tabs{
+    background:#fff;
+    border-bottom:1px solid var(--linea);
+    position:sticky;top:0;z-index:40;
+  }
+  .tabs-inner{max-width:1400px;margin:0 auto;padding:0 clamp(18px,4vw,44px);display:flex;gap:4px;overflow-x:auto}
+  .tab{
+    appearance:none;background:none;border:0;cursor:pointer;
+    font:inherit;font-size:14px;font-weight:550;color:var(--gris);
+    padding:15px 16px 13px;border-bottom:3px solid transparent;white-space:nowrap;
+  }
+  .tab:hover{color:var(--navy)}
+  .tab[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--rojo)}
+  .tab:focus-visible{outline:2px solid var(--navy-2);outline-offset:-3px}
+
+  /* ============ BARRA DE CONTROL ============ */
+  .barra{max-width:1400px;margin:0 auto;padding:16px clamp(18px,4vw,44px) 0;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+  .leyenda{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--gris)}
+  .leyenda span{display:inline-flex;align-items:center;gap:7px}
+  .lg-dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .lg-diamond{width:11px;height:11px;background:var(--rojo);transform:rotate(45deg);flex:none}
+  .switch{display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--tinta);cursor:pointer;user-select:none}
+  .switch input{width:0;height:0;opacity:0;position:absolute}
+  .track{width:38px;height:21px;border-radius:999px;background:#C7CBD8;position:relative;transition:background .18s}
+  .track::after{content:"";position:absolute;top:2.5px;left:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .18s;box-shadow:0 1px 3px rgba(0,0,0,.28)}
+  .switch input:checked + .track{background:var(--navy-2)}
+  .switch input:checked + .track::after{transform:translateX(17px)}
+  .switch input:focus-visible + .track{outline:2px solid var(--navy-2);outline-offset:2px}
+
+  /* ============ CONTENEDOR DE FLUJO ============ */
+  main{max-width:1400px;margin:0 auto;padding:18px clamp(18px,4vw,44px) 70px}
+  .panel[hidden]{display:none}
+
+  .titulo-flujo{margin:10px 0 4px;font-size:17px;font-weight:650;color:var(--navy)}
+  .subtitulo-flujo{margin:0 0 20px;font-size:13.5px;color:var(--gris);max-width:80ch}
+
+  .carriles{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    column-gap:var(--gap);
+    position:sticky;top:50px;z-index:30;
+    padding:10px 0 8px;
+    background:linear-gradient(to bottom,var(--fondo) 78%,rgba(244,245,248,0));
+  }
+  .carril-cab{
+    border-radius:8px;color:#fff;padding:10px 14px;
+    display:flex;align-items:baseline;gap:10px;
+  }
+  .carril-cab b{font-size:14.5px;font-weight:600;letter-spacing:.01em}
+  .carril-cab i{font-style:normal;font-size:11.5px;opacity:.78}
+  .c0{background:var(--lane-est)}
+  .c1{background:var(--lane-fun)}
+  .c2{background:var(--lane-dec)}
+
+  .lienzo{position:relative}
+  #wires,#wires2{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+  .etiquetas{position:absolute;inset:0;pointer-events:none;z-index:3}
+  .etq{
+    position:absolute;
+    background:#fff;border:1px solid var(--linea);border-radius:999px;
+    padding:3px 11px;font-size:11.5px;font-weight:550;color:var(--gris);
+    white-space:nowrap;box-shadow:0 1px 2px rgba(20,26,50,.06);
+  }
+  .etq.ok{color:var(--verde);border-color:#B6DCC9}
+  .etq.no{color:var(--rojo);border-color:#EDC3BD}
+  .etq.alerta{color:#8A5A00;border-color:#E8D093;background:#FFFBF0}
+
+  .malla{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    column-gap:var(--gap);
+    row-gap:58px;
+    position:relative;z-index:2;
+  }
+  .banda{border-radius:10px;background:rgba(255,255,255,.55);border:1px dashed #E2E5EC;z-index:0}
+
+  /* ============ NODOS ============ */
+  .nodo{
+    background:#fff;border:1px solid var(--linea);border-radius:11px;
+    box-shadow:0 1px 2px rgba(20,26,50,.05),0 6px 16px rgba(20,26,50,.05);
+    padding:13px 15px 14px;position:relative;z-index:2;
+    border-left:4px solid var(--lane-fun);
+  }
+  .nodo[data-lane="0"]{border-left-color:var(--lane-est)}
+  .nodo[data-lane="1"]{border-left-color:var(--lane-fun)}
+  .nodo[data-lane="2"]{border-left-color:var(--lane-dec)}
+  .nodo.decision{border-style:solid;box-shadow:0 1px 2px rgba(20,26,50,.05),0 6px 16px rgba(178,59,46,.10)}
+  .nodo.fin{background:#FBFBFD}
+
+  .nodo-top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+  .num{
+    flex:none;width:23px;height:23px;border-radius:6px;
+    background:var(--navy);color:#fff;
+    font-size:12px;font-weight:650;display:grid;place-items:center;
+  }
+  .nodo[data-lane="0"] .num{background:var(--lane-est)}
+  .nodo[data-lane="2"] .num{background:var(--lane-dec)}
+  .eyebrow{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:650;color:var(--gris)}
+  .nodo.decision .eyebrow{color:var(--rojo)}
+  .rombo{width:9px;height:9px;background:var(--rojo);transform:rotate(45deg);flex:none;margin-left:auto}
+
+  .nodo h3{margin:0 0 5px;font-size:14.5px;font-weight:600;line-height:1.35;letter-spacing:-.005em}
+  .nodo p{margin:0;font-size:12.8px;color:var(--gris);line-height:1.5}
+  .nodo p .marca{color:var(--rojo);font-weight:650}
+  .nodo p .marca-v{color:var(--verde);font-weight:650}
+
+  .pantalla{
+    margin-top:9px;display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;color:#5B6273;background:#F1F2F7;border-radius:6px;padding:4px 9px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+
+  .estados{margin-top:10px;padding-top:9px;border-top:1px dashed var(--linea);display:flex;flex-wrap:wrap;gap:5px}
+  .estados[hidden]{display:none}
+  .chip{font-size:10.5px;border-radius:5px;padding:3px 7px;background:#F1F2F7;color:#4A5062;white-space:nowrap}
+  .chip b{font-weight:650;color:var(--tinta)}
+  .chip.e{background:#EEF1FC}
+  .chip.f{background:#EDEFF8}
+  .chip.d{background:#FBEEEC}
+
+  /* ============ TABLA COMPARATIVA ============ */
+  .tabla-wrap{overflow-x:auto;border:1px solid var(--linea);border-radius:11px;background:#fff}
+  table{border-collapse:collapse;width:100%;min-width:820px;font-size:13.5px}
+  th,td{padding:12px 15px;text-align:left;vertical-align:top;border-bottom:1px solid #EDEFF3}
+  thead th{background:var(--navy-2);color:#fff;font-weight:600;font-size:13px;position:sticky;top:0}
+  thead th:first-child{background:var(--navy)}
+  tbody th{font-weight:600;color:var(--navy);width:210px;background:#FAFAFC}
+  tbody tr:nth-child(even) td,tbody tr:nth-child(even) th{background:#F8F9FB}
+  tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+  td .si{color:var(--verde);font-weight:650}
+  td .no{color:var(--rojo);font-weight:650}
+  td small{display:block;color:var(--gris);font-size:11.5px;margin-top:3px}
+
+  /* ============ PREGUNTAS ============ */
+  .preguntas{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+  .pq{background:#fff;border:1px solid var(--linea);border-left:4px solid var(--rojo);border-radius:11px;padding:14px 16px}
+  .pq .ref{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:650;color:var(--rojo);display:block;margin-bottom:5px}
+  .pq h3{margin:0 0 5px;font-size:14.5px;font-weight:600}
+  .pq p{margin:0;font-size:12.8px;color:var(--gris)}
+
+  .nota{
+    margin-top:22px;background:#FFFBF0;border:1px solid #E8D093;border-radius:10px;
+    padding:14px 16px;font-size:13px;color:#6B4E12;
+  }
+  .nota b{color:#553D06}
+
+  @media (max-width:820px){
+    .malla,.carriles{grid-template-columns:1fr}
+    .carriles{position:static}
+    .banda{display:none}
+    #wires{display:none}
+    .etiquetas{display:none}
+    .malla{row-gap:16px}
+    .nodo::after{content:"↓";display:block;text-align:center;color:var(--wire);margin:8px -15px -8px;font-size:16px}
+  }
+
+  @media print{
+    nav.tabs,.barra{display:none}
+    body{background:#fff}
+    .panel[hidden]{display:block;break-before:page}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div>
+      <h1>Flujo de los procesos académicos</h1>
+      <p>Cómo se atiende hoy una solicitud dentro del prototipo, paso a paso y por responsable. Decanatura de la Facultad de Ingeniería Electrónica y Telecomunicaciones.</p>
+    </div>
+    <div class="sello">Prototipo para validación</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-panel="p-cancel">Cancelación de Matrícula y de Asignatura</button>
+    <button class="tab" role="tab" aria-selected="false" data-panel="p-supl">Examen Supletorio</button>
+    <button class="tab" role="tab" aria-selected="false" data-panel="p-dif">Diferencias entre los tres trámites</button>
+    <button class="tab" role="tab" aria-selected="false" data-panel="p-preg">Lo que necesitamos confirmar</button>
+  </div>
+</nav>
+
+<div class="barra">
+  <div class="leyenda">
+    <span><i class="lg-dot" style="background:var(--lane-est)"></i>Estudiante</span>
+    <span><i class="lg-dot" style="background:var(--lane-fun)"></i>Funcionario Académico</span>
+    <span><i class="lg-dot" style="background:var(--lane-dec)"></i>Decano</span>
+    <span><i class="lg-diamond"></i>Punto de decisión</span>
+  </div>
+  <label class="switch">
+    <input type="checkbox" id="verEstados" checked>
+    <span class="track"></span>
+    <span>Mostrar el estado que ve cada panel</span>
+  </label>
+</div>
+
+<main>
+  <!-- ============ FLUJO CANCELACIONES ============ -->
+  <section class="panel" id="p-cancel">
+    <h2 class="titulo-flujo">Cancelación de Matrícula · Cancelación de Asignatura</h2>
+    <p class="subtitulo-flujo">Cinco pasos. La diferencia esencial frente al supletorio es que estos dos trámites producen un acto administrativo: la <b>resolución</b>. El Funcionario la prepara antes de remitir al Decano y el sistema no permite avanzar sin ella.</p>
+    <div class="carriles" data-carriles>
+      <div class="carril-cab c0"><b>Estudiante</b><i>radica y consulta</i></div>
+      <div class="carril-cab c1"><b>Funcionario Académico</b><i>revisa, remite y responde</i></div>
+      <div class="carril-cab c2"><b>Decano</b><i>decide</i></div>
+    </div>
+    <div class="lienzo" data-lienzo>
+      <svg class="wires" data-wires aria-hidden="true"></svg>
+      <div class="etiquetas" data-etiquetas></div>
+      <div class="malla" data-malla></div>
+    </div>
+  </section>
+
+  <!-- ============ FLUJO SUPLETORIO ============ -->
+  <section class="panel" id="p-supl" hidden>
+    <h2 class="titulo-flujo">Examen Supletorio</h2>
+    <p class="subtitulo-flujo">Siete pasos. Este trámite <b>no genera resolución</b>, pero sí incorpora el pago del derecho pecuniario: después de la aprobación del Decano el trámite vuelve al Estudiante y solo cierra cuando el Funcionario verifica el comprobante.</p>
+    <div class="carriles" data-carriles>
+      <div class="carril-cab c0"><b>Estudiante</b><i>radica, paga y consulta</i></div>
+      <div class="carril-cab c1"><b>Funcionario Académico</b><i>revisa, remite y verifica</i></div>
+      <div class="carril-cab c2"><b>Decano</b><i>decide</i></div>
+    </div>
+    <div class="lienzo" data-lienzo>
+      <svg class="wires" data-wires aria-hidden="true"></svg>
+      <div class="etiquetas" data-etiquetas></div>
+      <div class="malla" data-malla></div>
+    </div>
+  </section>
+
+  <!-- ============ DIFERENCIAS ============ -->
+  <section class="panel" id="p-dif" hidden>
+    <h2 class="titulo-flujo">En qué se parecen y en qué se separan los tres trámites</h2>
+    <p class="subtitulo-flujo">Los tres comparten la misma ruta de aprobación —Estudiante, Funcionario, Decano, Funcionario— pero se separan en el documento que se radica, en el acto administrativo que producen y en el cierre.</p>
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col"></th><th scope="col">Cancelación de Matrícula</th><th scope="col">Cancelación de Asignatura</th><th scope="col">Examen Supletorio</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Formato que radica el Estudiante</th>
+            <td>FOR-14<small>PA-GA-4.2-FOR-14 v2</small></td>
+            <td>FOR-9<small>PA-GA-4.2-FOR-9 v4</small></td>
+            <td>FOR-23<small>PM-FO-4-FOR-23</small></td>
+          </tr>
+          <tr>
+            <th scope="row">Procedimiento institucional</th>
+            <td>PR-32<small>por confirmar en la sesión</small></td>
+            <td>PR-7<small>Adiciones y cancelaciones de asignaturas</small></td>
+            <td>PR-28<small>Solicitud de examen supletorio</small></td>
+          </tr>
+          <tr>
+            <th scope="row">¿Produce resolución?</th>
+            <td><span class="si">Sí</span></td>
+            <td><span class="si">Sí</span></td>
+            <td><span class="no">No</span><small>el trámite cierra sin acto administrativo</small></td>
+          </tr>
+          <tr>
+            <th scope="row">¿Quién prepara la resolución y cuándo?</th>
+            <td colspan="2">El Funcionario, <b>antes</b> de remitir al Decano. Dos caminos: adjuntar el PDF ya elaborado o generarla dentro de la aplicación.</td>
+            <td>No aplica</td>
+          </tr>
+          <tr>
+            <th scope="row">¿Requiere pago del Estudiante?</th>
+            <td><span class="no">No</span></td>
+            <td><span class="no">No</span></td>
+            <td><span class="si">Sí</span><small>el Funcionario envía el recibo y el Estudiante sube el comprobante</small></td>
+          </tr>
+          <tr>
+            <th scope="row">Quién toma la decisión</th>
+            <td colspan="3">El <b>Decano</b>, de manera unipersonal, en los tres trámites.</td>
+          </tr>
+          <tr>
+            <th scope="row">Pasos hasta el cierre</th>
+            <td>5</td>
+            <td>5</td>
+            <td>7</td>
+          </tr>
+          <tr>
+            <th scope="row">Cómo cierra el trámite</th>
+            <td colspan="2">El Funcionario envía la respuesta con la resolución firmada. El sistema guarda copia en las carpetas <b>DARCA</b> y <b>DECANATURA</b>, identificadas con el radicado.</td>
+            <td>El Funcionario verifica el comprobante de pago y cierra la solicitud.</td>
+          </tr>
+          <tr>
+            <th scope="row">Si se rechaza</th>
+            <td colspan="3">El trámite queda cerrado. Hoy el prototipo <b>no contempla corrección ni reenvío</b>: el Estudiante debe radicar una solicitud nueva.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="nota"><b>Punto a discutir:</b> el rechazo cierra el trámite sin posibilidad de subsanar. Si en la práctica ustedes llaman al estudiante para que complete un documento faltante, ese comportamiento todavía no está en el sistema.</div>
+  </section>
+
+  <!-- ============ PREGUNTAS ============ -->
+  <section class="panel" id="p-preg" hidden>
+    <h2 class="titulo-flujo">Lo que necesitamos confirmar con ustedes</h2>
+    <p class="subtitulo-flujo">Cada punto corresponde a un paso del flujo donde el prototipo tomó una decisión que hay que contrastar con la práctica real de la Decanatura.</p>
+    <div class="preguntas">
+      <div class="pq"><span class="ref">Paso 5 · Respuesta al Estudiante</span><h3>¿Cómo se notifica al Estudiante?</h3><p>El prototipo dice “respuesta enviada”, pero no está definido si el sistema envía el correo, si ustedes lo envían aparte, y si la resolución va adjunta o se descarga desde la aplicación.</p></div>
+      <div class="pq"><span class="ref">Paso 3 · Resolución</span><h3>¿La resolución se elabora antes o después de que el Decano decida?</h3><p>Hoy el Funcionario la prepara antes de remitir. Eso significa redactar el acto administrativo asumiendo que será aprobado.</p></div>
+      <div class="pq"><span class="ref">Paso 3 · Resolución</span><h3>¿Quién asigna el número de resolución y en qué momento?</h3><p>Y la firma del Decano: ¿es física o digital? Si es física, ¿qué papel cumple el sistema en ese momento?</p></div>
+      <div class="pq"><span class="ref">Paso 5 · Cierre</span><h3>¿Realmente se necesitan las dos copias, DARCA y DECANATURA?</h3><p>¿Alguien más recibe copia: Registro y Control, la coordinación del programa, el docente?</p></div>
+      <div class="pq"><span class="ref">Supletorio · Paso 5</span><h3>¿Quién genera el recibo de pago?</h3><p>¿Lo produce la División Financiera o la Decanatura? ¿Hay plazo para pagar y qué pasa si el Estudiante no paga?</p></div>
+      <div class="pq"><span class="ref">Supletorio · Cierre</span><h3>¿Quién le avisa al docente que el supletorio fue aprobado?</h3><p>El docente no aparece como actor en el sistema, pero es quien aplica la prueba.</p></div>
+      <div class="pq"><span class="ref">Supletorio · Paso 7</span><h3>Si el comprobante no sirve, ¿el Estudiante puede volver a subirlo?</h3><p>Necesitamos definir si el trámite se devuelve a “Pendiente de pago” o si se cierra como rechazado.</p></div>
+      <div class="pq"><span class="ref">Paso 2 · Revisión</span><h3>Si falta un documento, ¿ustedes rechazan o piden completar?</h3><p>El prototipo solo permite rechazar y cerrar. Si en la práctica se pide completar, falta un estado en el sistema.</p></div>
+      <div class="pq"><span class="ref">Paso 4 · Decisión</span><h3>¿Los tres trámites los decide el Decano solo?</h3><p>¿O alguno pasa por Consejo de Facultad, por ejemplo una cancelación de matrícula extemporánea?</p></div>
+      <div class="pq"><span class="ref">Paso 1 · Radicación</span><h3>¿Hay fechas límite para radicar cada trámite?</h3><p>Y si las hay: ¿el sistema debe bloquear la radicación fuera de plazo o solo advertir y dejar radicar?</p></div>
+      <div class="pq"><span class="ref">Paso 2 · Asignación</span><h3>¿Quién asigna la solicitud al funcionario?</h3><p>¿Cuántas personas atienden estos trámites y se puede reasignar en vacaciones o incapacidad?</p></div>
+      <div class="pq"><span class="ref">Vocabulario</span><h3>¿Los nombres de los estados se entienden?</h3><p>En trámite, Pendiente, En gestión, Pendiente de pago, Respondida, Aprobada, Rechazada. ¿Cómo los llaman ustedes hoy?</p></div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* =========================================================
+   Datos del flujo — refleja los prototipos y HU-V2
+   lane: 0 Estudiante · 1 Funcionario · 2 Decano
+   ========================================================= */
+const FLUJOS = {
+  'p-cancel': {
+    nodos:[
+      {id:'a1', lane:0, row:1, num:1, tipo:'inicio', eyebrow:'Inicio',
+       titulo:'Radica la solicitud',
+       desc:'Diligencia el formato correspondiente —FOR-14 para matrícula, FOR-9 para asignatura— escribe la justificación y adjunta los soportes.',
+       pantalla:'formulario-cancelacion-matricula.html / -asignatura.html',
+       estados:{e:'En trámite', f:'Pendiente', d:'—'}},
+
+      {id:'a2', lane:1, row:2, num:2, tipo:'decision', eyebrow:'Decisión',
+       titulo:'Revisa la solicitud y los anexos',
+       desc:'Verifica que cumpla los requisitos del reglamento y que la documentación esté completa.',
+       pantalla:'funcionario.html → Solicitudes',
+       estados:{e:'En trámite', f:'Pendiente', d:'—'}},
+
+      {id:'a3', lane:0, row:3, num:'✕', tipo:'fin', eyebrow:'Cierre',
+       titulo:'Trámite cerrado — Rechazada',
+       desc:'El Funcionario registra la observación con el motivo. La observación es obligatoria. El trámite no admite corrección: para insistir, el Estudiante radica una solicitud nueva.',
+       pantalla:'estudiante.html → Mis trámites',
+       estados:{e:'Rechazada', f:'Respondida', d:'—'}},
+
+      {id:'a4', lane:1, row:3, num:3, tipo:'accion', eyebrow:'Acto administrativo',
+       titulo:'Prepara la resolución y remite al Decano',
+       desc:'<span class="marca">Aquí está la diferencia de estos dos trámites.</span> El Funcionario adjunta el PDF de la resolución o la genera desde la aplicación. Sin resolución el sistema no permite remitir.',
+       pantalla:'funcionario.html → Remitir al Decano',
+       estados:{e:'En trámite', f:'En gestión', d:'Pendiente'}},
+
+      {id:'a5', lane:2, row:4, num:4, tipo:'decision', eyebrow:'Decisión',
+       titulo:'Revisa y decide',
+       desc:'Consulta la solicitud, los anexos y la resolución propuesta. Aprueba o rechaza. Si rechaza, debe registrar la observación.',
+       pantalla:'decano.html → Procesos Académicos',
+       estados:{e:'En trámite', f:'Pendiente de respuesta', d:'Respondida'}},
+
+      {id:'a6', lane:1, row:5, num:5, tipo:'accion', eyebrow:'Respuesta',
+       titulo:'Envía la respuesta final al Estudiante',
+       desc:'Si fue aprobada, adjunta la resolución firmada y el sistema guarda copia en las carpetas <b>DARCA</b> y <b>DECANATURA</b>, cada una con el número de radicado.',
+       pantalla:'funcionario.html → Respuesta',
+       estados:{e:'Aprobada / Rechazada', f:'Respondida', d:'Respondida'}},
+
+      {id:'a7', lane:0, row:6, num:'✓', tipo:'fin', eyebrow:'Cierre',
+       titulo:'Consulta la respuesta y descarga la resolución',
+       desc:'El trámite queda cerrado. El Estudiante ve la decisión, la observación si la hubo y la resolución adjunta.',
+       pantalla:'estudiante.html → Detalle del trámite',
+       estados:{e:'Aprobada / Rechazada', f:'Respondida', d:'Respondida'}}
+    ],
+    enlaces:[
+      {de:'a1', a:'a2'},
+      {de:'a2', a:'a3', etq:'No cumple requisitos', tono:'no'},
+      {de:'a2', a:'a4', etq:'Cumple requisitos', tono:'ok'},
+      {de:'a4', a:'a5'},
+      {de:'a5', a:'a6', etq:'Aprueba o rechaza'},
+      {de:'a6', a:'a7'}
+    ]
+  },
+
+  'p-supl': {
+    nodos:[
+      {id:'b1', lane:0, row:1, num:1, tipo:'inicio', eyebrow:'Inicio',
+       titulo:'Radica la solicitud',
+       desc:'Diligencia el formato FOR-23, indica la evaluación y la asignatura, y adjunta los soportes de la causa justificada.',
+       pantalla:'formulario-examen-supletorio.html',
+       estados:{e:'En trámite', f:'Pendiente', d:'—'}},
+
+      {id:'b2', lane:1, row:2, num:2, tipo:'decision', eyebrow:'Decisión',
+       titulo:'Revisa la solicitud y los anexos',
+       desc:'Verifica la causa justificada, los soportes y los plazos.',
+       pantalla:'funcionario.html → Solicitudes',
+       estados:{e:'En trámite', f:'Pendiente', d:'—'}},
+
+      {id:'b3', lane:0, row:3, num:'✕', tipo:'fin', eyebrow:'Cierre',
+       titulo:'Trámite cerrado — Rechazada',
+       desc:'El Funcionario registra la observación con el motivo del rechazo.',
+       pantalla:'estudiante.html → Mis trámites',
+       estados:{e:'Rechazada', f:'Respondida', d:'—'}},
+
+      {id:'b4', lane:1, row:3, num:3, tipo:'accion', eyebrow:'Remisión',
+       titulo:'Remite al Decano',
+       desc:'<span class="marca">Sin resolución.</span> El Examen Supletorio no produce acto administrativo, así que el Funcionario remite directamente.',
+       pantalla:'funcionario.html → Remitir al Decano',
+       estados:{e:'En trámite', f:'En gestión', d:'Pendiente'}},
+
+      {id:'b5', lane:2, row:4, num:4, tipo:'decision', eyebrow:'Decisión',
+       titulo:'Revisa y decide',
+       desc:'Aprueba o rechaza la solicitud. Si rechaza, registra la observación.',
+       pantalla:'decano.html → Procesos Académicos',
+       estados:{e:'En trámite', f:'Pendiente de respuesta', d:'Respondida'}},
+
+      {id:'b6', lane:0, row:5, num:'✕', tipo:'fin', eyebrow:'Cierre',
+       titulo:'Trámite cerrado — Rechazada',
+       desc:'El Funcionario envía la respuesta de rechazo con la observación del Decano y el trámite se cierra.',
+       pantalla:'estudiante.html → Detalle del trámite',
+       estados:{e:'Rechazada', f:'Respondida', d:'Respondida'}},
+
+      {id:'b7', lane:1, row:5, num:5, tipo:'accion', eyebrow:'Pago',
+       titulo:'Adjunta el recibo y lo envía al Estudiante',
+       desc:'<span class="marca">Aquí está la diferencia de este trámite.</span> El recibo de pago es obligatorio: sin adjuntarlo el sistema no deja enviar la respuesta. El trámite vuelve al Estudiante.',
+       pantalla:'funcionario.html → Respuesta',
+       estados:{e:'Pendiente de pago', f:'En gestión', d:'Respondida'}},
+
+      {id:'b8', lane:0, row:6, num:6, tipo:'accion', eyebrow:'Acción del Estudiante',
+       titulo:'Descarga el recibo, paga y sube el comprobante',
+       desc:'Adjunta el comprobante en PDF, JPG o PNG. Mientras se verifica, no puede subir otro.',
+       pantalla:'estudiante.html → Subir comprobante',
+       estados:{e:'En verificación de pago', f:'Pendiente de verificación', d:'Respondida'}},
+
+      {id:'b9', lane:1, row:7, num:7, tipo:'decision', eyebrow:'Decisión',
+       titulo:'Verifica el comprobante de pago',
+       desc:'Si el comprobante es válido, cierra el trámite como aprobado. Si no, registra la observación.',
+       pantalla:'funcionario.html → Verificar comprobante',
+       estados:{e:'En verificación de pago', f:'Pendiente de verificación', d:'Respondida'}},
+
+      {id:'b10', lane:0, row:8, num:'✓', tipo:'fin', eyebrow:'Cierre',
+       titulo:'Trámite cerrado — Aprobada',
+       desc:'El Estudiante ve el supletorio aprobado y el pago verificado.',
+       pantalla:'estudiante.html → Detalle del trámite',
+       estados:{e:'Aprobada', f:'Respondida', d:'Respondida'}}
+    ],
+    enlaces:[
+      {de:'b1', a:'b2'},
+      {de:'b2', a:'b3', etq:'No cumple requisitos', tono:'no'},
+      {de:'b2', a:'b4', etq:'Cumple requisitos', tono:'ok'},
+      {de:'b4', a:'b5'},
+      {de:'b5', a:'b6', etq:'Rechaza', tono:'no'},
+      {de:'b5', a:'b7', etq:'Aprueba', tono:'ok'},
+      {de:'b7', a:'b8'},
+      {de:'b8', a:'b9'},
+      {de:'b9', a:'b10', etq:'Comprobante válido', tono:'ok'},
+      {de:'b9', a:'b8', bucle:true, etq:'Comprobante inválido · vuelve a Pendiente de pago', tono:'alerta'}
+    ]
+  }
+};
+
+/* ========== Construcción del DOM ========== */
+function construir(panelId){
+  const panel = document.getElementById(panelId);
+  const malla = panel.querySelector('[data-malla]');
+  const datos = FLUJOS[panelId];
+  if(!datos || malla.dataset.listo) return;
+
+  const filas = Math.max(...datos.nodos.map(n => n.row));
+  malla.style.gridTemplateRows = `repeat(${filas}, auto)`;
+
+  // bandas de carril de fondo
+  for(let i=0;i<3;i++){
+    const b = document.createElement('div');
+    b.className = 'banda';
+    b.style.gridColumn = i+1;
+    b.style.gridRow = `1 / -1`;
+    malla.appendChild(b);
+  }
+
+  datos.nodos.forEach(n => {
+    const el = document.createElement('article');
+    el.className = 'nodo' + (n.tipo === 'decision' ? ' decision' : '') + (n.tipo === 'fin' ? ' fin' : '');
+    el.id = n.id;
+    el.dataset.lane = n.lane;
+    el.style.gridColumn = n.lane + 1;
+    el.style.gridRow = n.row;
+    el.innerHTML = `
+      <div class="nodo-top">
+        <span class="num">${n.num}</span>
+        <span class="eyebrow">${n.eyebrow}</span>
+        ${n.tipo === 'decision' ? '<span class="rombo"></span>' : ''}
+      </div>
+      <h3>${n.titulo}</h3>
+      <p>${n.desc}</p>
+      <span class="pantalla">${n.pantalla}</span>
+      <div class="estados" data-estados>
+        <span class="chip e">Estudiante: <b>${n.estados.e}</b></span>
+        <span class="chip f">Funcionario: <b>${n.estados.f}</b></span>
+        <span class="chip d">Decano: <b>${n.estados.d}</b></span>
+      </div>`;
+    malla.appendChild(el);
+  });
+
+  malla.dataset.listo = '1';
+}
+
+/* ========== Trazado de conectores ========== */
+function trazar(panelId){
+  const panel = document.getElementById(panelId);
+  if(panel.hidden) return;
+  const datos = FLUJOS[panelId];
+  if(!datos) return;
+
+  const lienzo = panel.querySelector('[data-lienzo]');
+  const svg = panel.querySelector('[data-wires]');
+  const capa = panel.querySelector('[data-etiquetas]');
+  const base = lienzo.getBoundingClientRect();
+
+  if(base.width < 60) return;
+
+  svg.setAttribute('viewBox', `0 0 ${base.width} ${base.height}`);
+  capa.innerHTML = '';
+
+  const tonos = {neutro:'#8890A8', ok:'#17714F', no:'#B23B2E', alerta:'#C99400'};
+  let defs = '<defs>';
+  Object.entries(tonos).forEach(([k,c]) => {
+    defs += `<marker id="pf-${panelId}-${k}" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0.8 L9 5 L0 9.2 Z" fill="${c}"/></marker>`;
+  });
+  defs += '</defs>';
+
+  const caja = id => {
+    const r = document.getElementById(id).getBoundingClientRect();
+    return {
+      izq: r.left - base.left, der: r.right - base.left,
+      arr: r.top - base.top, aba: r.bottom - base.top,
+      cx: r.left - base.left + r.width/2,
+      cy: r.top - base.top + r.height/2
+    };
+  };
+
+  let trazos = '';
+
+  datos.enlaces.forEach(en => {
+    const A = caja(en.de), B = caja(en.a);
+    const tono = en.tono && tonos[en.tono] ? en.tono : 'neutro';
+    const color = tonos[tono];
+    const punteado = en.bucle ? ' stroke-dasharray="6 5"' : '';
+    let d, lx, ly, anclaje = 'translate(-50%,-50%)';
+
+    if(en.bucle){
+      const canal = base.width - 6;
+      const R = 12;
+      const y1 = A.cy, y2 = B.cy;
+      d = `M ${A.der} ${y1} L ${canal-R} ${y1} Q ${canal} ${y1} ${canal} ${y1-R} L ${canal} ${y2+R} Q ${canal} ${y2} ${canal-R} ${y2} L ${B.der+4} ${y2}`;
+      lx = canal - 14; ly = (y1 + y2)/2;
+      anclaje = 'translate(-100%,-50%)';
+    } else {
+      const x1 = A.cx, y1 = A.aba, x2 = B.cx, y2 = B.arr - 4;
+      if(Math.abs(x2 - x1) < 2){
+        d = `M ${x1} ${y1} L ${x2} ${y2}`;
+        lx = x1; ly = (y1 + y2)/2;
+      } else {
+        const ym = y1 + (y2 - y1) * 0.52;
+        const s = Math.sign(x2 - x1);
+        const R = Math.min(13, Math.abs(x2-x1)/2, Math.abs(ym-y1), Math.abs(y2-ym));
+        d = `M ${x1} ${y1} L ${x1} ${ym-R} Q ${x1} ${ym} ${x1+s*R} ${ym} L ${x2-s*R} ${ym} Q ${x2} ${ym} ${x2} ${ym+R} L ${x2} ${y2}`;
+        lx = (x1 + x2)/2; ly = ym;
+      }
+    }
+
+    trazos += `<path d="${d}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round"${punteado} marker-end="url(#pf-${panelId}-${tono})"/>`;
+
+    if(en.etq){
+      const t = document.createElement('span');
+      t.className = 'etq' + (tono !== 'neutro' ? ' ' + tono : '');
+      t.textContent = en.etq;
+      t.style.left = lx + 'px';
+      t.style.top = ly + 'px';
+      t.style.transform = anclaje;
+      capa.appendChild(t);
+    }
+  });
+
+  svg.innerHTML = defs + trazos;
+}
+
+/* ========== Pestañas ========== */
+const tabs = [...document.querySelectorAll('.tab')];
+tabs.forEach(t => {
+  t.addEventListener('click', () => {
+    tabs.forEach(o => {
+      o.setAttribute('aria-selected', String(o === t));
+      document.getElementById(o.dataset.panel).hidden = (o !== t);
+    });
+    construir(t.dataset.panel);
+    requestAnimationFrame(() => trazar(t.dataset.panel));
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* ========== Estados visibles ========== */
+document.getElementById('verEstados').addEventListener('change', e => {
+  document.querySelectorAll('[data-estados]').forEach(el => { el.hidden = !e.target.checked; });
+  requestAnimationFrame(redibujar);
+});
+
+/* ========== Redibujo ========== */
+function redibujar(){ Object.keys(FLUJOS).forEach(trazar); }
+
+construir('p-cancel');
+construir('p-supl');
+requestAnimationFrame(() => { trazar('p-cancel'); });
+
+let temporizador;
+window.addEventListener('resize', () => {
+  clearTimeout(temporizador);
+  temporizador = setTimeout(redibujar, 90);
+});
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(redibujar); }
+window.addEventListener('load', redibujar);
+</script>
+</body>
+</html>
