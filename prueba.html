@@ -19,6 +19,7 @@
     --linea:#D9DCE4;
     --fondo:#F4F5F8;
     --wire:#8890A8;
+    --gap:clamp(14px,2.2vw,34px);
   }
 
   *{box-sizing:border-box}
@@ -38,7 +39,7 @@
     color:#fff;
     padding:22px clamp(18px,4vw,44px) 20px;
   }
-  .head-inner{max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between}
+  .head-inner{max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between}
   h1{margin:0;font-size:clamp(20px,2.4vw,27px);font-weight:650;letter-spacing:-.01em}
   header p{margin:5px 0 0;font-size:14px;color:#B9C0DC;max-width:70ch}
   .sello{
@@ -58,7 +59,7 @@
     border-bottom:1px solid var(--linea);
     position:sticky;top:0;z-index:40;
   }
-  .tabs-inner{max-width:1400px;margin:0 auto;padding:0 clamp(18px,4vw,44px);display:flex;gap:4px;overflow-x:auto}
+  .tabs-inner{max-width:1240px;margin:0 auto;padding:0 clamp(18px,4vw,44px);display:flex;gap:4px;overflow-x:auto}
   .tab{
     appearance:none;background:none;border:0;cursor:pointer;
     font:inherit;font-size:14px;font-weight:550;color:var(--gris);
@@ -69,7 +70,7 @@
   .tab:focus-visible{outline:2px solid var(--navy-2);outline-offset:-3px}
 
   /* ============ BARRA DE CONTROL ============ */
-  .barra{max-width:1400px;margin:0 auto;padding:16px clamp(18px,4vw,44px) 0;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+  .barra{max-width:1240px;margin:0 auto;padding:16px clamp(18px,4vw,44px) 0;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
   .leyenda{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--gris)}
   .leyenda span{display:inline-flex;align-items:center;gap:7px}
   .lg-dot{width:11px;height:11px;border-radius:3px;flex:none}
@@ -83,7 +84,7 @@
   .switch input:focus-visible + .track{outline:2px solid var(--navy-2);outline-offset:2px}
 
   /* ============ CONTENEDOR DE FLUJO ============ */
-  main{max-width:1400px;margin:0 auto;padding:18px clamp(18px,4vw,44px) 70px}
+  main{max-width:1240px;margin:0 auto;padding:18px clamp(18px,4vw,44px) 70px}
   .panel[hidden]{display:none}
 
   .titulo-flujo{margin:10px 0 4px;font-size:17px;font-weight:650;color:var(--navy)}
@@ -124,10 +125,21 @@
     display:grid;
     grid-template-columns:repeat(3,minmax(0,1fr));
     column-gap:var(--gap);
-    row-gap:58px;
+    row-gap:44px;
     position:relative;z-index:2;
+    padding-bottom:6px;
   }
-  .banda{border-radius:10px;background:rgba(255,255,255,.55);border:1px dashed #E2E5EC;z-index:0}
+  .banda{
+    border-radius:12px;z-index:0;position:relative;
+    background:rgba(74,99,199,.045);
+  }
+  .banda[data-lane="1"]{background:rgba(27,38,96,.05)}
+  .banda[data-lane="2"]{background:rgba(178,59,46,.04)}
+  .banda::before{
+    content:"";position:absolute;top:14px;bottom:14px;left:50%;
+    border-left:1px dashed rgba(27,38,96,.16);
+  }
+  .banda[data-lane="2"]::before{border-left-color:rgba(178,59,46,.16)}
 
   /* ============ NODOS ============ */
   .nodo{
@@ -520,6 +532,7 @@ function construir(panelId){
   for(let i=0;i<3;i++){
     const b = document.createElement('div');
     b.className = 'banda';
+    b.dataset.lane = i;
     b.style.gridColumn = i+1;
     b.style.gridRow = `1 / -1`;
     malla.appendChild(b);
