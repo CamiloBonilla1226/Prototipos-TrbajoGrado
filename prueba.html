@@ -109,7 +109,12 @@
   .c2{background:var(--lane-dec)}
 
   .lienzo{position:relative}
-  #wires,#wires2{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+  .lienzo > svg.wires{
+    position:absolute;top:0;left:0;
+    width:100%;height:100%;
+    pointer-events:none;z-index:1;overflow:visible;
+    display:block;
+  }
   .etiquetas{position:absolute;inset:0;pointer-events:none;z-index:3}
   .etq{
     position:absolute;
@@ -215,9 +220,9 @@
     .malla,.carriles{grid-template-columns:1fr}
     .carriles{position:static}
     .banda{display:none}
-    #wires{display:none}
-    .etiquetas{display:none}
     .malla{row-gap:16px}
+    .lienzo > svg.wires{display:none}
+    .etiquetas{display:none}
     .nodo::after{content:"↓";display:block;text-align:center;color:var(--wire);margin:8px -15px -8px;font-size:16px}
   }
 
@@ -580,6 +585,9 @@ function trazar(panelId){
   if(base.width < 60) return;
 
   svg.setAttribute('viewBox', `0 0 ${base.width} ${base.height}`);
+  svg.setAttribute('width', base.width);
+  svg.setAttribute('height', base.height);
+  svg.setAttribute('preserveAspectRatio', 'none');
   capa.innerHTML = '';
 
   const tonos = {neutro:'#8890A8', ok:'#17714F', no:'#B23B2E', alerta:'#C99400'};
@@ -655,7 +663,7 @@ tabs.forEach(t => {
       document.getElementById(o.dataset.panel).hidden = (o !== t);
     });
     construir(t.dataset.panel);
-    requestAnimationFrame(() => trazar(t.dataset.panel));
+    requestAnimationFrame(() => requestAnimationFrame(() => trazar(t.dataset.panel)));
     window.scrollTo({top:0, behavior:'smooth'});
   });
 });
@@ -671,7 +679,16 @@ function redibujar(){ Object.keys(FLUJOS).forEach(trazar); }
 
 construir('p-cancel');
 construir('p-supl');
-requestAnimationFrame(() => { trazar('p-cancel'); });
+requestAnimationFrame(() => requestAnimationFrame(() => trazar('p-cancel')));
+
+let temporizadorRO;
+if(window.ResizeObserver){
+  const ro = new ResizeObserver(() => {
+    clearTimeout(temporizadorRO);
+    temporizadorRO = setTimeout(redibujar, 60);
+  });
+  document.querySelectorAll('[data-lienzo]').forEach(l => ro.observe(l));
+}
 
 let temporizador;
 window.addEventListener('resize', () => {
