@@ -1,0 +1,499 @@
+===============================================================================
+HISTORIAS DE USUARIO — ACTOR: FUNCIONARIO — VERSIÓN 3 (CORREGIDA)
+===============================================================================
+
+Proyecto: Prototipo de aplicación web para la gestión de los procesos
+académicos de Cancelación de Matrícula, Cancelación de Asignatura y Examen
+Supletorio — FIET, Universidad del Cauca
+
+Actor: Funcionario
+Módulos: Solicitudes, Respuesta
+
+
+===============================================================================
+ALCANCE — TRATAMIENTO DE LA RESOLUCIÓN
+===============================================================================
+
+La resolución queda FUERA del alcance del sistema. La aplicación no la
+genera, no la adjunta, no la almacena y no registra su número. La
+resolución es un acto administrativo físico que se tramita por fuera de la
+aplicación.
+
+El sistema únicamente informa al Estudiante que debe acercarse a la
+Decanatura a firmar la resolución. Ese mensaje es un texto informativo
+fijo, no un documento.
+
+
+===============================================================================
+CAMPOS INTERNOS DEL SISTEMA
+===============================================================================
+
+- Responsable Actual .......... Estudiante / Funcionario / Decano / Ninguno
+- Decisión .................... Aprobado / Rechazado / (vacío)
+- Instancia Decisoria ......... Funcionario / Decano / (vacío)
+- Motivo del Rechazo .......... texto libre / (vacío)
+- Observaciones al Estudiante . texto libre / (vacío)
+- Comentarios al Decano ....... texto libre / (vacío)
+- Observaciones Decano ........ texto libre / (vacío)
+
+
+===============================================================================
+ESTRUCTURA DE LA RESPUESTA AL ESTUDIANTE
+===============================================================================
+
+Toda respuesta enviada al Estudiante, sin importar la instancia que haya
+tomado la decisión ni el sentido de la misma, se compone de tres bloques:
+
+  Bloque 1 — Solicitud original
+    Reproduce la solicitud tal como fue radicada por el Estudiante: número
+    de radicado, tipo de proceso académico, fecha de radicación,
+    justificación y lista de anexos adjuntados.
+
+  Bloque 2 — Observaciones (opcional)
+    Texto libre diligenciado por el Funcionario. Cuando el bloque está
+    vacío, la sección no se despliega en la respuesta.
+
+  Bloque 3 — Mensaje informativo de Decanatura
+    Texto fijo del sistema indicando al Estudiante que debe acercarse a la
+    Decanatura de la FIET a firmar la resolución correspondiente.
+
+Lineamientos técnicos generales: El Bloque 1 se construye automáticamente a
+partir de los datos ya registrados en la solicitud; el Funcionario no lo
+digita ni lo modifica. El Bloque 3 es un texto fijo del sistema, no
+editable por el Funcionario. La respuesta es de solo lectura para el
+Estudiante una vez enviada.
+
+
+===============================================================================
+MÓDULO: SOLICITUDES
+===============================================================================
+
+-------------------------------------------------------------------------------
+HU-01 — Listar solicitudes académicas asignadas
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero listar las solicitudes académicas que me han sido
+asignadas, para tener una visión general de los trámites que debo atender.
+
+Escenario 1 — Listar solicitudes
+Dado que me encuentro en la vista de gestión de solicitudes del módulo
+académico y la página ha cargado correctamente.
+Cuando ingreso a la opción de gestión de solicitudes desde el menú de
+navegación.
+Entonces la aplicación desplegará una tabla con las solicitudes académicas
+asignadas a mi usuario cuyo Responsable Actual sea "Funcionario" y que aún
+no hayan sido remitidas al Decano ni rechazadas, mostrando su estado como
+"Pendiente".
+Lineamientos técnicos: El sistema filtrará automáticamente mostrando
+únicamente las solicitudes cuyo proceso académico esté asignado al
+Funcionario autenticado. Las solicitudes ya remitidas al Decano o ya
+cerradas se consultan mediante el filtro por estado (ver HU-03).
+
+Escenario 2 — Sin solicitudes pendientes
+Dado que me encuentro en la vista de gestión de solicitudes del módulo
+académico y la página ha cargado correctamente.
+Cuando ingreso a la opción de gestión de solicitudes y no existen
+solicitudes con Responsable Actual = "Funcionario" en estado "Pendiente"
+asignadas a mi usuario.
+Entonces la aplicación mostrará la tabla vacía acompañada de un mensaje
+informativo indicando que no hay solicitudes pendientes asignadas en este
+momento.
+Lineamientos técnicos: El mensaje de estado vacío debe ser claro y no debe
+interpretarse como un error del sistema.
+
+
+-------------------------------------------------------------------------------
+HU-02 — Consultar el detalle completo de una solicitud académica
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero consultar el detalle completo de una solicitud
+académica asignada a mi gestión, para revisar toda la información del
+trámite antes de tomar una decisión sobre él.
+
+Escenario 1 — Consultar solicitud
+Dado que me encuentro en la tabla de solicitudes asignadas y existe al
+menos una solicitud listada.
+Cuando presiono el botón de consultar detalle sobre una solicitud
+específica.
+Entonces la aplicación mostrará una vista detallada con toda la información
+de la solicitud y la lista de anexos adjuntados por el Estudiante, los
+cuales podrán ser descargados o visualizados individualmente.
+Lineamientos técnicos: La vista debe mostrar: número de radicado, tipo de
+proceso académico, nombre del Estudiante, número de documento, programa
+académico, fecha de radicación, estado actual, justificación de la
+solicitud y lista de anexos.
+
+Escenario 2 — Consultar solicitud con trazabilidad registrada
+Dado que me encuentro en la tabla de solicitudes asignadas y existe una
+solicitud que ya fue remitida al Decano o que ya cuenta con una Decisión
+registrada.
+Cuando presiono el botón de consultar detalle sobre esa solicitud.
+Entonces la aplicación mostrará, además de la información de la solicitud,
+los Comentarios al Decano registrados en la remisión y — cuando existan —
+la Decisión, la Instancia Decisoria y las Observaciones Decano.
+Lineamientos técnicos: Los campos de trazabilidad se muestran en modo de
+solo lectura. Los campos vacíos no se despliegan, para evitar secciones sin
+contenido.
+
+
+-------------------------------------------------------------------------------
+HU-03 — Filtrar solicitudes académicas asignadas
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero filtrar las solicitudes académicas asignadas a mi
+gestión, para localizar rápidamente una solicitud específica y gestionar mi
+carga de trabajo de manera más eficiente.
+
+Escenario 1 — Filtrar por tipo de proceso
+Dado que me encuentro en la vista de gestión de solicitudes con la tabla
+cargada y tengo asignado más de un tipo de proceso académico.
+Cuando selecciono un tipo de proceso académico desde el filtro disponible.
+Entonces la tabla se actualizará mostrando únicamente las solicitudes que
+correspondan al tipo de proceso seleccionado y que estén asignadas a mi
+usuario.
+Lineamientos técnicos: El filtro se implementará como un selector
+desplegable que mostrará únicamente los procesos académicos asignados al
+Funcionario autenticado, más una opción "Todos".
+
+Escenario 2 — Filtrar por estado
+Dado que me encuentro en la vista de gestión de solicitudes con la tabla
+cargada.
+Cuando selecciono un estado específico desde el filtro disponible.
+Entonces la tabla se actualizará mostrando únicamente las solicitudes que
+correspondan al estado seleccionado y que estén asignadas a mi usuario.
+Lineamientos técnicos: El filtro por estado mostrará los estados visibles
+para el Funcionario: Pendiente, En Gestión, Pendiente de Respuesta,
+Pendiente de Verificación, Respondida y Todos. El estado "Pendiente de
+Verificación" solo produce resultados en solicitudes de Examen Supletorio.
+
+Escenario 3 — Filtrar por número de identificación
+Dado que me encuentro en la vista de gestión de solicitudes con la tabla
+cargada.
+Cuando ingreso el número de documento del Estudiante en el campo de
+búsqueda.
+Entonces la tabla se actualizará mostrando únicamente las solicitudes que
+coincidan con el criterio ingresado.
+
+Escenario 4 — Filtro sin resultado
+Dado que me encuentro en la vista de gestión de solicitudes y aplico uno o
+más filtros.
+Cuando aplico un filtro cuya combinación de criterios no coincide con
+ninguna solicitud registrada.
+Entonces la tabla se mostrará vacía con un mensaje informativo indicando
+que no se encontraron solicitudes con los criterios aplicados.
+Lineamientos técnicos: Debe existir un botón de limpiar filtros que
+restaure la tabla a su estado original sin filtros aplicados.
+
+
+===============================================================================
+MÓDULO: RESPUESTA
+===============================================================================
+
+-------------------------------------------------------------------------------
+HU-01 — Rechazar solicitud académica
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero rechazar una solicitud académica que no cumple los
+requisitos, para cerrar el trámite y entregar al Estudiante la respuesta
+correspondiente sin necesidad de remitirla al Decano.
+
+Escenario 1 — Rechazar solicitud y generar la respuesta
+Dado que me encuentro en el detalle de una solicitud en estado "Pendiente"
+(Responsable Actual = Funcionario), radicada por el Estudiante y aún no
+remitida al Decano.
+Cuando selecciono la acción de rechazar, diligencio el Motivo del Rechazo,
+diligencio opcionalmente las Observaciones al Estudiante y confirmo en el
+diálogo de confirmación.
+Entonces la solicitud registra Decisión = "Rechazado", Instancia Decisoria
+= "Funcionario" y Responsable Actual = "Ninguno"; el sistema genera y envía
+la respuesta al Estudiante con los tres bloques definidos en la sección
+"Estructura de la respuesta al Estudiante"; la solicitud se traslada a la
+sección de respuestas del módulo Respuesta. En mi panel de Funcionario pasa
+a verse como "Respondida". En el panel del Estudiante pasa a verse como
+"Rechazada".
+Lineamientos técnicos: El Motivo del Rechazo es obligatorio; no debe
+permitirse rechazar sin justificación. Las Observaciones al Estudiante son
+opcionales. El rechazo del Funcionario cierra el trámite en un solo paso y
+no requiere una acción de envío posterior. El Estudiante que desee
+reintentar deberá radicar una solicitud completamente nueva. La acción
+estará disponible únicamente para solicitudes en estado "Pendiente" con
+Responsable Actual = "Funcionario" que aún no hayan sido remitidas al
+Decano. El cambio debe quedar registrado en el historial.
+
+Escenario 2 — Intento de rechazo sin motivo
+Dado que me encuentro en el diálogo de rechazo de una solicitud académica.
+Cuando intento confirmar el rechazo sin haber diligenciado el Motivo del
+Rechazo.
+Entonces la aplicación impedirá el rechazo y mostrará un mensaje de
+validación indicando que el Motivo del Rechazo es obligatorio.
+Lineamientos técnicos: La validación no debe exigir las Observaciones al
+Estudiante, que permanecen opcionales.
+
+Escenario 3 — Previsualizar la respuesta antes de enviarla
+Dado que me encuentro en el diálogo de rechazo y he diligenciado el Motivo
+del Rechazo.
+Cuando selecciono la acción de previsualizar la respuesta.
+Entonces la aplicación mostrará la respuesta tal como la verá el
+Estudiante, con la solicitud original, las Observaciones cuando existan y
+el mensaje informativo de Decanatura.
+Lineamientos técnicos: La previsualización es de solo lectura y no ejecuta
+el rechazo. Debe permitir regresar al diálogo para modificar los campos
+antes de confirmar.
+
+
+-------------------------------------------------------------------------------
+HU-02 — Remitir al Decano una solicitud de Cancelación de Matrícula o
+        Cancelación de Asignatura
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero remitir al Decano una solicitud de Cancelación de
+Matrícula o Cancelación de Asignatura que cumple los requisitos, para
+escalar formalmente el trámite a la instancia que toma la decisión de
+fondo.
+
+Escenario 1 — Remitir con comentarios al Decano
+Dado que me encuentro en el detalle de una solicitud de Cancelación de
+Matrícula o Cancelación de Asignatura en estado "Pendiente" (Responsable
+Actual = Funcionario), y he verificado que cumple todos los requisitos.
+Cuando selecciono la acción de remitir al Decano, diligencio los
+Comentarios al Decano y confirmo en el diálogo de confirmación.
+Entonces los Comentarios al Decano quedarán registrados y asociados a la
+solicitud, el Responsable Actual cambia a "Decano", y la solicitud pasa a
+verse como "En Gestión" tanto para el Funcionario como para el Estudiante.
+Lineamientos técnicos: Los Comentarios al Decano son de uso interno entre
+Funcionario y Decano; no se incluyen en la respuesta al Estudiante ni son
+visibles para él. El cambio debe quedar registrado en el historial.
+
+Escenario 2 — Remitir sin comentarios al Decano
+Dado que me encuentro en el detalle de una solicitud de Cancelación de
+Matrícula o Cancelación de Asignatura en estado "Pendiente" (Responsable
+Actual = Funcionario), y he verificado que cumple todos los requisitos.
+Cuando selecciono la acción de remitir al Decano y confirmo sin diligenciar
+los Comentarios al Decano.
+Entonces la remisión se ejecutará normalmente: el Responsable Actual cambia
+a "Decano" y la solicitud pasa a verse como "En Gestión" tanto para el
+Funcionario como para el Estudiante.
+Lineamientos técnicos: Los Comentarios al Decano son opcionales. La
+aplicación no debe presentar mensajes de validación ni advertencias por
+remitir sin comentarios.
+
+
+-------------------------------------------------------------------------------
+HU-03 — Remitir al Decano una solicitud de Examen Supletorio
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero remitir al Decano una solicitud de Examen
+Supletorio que cumple los requisitos, para escalar formalmente el trámite a
+la instancia que toma la decisión de fondo.
+
+Escenario 1 — Remitir solicitud
+Dado que me encuentro en el detalle de una solicitud de Examen Supletorio
+en estado "Pendiente" (Responsable Actual = Funcionario), y he verificado
+que cumple todos los requisitos.
+Cuando selecciono la acción de remitir al Decano, diligencio opcionalmente
+los Comentarios al Decano y confirmo en el diálogo de confirmación.
+Entonces los Comentarios al Decano, si fueron diligenciados, quedarán
+registrados y asociados a la solicitud, el Responsable Actual cambia a
+"Decano", y la solicitud pasa a verse como "En Gestión" tanto para el
+Funcionario como para el Estudiante.
+Lineamientos técnicos: Los Comentarios al Decano son opcionales, en
+consistencia con HU-02, y de uso interno; no se incluyen en la respuesta al
+Estudiante. El cambio debe quedar registrado en el historial.
+
+
+-------------------------------------------------------------------------------
+HU-04 — Enviar al Estudiante la respuesta de la decisión del Decano
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero enviar al Estudiante la respuesta correspondiente
+a la decisión tomada por el Decano, para informarle el resultado de su
+trámite y cerrar el proceso en el sistema.
+
+Escenario 1 — Enviar respuesta de una solicitud aprobada
+Dado que me encuentro en el módulo de Respuesta y existe una solicitud de
+Cancelación de Matrícula o Cancelación de Asignatura en estado "Pendiente
+de Respuesta" (Responsable Actual = Funcionario) con Decisión = "Aprobado"
+e Instancia Decisoria = "Decano".
+Cuando selecciono la acción de enviar respuesta al Estudiante, diligencio
+opcionalmente las Observaciones al Estudiante y confirmo en el diálogo de
+confirmación.
+Entonces el sistema generará y enviará la respuesta con los tres bloques
+definidos en la sección "Estructura de la respuesta al Estudiante", y el
+Responsable Actual cambia a "Ninguno". En mi panel de Funcionario la
+solicitud pasa a verse como "Respondida". En el panel del Estudiante pasa a
+verse como "Aprobada".
+Lineamientos técnicos: Las Observaciones al Estudiante son opcionales. La
+acción estará disponible únicamente para solicitudes con Responsable Actual
+= "Funcionario" e Instancia Decisoria = "Decano". El cambio debe quedar
+registrado en el historial.
+
+Escenario 2 — Enviar respuesta de una solicitud rechazada
+Dado que me encuentro en el módulo de Respuesta y existe una solicitud de
+Cancelación de Matrícula o Cancelación de Asignatura en estado "Pendiente
+de Respuesta" (Responsable Actual = Funcionario) con Decisión = "Rechazado"
+e Instancia Decisoria = "Decano".
+Cuando selecciono la acción de enviar respuesta al Estudiante, diligencio
+opcionalmente las Observaciones al Estudiante y confirmo en el diálogo de
+confirmación.
+Entonces el sistema generará y enviará la respuesta con los tres bloques
+definidos en la sección "Estructura de la respuesta al Estudiante", y el
+Responsable Actual cambia a "Ninguno". En mi panel de Funcionario la
+solicitud pasa a verse como "Respondida". En el panel del Estudiante pasa a
+verse como "Rechazada".
+Lineamientos técnicos: La estructura de la respuesta es idéntica a la del
+Escenario 1; únicamente cambia el sentido de la Decisión mostrada. El
+Estudiante que desee reintentar deberá radicar una solicitud completamente
+nueva. El cambio debe quedar registrado en el historial.
+
+Escenario 3 — Previsualizar la respuesta antes de enviarla
+Dado que me encuentro en el diálogo de envío de respuesta de una solicitud
+con Decisión registrada por el Decano.
+Cuando selecciono la acción de previsualizar la respuesta.
+Entonces la aplicación mostrará la respuesta tal como la verá el
+Estudiante, con la solicitud original, las Observaciones cuando existan y
+el mensaje informativo de Decanatura.
+Lineamientos técnicos: La previsualización es de solo lectura y no ejecuta
+el envío. Debe permitir regresar al diálogo para modificar las
+Observaciones antes de confirmar.
+
+
+-------------------------------------------------------------------------------
+HU-05 — Enviar respuesta de aprobación de Examen Supletorio
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero enviar al Estudiante la respuesta de aprobación de
+una solicitud de Examen Supletorio, para informarle el resultado de su
+trámite y habilitar el pago correspondiente.
+
+Escenario 1 — Adjuntar recibo y enviar respuesta
+Dado que me encuentro en el módulo de Respuesta y existe una solicitud de
+Examen Supletorio en estado "Pendiente de Respuesta" (Responsable Actual =
+Funcionario) con Decisión = "Aprobado".
+Cuando selecciono la acción de enviar respuesta al Estudiante y adjunto el
+recibo de pago.
+Entonces el Responsable Actual cambia a "Estudiante". En mi panel de
+Funcionario la solicitud pasa a verse como "En Gestión". En el panel del
+Estudiante pasa a verse como "Pendiente de Pago".
+Lineamientos técnicos: El campo de adjuntar recibo es obligatorio para
+ejecutar esta acción; no debe permitirse enviar la respuesta sin el recibo
+adjunto. El formato de archivo aceptado será PDF. Esta respuesta no cierra
+el trámite y por lo tanto no incluye el mensaje informativo de Decanatura.
+
+Escenario 2 — Intento de envío sin recibo adjunto
+Dado que me encuentro en el módulo de Respuesta y existe una solicitud de
+Examen Supletorio en estado "Pendiente de Respuesta" (Responsable Actual =
+Funcionario) con Decisión = "Aprobado".
+Cuando intento confirmar el envío sin haber adjuntado el recibo de pago.
+Entonces la aplicación impedirá el envío y mostrará un mensaje de
+validación indicando que debe adjuntar el recibo de pago antes de enviar la
+respuesta al Estudiante.
+
+
+-------------------------------------------------------------------------------
+HU-06 — Verificar comprobante de pago de Examen Supletorio
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero verificar el comprobante de pago de una solicitud
+de Examen Supletorio, para determinar si el trámite puede continuar hacia
+su cierre.
+
+Escenario 1 — Verificar comprobante y cerrar el trámite
+Dado que me encuentro en el detalle de una solicitud de Examen Supletorio
+en estado "Pendiente de Verificación" (Responsable Actual = Funcionario), y
+el Estudiante ya subió el comprobante de pago.
+Cuando reviso el comprobante y confirmo la acción de aprobar.
+Entonces la solicitud registra Decisión = "Aprobado" y el Responsable
+Actual cambia a "Ninguno". En mi panel de Funcionario pasa a verse como
+"Respondida". En el panel del Estudiante pasa a verse como "Aprobada".
+Lineamientos técnicos: El cambio debe quedar registrado en el historial.
+
+Escenario 2 — Comprobante inválido
+Dado que me encuentro en el detalle de una solicitud de Examen Supletorio
+en estado "Pendiente de Verificación" (Responsable Actual = Funcionario), y
+el Estudiante ya subió el comprobante de pago.
+Cuando confirmo la acción de rechazar el comprobante e ingreso las
+observaciones correspondientes.
+Entonces el Responsable Actual cambia a "Estudiante". En el panel del
+Estudiante la solicitud vuelve a verse como "Pendiente de Pago", indicando
+que debe subir un comprobante válido. En mi panel de Funcionario vuelve a
+verse como "En Gestión".
+Lineamientos técnicos: El campo de observaciones es obligatorio para
+rechazar un comprobante. El rechazo del comprobante no cierra el trámite ni
+modifica la Decisión registrada; únicamente devuelve la responsabilidad al
+Estudiante para que aporte un comprobante válido. Este es el único punto de
+retorno del sistema.
+
+
+-------------------------------------------------------------------------------
+HU-07 — Consultar el historial de solicitudes respondidas
+-------------------------------------------------------------------------------
+
+Como Funcionario, quiero consultar el historial de solicitudes respondidas,
+para tener trazabilidad de todos los trámites cerrados.
+
+Escenario 1 — Listar historial de solicitudes respondidas
+Dado que me encuentro en el módulo de Respuesta.
+Cuando ingreso a la sección de historial desde el módulo de Respuesta.
+Entonces la aplicación mostrará una tabla con todas las solicitudes en
+estado "Respondida" de los procesos académicos asignados al Funcionario,
+indicando para cada una: número de radicado, tipo de proceso, nombre del
+Estudiante, fecha de cierre, Decisión (Aprobado/Rechazado) e Instancia
+Decisoria (Funcionario/Decano).
+Lineamientos técnicos: Las solicitudes del historial son de solo lectura.
+La tabla diferenciará visualmente las solicitudes con Decisión "Aprobado"
+de las de Decisión "Rechazado". Solo se listarán solicitudes de los
+procesos académicos asignados al Funcionario autenticado.
+
+Escenario 2 — Consultar la respuesta enviada
+Dado que me encuentro en el historial y existe al menos una solicitud en
+estado "Respondida".
+Cuando selecciono la acción de consultar detalle sobre una solicitud.
+Entonces la aplicación mostrará la respuesta que fue enviada al Estudiante,
+con la solicitud original, las Observaciones cuando existan y el mensaje
+informativo de Decanatura, junto con la trazabilidad interna del trámite:
+Comentarios al Decano, Motivo del Rechazo cuando aplique, Decisión,
+Instancia Decisoria y Observaciones Decano.
+Lineamientos técnicos: La vista es de solo lectura y no habilita ninguna
+acción de gestión sobre la solicitud. La respuesta enviada no puede
+modificarse una vez despachada.
+
+Escenario 3 — Filtrar historial
+Dado que me encuentro en el historial de solicitudes respondidas.
+Cuando selecciono un tipo de proceso, una decisión o una instancia
+decisoria desde los filtros disponibles.
+Entonces la tabla se actualizará mostrando únicamente los registros que
+coincidan con los criterios seleccionados.
+Lineamientos técnicos: El filtro por tipo de proceso mostrará: Cancelación
+de Matrícula, Cancelación de Asignatura, Examen Supletorio y Todos. El
+filtro por Decisión mostrará: Aprobado, Rechazado y Todos. El filtro por
+Instancia Decisoria mostrará: Funcionario, Decano y Todos.
+
+Escenario 4 — Historial vacío
+Dado que me encuentro en el historial de solicitudes respondidas.
+Cuando ingreso al historial sin que existan solicitudes respondidas.
+Entonces la aplicación mostrará la tabla vacía con un mensaje informativo
+indicando que aún no hay trámites respondidos registrados.
+Lineamientos técnicos: El estado vacío no debe interpretarse como un error;
+debe acompañarse de un mensaje descriptivo.
+
+
+===============================================================================
+DECISIONES PENDIENTES DE CONFIRMACIÓN
+===============================================================================
+
+1. Motivo del Rechazo vs. Observaciones al Estudiante (HU-01, Módulo
+   Respuesta). Se modelaron como dos campos distintos dentro de una misma
+   acción: el primero obligatorio, el segundo opcional. Si en la práctica
+   se trata de un único campo, deben unificarse.
+
+2. Alcance del mensaje informativo de Decanatura. Está redactado como
+   aplicable a Cancelación de Matrícula y Cancelación de Asignatura, que
+   son los procesos que producen resolución. Falta confirmar si el rechazo
+   de un Examen Supletorio también obliga al Estudiante a acercarse a la
+   Decanatura a firmar un documento, o si en ese proceso la respuesta se
+   agota en el sistema.
+
+3. Escenarios de previsualización (HU-01 Esc. 3 y HU-04 Esc. 3). Se
+   incorporaron porque la respuesta ya no es un documento revisable antes
+   del envío y una vez despachada no puede corregirse. Confirmar si se
+   conservan.
